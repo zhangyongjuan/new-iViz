@@ -1,0 +1,100 @@
+body{
+  font-family: "Microsoft YaHei UI";
+}
+.normal {
+  /*font-family: Georgia, sans-serif;*/
+  /*margin-top: 4em;*/
+  text-align: center;
+  border-bottom:1px lightgray solid;
+}
+
+.welcome {
+  height: 328px;
+  background: url(../assets/yay.jpg) no-repeat center 0;
+  background-size: 388px 328px;
+}
+
+.list {
+  font-size: 1.2em;
+  margin-top: 1.8em;
+  list-style: none;
+  line-height: 1.5em;
+}
+
+.list code {
+  background: #f7f7f7;
+}
+/*
+  ** 页面
+*/
+.header{
+  /*background: #483c8b;*/
+  height:50px;
+  /*border-bottom: 1px lightgray solid;*/
+}
+.header ul{
+  list-style: none;
+  min-width: 90%;
+  display: inline-block;
+  line-height: 50px;
+  border: none;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+.header li{
+  min-width:190px;
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  vertical-align: bottom;
+  border-bottom: 2px solid transparent;
+}
+.header li:hover{
+  border-bottom: 2px solid #ff6d02;
+}
+.leftmenu{
+  width:10%;
+  height:300px;
+  /*border:1px black solid;*/
+  float:left;
+  margin-top: 50px;
+}
+.leftmenu ul{
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  font-weight: bold;
+}
+.leftmenu ul>li{
+  width: 100%;
+  height: 40px;
+  cursor: pointer;
+  /*border: 1px lightgray solid;*/
+  line-height: 40px;
+}
+.leftmenu ul>li:hover{
+  background: #999;
+}
+.selectbox label{
+  display:block;
+}
+.bighead{
+  font-size: 12px;
+}
+
+/*.menu3_4{*/
+/*  position: relative;*/
+/*  margin: 0;*/
+/*  padding: 4px 0;*/
+/*  text-align: left;*/
+/*  list-style-type: none;*/
+/*  background-color: #fff;*/
+/*  background-clip: padding-box;*/
+/*  border-radius: 4px;*/
+/*  outline: none;*/
+/*  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);*/
+/*  -webkit-transform: translate3d(0, 0, 0);*/
+/*}*/
+
