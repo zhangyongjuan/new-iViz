@@ -44,7 +44,6 @@ export default {
 
     },
   },
-
   reducers: {        //接收action，同步更新state
     saveDate(state, action) {
       return {
