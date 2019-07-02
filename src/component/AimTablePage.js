@@ -102,7 +102,8 @@ class AimTablePage extends Component{
   state ={
     showAimPlus:'none',
     showBarChart:'none',
-    showLineChart:'none',
+    showLineChart:'none'
+
   }
   componentDidMount() {
     const barOption = {
