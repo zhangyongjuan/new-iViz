@@ -170,8 +170,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="1052" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="633" />
+    <option name="y" value="174" />
     <option name="width" value="1533" />
     <option name="height" value="1100" />
   </component>
@@ -197,6 +198,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="editor.config.ad.shown" value="true" />
@@ -246,26 +248,26 @@
       <workItem from="1561597570565" duration="1084000" />
       <workItem from="1561598667992" duration="1272000" />
       <workItem from="1561603563839" duration="38728000" />
-      <workItem from="1561941043582" duration="17410000" />
+      <workItem from="1561941043582" duration="17652000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="108424000" />
+    <option name="totallyTimeSpent" value="108666000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1052" y="0" width="1533" height="1100" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
-      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.18669382" />
+      <window_info content_ui="combo" id="Project" order="5" visible="true" weight="0.14658849" />
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="TypeScript" order="0" />
       <window_info anchor="bottom" id="Version Control" order="1" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.442029" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.46312365" />
       <window_info anchor="bottom" id="Database Changes" order="3" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
