@@ -173,8 +173,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1090" />
-    <option name="y" value="9" />
+    <option name="x" value="1081" />
+    <option name="y" value="25" />
     <option name="width" value="1533" />
     <option name="height" value="1100" />
   </component>
@@ -212,7 +212,7 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="settings.github" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="ts.external.directory.path" value="E:\ideaIU\IntelliJ IDEA 2019.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
@@ -250,15 +250,15 @@
       <workItem from="1561597570565" duration="1084000" />
       <workItem from="1561598667992" duration="1272000" />
       <workItem from="1561603563839" duration="38728000" />
-      <workItem from="1561941043582" duration="18953000" />
+      <workItem from="1561941043582" duration="19991000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="109967000" />
+    <option name="totallyTimeSpent" value="111005000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="992" y="14" width="1533" height="1100" extended-state="0" />
+    <frame x="917" y="19" width="1533" height="1100" extended-state="0" />
     <layout>
       <window_info id="Designer" order="0" />
       <window_info id="UI Designer" order="1" />
@@ -269,7 +269,7 @@
       <window_info id="Structure" order="6" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="TypeScript" order="0" />
       <window_info anchor="bottom" id="Version Control" order="1" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.442029" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="2" visible="true" weight="0.3726708" />
       <window_info anchor="bottom" id="Database Changes" order="3" />
       <window_info anchor="bottom" id="Event Log" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Docker" order="5" show_stripe_button="false" />
@@ -530,7 +530,7 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor />
+          <first_editor relative-caret-position="-1147" />
           <second_editor />
         </state>
       </provider>
