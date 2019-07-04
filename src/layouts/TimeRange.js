@@ -14,12 +14,12 @@ const {Option} = Select;
 // const speacilBuildOption = ['DVT-DOE1'];
 // const wifiOption = ['4G','WIFI'];
 const selectOption = {
-  'Vendor': ['RT', 'CTC', 'McEG'],
-  'Product Code': ['J71B', 'J320'],
-  'Color': ['NDA'],
-  'Build': ['DVT'],
-  'Speacil Build': ['DVT-DOE1'],
-  '4G/WIFI': ['4G', 'WIFI'],
+  'Site': ['RT'],
+  'Product Code': ['Stanford'],
+  'Color': ["Silver", "Gold", "Space Gray", "Rose Gold", "Black"],
+  'Build': ["DVT-1", "DVT-2", "DVT-3", "DVT-4", "DVT-5", "DVT-6", "DVT-7"],
+  'Speacil Build': ["DVT-DOE1", "DVT-DOE2", "DVT-DOE3", "DVT-DOE4", "DVT-DOE5", "DVT-DOE6", "DVT-DOE7", "DVT-DOE8"],
+  'wifis': ['4G', 'WIFI'],
 }
 
 @connect(({global}) => ({
@@ -28,6 +28,14 @@ const selectOption = {
 class TimeRange extends Component {
   state = {
     timeRange: {},
+    SelectItem:{
+      site:'RT',
+      productCode:'Stanford',
+      color:'Silver',
+      build:'DVT-1',
+      speacilBuild:'DVT-DOE1',
+      wifiOr4g:'4G',
+    }
   }
   timeChange = (value, dateString) => {
     // console.log('Selected Time: ', value);
@@ -46,11 +54,38 @@ class TimeRange extends Component {
       }
     })
   }
+  componentDidMount() {
+    const item = this.state.SelectItem;
+    this.props.dispatch({
+      type:'global/saveSelectCondition',
+      payload:{
+        item
+      }
+    })
+  }
 
   handleChange = (value,key) => {
     console.log(`selected ${key}:${value}`);
     const item = {};
-    item.vendor = value;
+    switch (key) {
+      case 'Vendor':
+        item.vendor = value;
+        break;
+      case 'Product Code':
+        item.productCode = value;
+        break;
+      case 'Color':
+        item.color = value;
+        break;
+      case 'Build':
+        item.build = value;
+        break;
+      case 'Speacil Build':
+        item.speacilBuild = value;
+        break;
+      case '4G/WIFI':
+        item.wifiOr4g = value;
+    }
     this.props.dispatch({
       type:'global/saveSelectCondition',
       payload:{
@@ -79,7 +114,7 @@ class TimeRange extends Component {
         />
         {
           Object.keys(selectOption).map((key, i) =>
-            <Select key={key} defaultValue={key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
+            <Select key={key} defaultValue={selectOption[key][0]} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
               <Option className={styles.topselectOption} value='disabled' disabled>{key}</Option>
               {
                 selectOption[key].map((v, k) =>

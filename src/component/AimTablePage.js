@@ -159,7 +159,7 @@ class AimTablePage extends Component{
       }]
     };
     echarts.init(document.getElementById('barchart')).setOption(barOption);
-    const lineChart = echarts.init(document.getElementById('linechart'));
+    const lineChart = echarts.init(document.getElementById('aimlinechart'));
     lineChart.setOption(lineOption);
     lineChart.on('click',(e)=>{
       alert('线图被点击了');
@@ -257,7 +257,7 @@ class AimTablePage extends Component{
           <Table size="small" columns={stationColums} dataSource={stationDataSource} scroll={{x: 'max-content'}} pagination={false} />
         </div>
         <p className={styles.tableName} >AIM yield trend plot</p>
-        <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='linechart'></div>
+        <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart'></div>
       </div>
     )
   }

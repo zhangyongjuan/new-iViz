@@ -12,13 +12,14 @@ export default {
       span:'8'
     },
     topSelectItem:{
-      vendor:'',
+      site:'',
       productCode:'',
       color:'',
       build:'',
       speacilBuild:'',
       wifiOr4g:'',
-    }
+    },
+    mapping:''
   },
 
   effects: {
@@ -31,7 +32,7 @@ export default {
         }
       });
     },
-    *saveSelectCondition({payload},{call,put,select}){
+    * saveSelectCondition({payload},{call,put,select}){
       const oldTopSelectItem = yield select(
         state => state.global.topSelectItem
       )
@@ -41,7 +42,6 @@ export default {
           topSelectItem:  Object.assign({},oldTopSelectItem ,payload.item)
         }
       })
-
     },
   },
   reducers: {        //接收action，同步更新state
