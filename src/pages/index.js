@@ -14,10 +14,10 @@ class AIM extends Component{
     return(
       <div className={styles.normal}>
         <Tabs onChange={this.callback} type="card">
-          <TabPane key="1" tab={<span><Icon type="apple" />Reactive Table</span>}>
+          <TabPane key="1" tab={<span><Icon type="table" />Reactive Table</span>}>
             <AimTablePage />
           </TabPane>
-          <TabPane key="2" tab={<span><Icon type="apple" />Demo</span>}>
+          <TabPane key="2" tab={<span><Icon type="bar-chart" />AIM Chart</span>}>
             <DrawChart />
           </TabPane>
         </Tabs>

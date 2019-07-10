@@ -1,4 +1,4 @@
-import {queryFakeList} from '@/services/api';
+// import {queryFakeList} from '@/services/api';
 // import select from "eslint-plugin-jsx-a11y/src/util/implicitRoles/select";
 
 export default {

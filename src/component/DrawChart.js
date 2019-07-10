@@ -1,10 +1,8 @@
 import React,{ Component } from 'react';
-import {Button,DatePicker} from 'antd/lib/index';
+import {Button} from 'antd/lib/index';
 import echarts from 'echarts';
 import NewHeader from './Condition'
 import styles from './index.css';
-import dataTool from 'echarts/dist/extension/dataTool'
-import locale from 'antd/lib/date-picker/locale/zh_CN';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import reqwest from "reqwest";
@@ -12,7 +10,6 @@ import '../global'
 import {connect} from "react-redux";
 moment.locale('zh-cn');
 
-const {RangePicker} = DatePicker;
 @connect(({global}) => ({
   global
 }))

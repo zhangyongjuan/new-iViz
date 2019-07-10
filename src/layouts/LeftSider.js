@@ -3,7 +3,7 @@ import {Layout, Icon, Menu} from 'antd';
 import Link from "umi/link";
 import styles from './LeftSider.less'
 const { Sider } = Layout;
-const { SubMenu } = Menu;
+// const { SubMenu } = Menu;
 
 class LeftSider extends Component{
   state = {

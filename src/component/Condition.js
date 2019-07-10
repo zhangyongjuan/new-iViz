@@ -415,7 +415,7 @@ class NewHeader extends Component {
     this.state.checkedList6.map((v,j)=>{
       this.state.condition6D.map((val,i)=>{
         if(v === val){
-          newList.push(val)
+         return newList.push(val)
         }
       })
     })
@@ -453,7 +453,7 @@ class NewHeader extends Component {
     this.state.checkedList7.map((v,j)=>{
       this.state.condition7D.map((val,i)=>{
         if(v === val){
-          newList.push(val)
+         return newList.push(val)
         }
       })
     })

@@ -22,7 +22,7 @@ body {
 }
 .showBarChart{
   transition: all 1s;
-  height: 600px !important;
+  height: 800px !important;
   transform: translateY(200px);
   z-index: 1 !important;
 }

@@ -68,7 +68,7 @@ class TimeRange extends Component {
     console.log(`selected ${key}:${value}`);
     const item = {};
     switch (key) {
-      case 'Vendor':
+      case 'Site':
         item.vendor = value;
         break;
       case 'Product Code':
@@ -83,8 +83,11 @@ class TimeRange extends Component {
       case 'Speacil Build':
         item.speacilBuild = value;
         break;
-      case '4G/WIFI':
+      case 'wifis':
         item.wifiOr4g = value;
+        break;
+      default:
+        break;
     }
     this.props.dispatch({
       type:'global/saveSelectCondition',
