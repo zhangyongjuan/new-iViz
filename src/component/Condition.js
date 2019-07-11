@@ -95,7 +95,7 @@ class NewHeader extends Component {
       data:timeN
     })
       .then((data)=>{
-        console.log('初始拿到的所有选择项：',data);
+        // console.log('初始拿到的所有选择项：',data);
         this.setState({condition1:data.condition1,condition2:data.condition2,condition3:data.condition3,
           condition4:data.condition4,condition5:data.condition5,condition6:data.condition6,condition7:data.condition7,allConditions:data},this.test)
       })
@@ -113,18 +113,18 @@ class NewHeader extends Component {
     alloption.condition5 = this.state.select5;
     alloption.condition6 = this.state.select6;
     alloption.condition7 = this.state.select7;
-    console.log('将要传回去画图的值---',alloption);
+    // console.log('将要传回去画图的值---',alloption);
     this.turnData(alloption)
   }
   handleMenuClick1 = e=>{
-    console.log('条件1被点击项-------',e);
+    // console.log('条件1被点击项-------',e);
     const d1 = [];
     const key = e.key;
     d1.push(key);
     this.setState({select1:d1,title1:key},this.test)
   }
   handleMenuClick2 = e => {
-    console.log('条件2被点击项-------',e);
+    // console.log('条件2被点击项-------',e);
     let bigContainer = {};
     bigContainer.data = {};
     let data = {};
@@ -139,22 +139,22 @@ class NewHeader extends Component {
       data:bigContainer
     })
       .then((data)=>{
-        console.log('newCondition3========',data);
+        // console.log('newCondition3========',data);
         this.setState({condition3:data,category:data.process})
       })
   };
   handleMenuClick3 = e=>{
-    console.log('条件3被点击项-------',e);
+    // console.log('条件3被点击项-------',e);
     let d3 = [];
     const clickId = e.key;
     d3.push(clickId)
     this.setState({select3:d3,spcId:clickId,title3:clickId},this.test)
-    console.log(this.state.select3)
+    // console.log(this.state.select3)
   }
   handleMenuClick3_4 = e=>{
-    console.log(e);
-    console.log('select2======',this.state.select2);
-    console.log('select3======',this.state.select3);
+    // console.log(e);
+    // console.log('select2======',this.state.select2);
+    // console.log('select3======',this.state.select3);
     const d3_4 = {},container = {},s3_4 = [];
     s3_4.push(e.key)
     d3_4.child = e.key;
@@ -169,7 +169,7 @@ class NewHeader extends Component {
       data:container
     })
       .then(data=>{
-        console.log('c4-----',data)
+        // console.log('c4-----',data)
         if(data.aimIps.length !== 0){
           this.setState({condition4D:data.aimIps,select4:data.aimIps})
         }else if(data.lines.length !== 0){
@@ -190,7 +190,7 @@ class NewHeader extends Component {
       })
   }
   handleMenuClick4 = e => {
-    console.log('被点击项-------',e);
+    // console.log('被点击项-------',e);
     const d4 = {},container = {},machine4 = [];
     d4.child = [];d4.con4 = [];d4.con5 = [];
     d4.child.push(this.state.title3_4);
@@ -208,11 +208,11 @@ class NewHeader extends Component {
       data:container
     })
       .then((data)=>{
-        console.log('newCondition5========',data);
+        // console.log('newCondition5========',data);
         this.setState({condition5:data})
         data.machines && data.machines.length !== 0 ? this.setState({condition5D:data.machines}):
           this.setState({condition5D:data.spms})
-        console.log('5D====',this.state.condition5D);
+        // console.log('5D====',this.state.condition5D);
         let arr = data.machines;
         this.setState({plainOptions5:arr,checkedList5:arr,select5:this.state.condition5D});
         d4.con5=this.state.condition5.machines;
@@ -221,7 +221,7 @@ class NewHeader extends Component {
       })
   };
   handleMenuClick5 = e=>{
-    console.log('条件5点击了-------',e);
+    // console.log('条件5点击了-------',e);
     const d5 = {},container = {},machine5 = [];
     d5.child = [];d5.con4 = [];d5.con5 = [];
     d5.child.push(this.state.title3_4);
@@ -240,11 +240,11 @@ class NewHeader extends Component {
       data:container
     })
       .then((data)=>{
-        console.log('newCondition6========',data);
+        // console.log('newCondition6========',data);
         this.setState({condition6:data});
         this.state.condition6.machines && this.state.condition6.machines.length !== 0 ? this.setState({condition6D:this.state.condition6.machines}) :
           this.setState({condition6D:this.state.condition6.spms})
-        console.log('6D====',this.state.condition6D);
+        // console.log('6D====',this.state.condition6D);
         let arr = this.state.condition6D;
         this.setState({plainOptions6:arr,checkedList6:arr,select6:this.state.condition6D})
 
@@ -261,7 +261,7 @@ class NewHeader extends Component {
       data:getCondition7
     })
       .then(data=>{
-        console.log('条件7--',data);
+        // console.log('条件7--',data);
         this.setState({condition7:data,condition7D:data.spms,plainOptions7:data.spms,checkedList7:data.spms,select7:data.spms},this.test)
       })
   }
@@ -314,7 +314,7 @@ class NewHeader extends Component {
       d5.con4=this.state.select4;
       d5.con5 = newList;
       container.data = JSON.stringify(d5)
-      console.log('这是改变后的条件5选项',newList)
+      // console.log('这是改变后的条件5选项',newList)
       this.setState({select5:newList},this.test)
       this.getcondition6(container)
     }else{
@@ -351,7 +351,7 @@ class NewHeader extends Component {
         }
       })
     })
-    console.log('select4======',newList)
+    // console.log('select4======',newList)
     this.setState({select4:newList,select5:[],select6:[]},this.test);
     if(newList.length !== 0 && this.state.title3_4 === "Line"){
       const d3_4 = {};
@@ -369,9 +369,9 @@ class NewHeader extends Component {
         data:container
       })
         .then(data=>{
-          console.log('条件4选择line，这是条件5的数据',data)
+          // console.log('条件4选择line，这是条件5的数据',data)
           this.setState({condition5:data,condition5D:data.spms})
-          console.log('5D====',this.state.condition5D);
+          // console.log('5D====',this.state.condition5D);
           this.setState({plainOptions5:[],checkedList5:[],select5:[],checkAll5:false});
         })
     }
@@ -384,11 +384,11 @@ class NewHeader extends Component {
       data:container
     })
       .then(data=>{
-        console.log('newCondition6========',data);
+        // console.log('newCondition6========',data);
         this.setState({condition6:data})
         this.state.condition6.machines && this.state.condition6.machines.length !== 0 ? this.setState({condition6D:this.state.condition6.machines}) :
           this.setState({condition6D:this.state.condition6.spms})
-        console.log('6D====',this.state.condition6D);
+        // console.log('6D====',this.state.condition6D);
         let arr = this.state.condition6D;
         if(data.title === 'Mc'){
           this.setState({title6:data.title});
@@ -419,7 +419,7 @@ class NewHeader extends Component {
         }
       })
     })
-    console.log('选择的条件6---',newList)
+    // console.log('选择的条件6---',newList)
     this.setState({select6:newList});
     const d6 = {},container = {};
     d6.child = [];d6.con4 = [];d6.con5 = [];d6.con6 = [];
@@ -457,7 +457,7 @@ class NewHeader extends Component {
         }
       })
     })
-    console.log(newList)
+    // console.log(newList)
     this.setState({select7:newList},this.test)
   }
   render() {

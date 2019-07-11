@@ -147,7 +147,7 @@ class AimTablePage extends Component{
     const initcondition = {};
     initcondition.data = {};
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.state.mapping,station:this.state.station,aimIp:this.state.aimIp}));
-  console.log('取数据的条件',initcondition.data);
+  // console.log('取数据的条件',initcondition.data);
     reqwest({
       url:`http://${global.constants.ip}:${global.constants.port}/condition/getYield`,
       method:'post',
@@ -155,7 +155,7 @@ class AimTablePage extends Component{
       data:initcondition
     })
       .then(data=>{
-        console.log("初始条件获得数据",data);
+        // console.log("初始条件获得数据",data);
         if(data.stationYield !== null){
           const stationHead = [],stationDataSource=[];
           const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};
@@ -262,7 +262,6 @@ class AimTablePage extends Component{
         barWidth:'60%'
       }]
     };
-    // console.log('画图的yield',this.state.spcYield)
     const aimlineOption = {
       color:['#188fff'],
       tooltip:{},
@@ -317,11 +316,11 @@ class AimTablePage extends Component{
     })
   }
   clickStationPlus = e =>{
-    console.log('clickStationPlus====',e.currentTarget.previousElementSibling.innerText);
+    // console.log('clickStationPlus====',e.currentTarget.previousElementSibling.innerText);
     this.setState({showAimPlus:'showAimPlus',station:e.currentTarget.previousElementSibling.innerText,aimIp:''},this.fetch)
   }
   clickPlusName = e =>{
-    console.log('clickplusName====',e.target.innerText);
+    // console.log('clickplusName====',e.target.innerText);
     this.setState({aimIp:e.target.innerText},this.fetch)
   }
 

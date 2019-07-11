@@ -107,12 +107,12 @@ class TimeRange extends Component {
           format="YYYY-MM-DD HH:mm:ss"
           onChange={this.timeChange}
           onOk={this.onOk}
-          showTime={{
-            hideDisabledOptions: true,
-            // defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 11:59:59', 'YYYY-MM-DD HH:mm:ss')],
-            defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]
-          }}
+          // showTime={{
+          //   hideDisabledOptions: true,
+          //   defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]
+          // }}
           defaultValue={[moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]}
+          value={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
           style={{marginRight: '20px', fontSize: '12px'}} locale={locale}
         />
         {
