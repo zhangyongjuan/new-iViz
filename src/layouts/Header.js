@@ -14,16 +14,16 @@ class HeaderView extends Component{
           <div className={styles.setting} >
             <ul className={styles.settingItem} >
               <li>
-                <Icon type="setting" />
+                <Icon type="bell" theme="filled"/>
               </li>
               <li>
-                <Icon type="setting" />
+                <Icon type="setting" theme="filled" />
               </li>
               <li>
-                <Icon type="setting" />
+                <Icon type="poweroff" />
               </li>
-              <li>
-                <Icon type="setting" />
+              <li style={{color:'#ff6d02'}}>
+                user1
               </li>
             </ul>
           </div>

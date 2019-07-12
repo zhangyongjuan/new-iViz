@@ -30,6 +30,7 @@
   font-size: 16px;
   color: #ff6d02;
   float: left;
+  font-weight: bold;
 }
 .setting{
   display:inline-block;
@@ -41,6 +42,8 @@
 .settingItem li{
   float: left;
   line-height: 45px;
+  font-size: 18px;
+  margin-right: 25px;
 }
 .timeRangeCon{
   width: 100%;
@@ -48,12 +51,14 @@
   /*border:1px yellow solid;*/
   line-height: 135px;
   padding-left: 100px;
+  overflow: hidden;
 }
 .topSelect{
   width:130px;
   margin-right:20px !important;
   /*font-size: 12px !important;*/
   text-align: center;
+  color:black !important;
 }
 .topSelect div{
   border: none;
@@ -61,6 +66,9 @@
 .topSelect div:first-child div{
   display: inline-block;
   margin-right: 0;
+}
+.topSelect div:first-child span{
+  color: black;
 }
 .topselectOption{
   text-align: center;

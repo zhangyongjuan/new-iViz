@@ -65,7 +65,14 @@ class NewHeader extends Component {
       select6:[],
       select7:[],
       timeRange:{},
-      mapping:'RTStanfordSilverDVT-1DVT-DOE14G'
+      mapping:{
+        site: "",
+        product: "",
+        color: [],      //有全选和单选之分，全选时需要列出全部选择项
+        build: "",
+        special_build:"",
+        wifi: []
+      },
     };
     return State;
   }
@@ -73,19 +80,19 @@ class NewHeader extends Component {
     this.fetch();
   }
   componentWillReceiveProps(nextProps) {
-    let mapping = ''
-    Object.keys(nextProps.global.topSelectItem).map((v,i)=>{
-      return mapping += nextProps.global.topSelectItem[v];
-    })
-    if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || mapping !== this.state.mapping){
+    // let mapping = ''
+    // Object.keys(nextProps.global.topSelectItem).map((v,i)=>{
+    //   return mapping += nextProps.global.topSelectItem[v];
+    // })
+    if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || JSON.stringify(nextProps.global.topSelectItem) !== JSON.stringify(this.state.mapping)){
       this.setState(this.initialState());
-      this.setState({timeRange:nextProps.global.dateTime,mapping : mapping},this.fetch);
+      this.setState({timeRange:nextProps.global.dateTime,mapping: nextProps.global.topSelectItem},this.fetch);
     }
   }
 
   fetch = ()=>{
     const T = Object.assign({},this.props.global.dateTime);
-    T.mapping = this.state.mapping;
+    T.mapping = this.props.global.topSelectItem;
     let timeN = {};
     timeN.data = JSON.stringify(T);
     reqwest({

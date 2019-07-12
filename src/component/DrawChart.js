@@ -41,7 +41,7 @@ class DrawChart extends Component{
     if(this.state.type === '2'){
       document.getElementById('hexuchart').style.height='0px';
       if(JSON.stringify(this.state.lineChart) !== '{}'){
-        console.log('linechart----',this.state.lineChart);
+        // console.log('linechart----',this.state.lineChart);
         const lineoption = {
           legend:{
             bottom: 'bottom',
@@ -253,7 +253,7 @@ class DrawChart extends Component{
               data: hexudata.series[0].data,
               tooltip: {
                 formatter: function (param) {
-                  console.log('盒须图param===========',param)
+                  // console.log('盒须图param===========',param)
                   return [
                     'Experiment ' + param.name + ': ',
                     'upper: ' + param.data[5],
@@ -297,15 +297,11 @@ class DrawChart extends Component{
     }
   }
   submit=()=>{
-    console.log('可以提交选项信息了！',this.state.drawchartRequest);            //拿到数据啦，可以和后台交互啦，赶紧去获取chart数据吧
-    console.log('时间及6个条件',this.props.global.topSelectItem,this.props.global.dateTime);
-    let now = {},mapping={};
+    // console.log('可以提交选项信息了！',this.state.drawchartRequest);            //拿到数据啦，可以和后台交互啦，赶紧去获取chart数据吧
+    // console.log('时间及6个条件',this.props.global.topSelectItem,this.props.global.dateTime);
+    let now = {};
     now.timeRange= this.props.global.dateTime;
-    mapping.mapping ='';
-    Object.keys(this.props.global.topSelectItem).map((v,i)=>{
-      return mapping.mapping += this.props.global.topSelectItem[v];
-    })
-    let selectData = Object.assign({},mapping,now,this.state.drawchartRequest);
+    let selectData = Object.assign({},{mapping:this.props.global.topSelectItem},now,this.state.drawchartRequest);
     console.log('selectData',selectData)
     const container = {};
     container.data = JSON.stringify(selectData);
@@ -316,7 +312,7 @@ class DrawChart extends Component{
       data:container
     })
       .then(data=>{
-        console.log('图表数据---',data);
+        // console.log('图表数据---',data);
         // react data
         if(data.blockChart !== null && data.blockChart !== undefined){
           data.blockChart.series[0].data = data.blockChart.series[0].data.map((num,i)=>{

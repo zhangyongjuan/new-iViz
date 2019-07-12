@@ -32,3 +32,16 @@ body {
   transform: translateY(200px);
   z-index: 1 !important;
 }
+.ant-table table{
+  text-align: center;
+  color:black;
+}
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th{
+  text-align: center;
+  /*color:black;*/
+  font-weight: bold;
+}
+.ant-table-small > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td{
+  font-weight: bold;
+  color:rgba(0,0,0,0.85);
+}

@@ -105,7 +105,14 @@ class AimTablePage extends Component{
     showBarChart:'none',
     showLineChart:'none',
     timeRange:{},
-    mapping:'RTStanfordSilverDVT-1DVT-DOE14G',
+    mapping:{
+      site: "",
+      product: "",
+      color: [],      //有全选和单选之分，全选时需要列出全部选择项
+      build: "",
+      special_build:"",
+      wifi: []
+    },
     station:'',
     aimIp:'',
     stationTitle:[],   //station head and source
@@ -127,18 +134,18 @@ class AimTablePage extends Component{
     this.fetch();
   }
   componentWillReceiveProps(nextProps) {
-    console.log('条件改变--',nextProps.global)
-    let mapping = '';
-    Object.keys(nextProps.global.topSelectItem).map((v,i)=>{
-      return mapping += nextProps.global.topSelectItem[v];
-    })
+    // console.log('条件改变--',nextProps.global)
+    // let mapping = '';
+    // Object.keys(nextProps.global.topSelectItem).map((v,i)=>{
+    //   return mapping += nextProps.global.topSelectItem[v];
+    // })
     if(this.state.clickLinePoint === true){      //如果是通过点击线图更改时间，则不需要把station和aimIp条件置空，及页面显示不变
-      if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || mapping!==this.state.mapping){
-        this.setState({timeRange:nextProps.global.dateTime,mapping: mapping,clickLinePoint:false},this.fetch)
+      if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || JSON.stringify(nextProps.global.topSelectItem) !== JSON.stringify(this.state.mapping)){
+        this.setState({timeRange:nextProps.global.dateTime,mapping: nextProps.global.topSelectItem,clickLinePoint:false},this.fetch)
       }
     }else{  //如果是手动更改顶部条件，一切选择情况清空,切aim下级隐藏不显示
-      if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || mapping!==this.state.mapping){
-        this.setState({timeRange:nextProps.global.dateTime,mapping: mapping,showAimPlus:'none',station:'',aimIp:''},this.fetch)
+      if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || JSON.stringify(nextProps.global.topSelectItem) !== JSON.stringify(this.state.mapping)){
+        this.setState({timeRange:nextProps.global.dateTime,mapping: nextProps.global.topSelectItem,showAimPlus:'none',station:'',aimIp:''},this.fetch)
       }
     }
 
@@ -146,8 +153,8 @@ class AimTablePage extends Component{
   fetch=()=>{
     const initcondition = {};
     initcondition.data = {};
-    initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.state.mapping,station:this.state.station,aimIp:this.state.aimIp}));
-  // console.log('取数据的条件',initcondition.data);
+    initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp}));
+    // console.log('取数据的条件',initcondition.data);
     reqwest({
       url:`http://${global.constants.ip}:${global.constants.port}/condition/getYield`,
       method:'post',
@@ -172,13 +179,13 @@ class AimTablePage extends Component{
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=v.yield;
+            columnTitle4[v.name]=(v.yield.toFixed(3));
             return ;
           })
           stationDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
           this.setState({stationTitle:stationHead,stationDataSource:stationDataSource})
         }
-        if(data.spcYields !== null){      //条形图数据
+        if(data.spcYields !== null && data.spcYields.length !== 0 ){      //条形图数据
           //整理出表格头(条形图x轴坐标值)
           const spcHead = [],spcYield=[],spcname=[];
           Object.keys(data.spcYields[0]).map((key,i)=>{
@@ -189,21 +196,30 @@ class AimTablePage extends Component{
             }
             return spcHead.push(object);
           })
-          //给值加唯一的key值
+          //给值加唯一的key值,整理条形图的数据
           data.spcYields.map((value,j)=>{
             spcname.push(value.name);
-            spcYield.push(value.yield);
+            spcYield.push(value.yield.toFixed(3));
+            //限制小数位数
+            Object.keys(value).map((key,i)=>{
+              if(key === 'name'){
+                return;
+              }else{
+                return value[key] = (value[key]).toFixed(3)
+              }
+            })
             return value.key=j;
           })
+
           this.setState({spcTitle:spcHead,spcDataSource:data.spcYields,spcYield:spcYield,spcname:spcname},this.drawBarAndLineChart)
         }else {
           this.setState({showBarChart:'none',spcTitle:[],spcDataSource:[],spcYield:[],spcname:[]},this.drawBarAndLineChart)
         }
-        if(data.timeYields !== null){     //线图数据
+        if(data.timeYields !== null && data.timeYields.length !== 0){     //线图数据
           const linetime=[],linedata=[]
           data.timeYields.map((linevalue,n)=>{
             linetime.push(linevalue.time);
-            return linedata.push(linevalue.yield)
+            return linedata.push(linevalue.yield.toFixed(3))
           })
           this.setState({lineTime:linetime,lineData:linedata},this.drawBarAndLineChart)
         }else {
@@ -225,7 +241,7 @@ class AimTablePage extends Component{
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=v.yield;
+            columnTitle4[v.name]=v.yield.toFixed(3);
             return ;
           })
           plusDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
@@ -234,7 +250,7 @@ class AimTablePage extends Component{
       })
   }
   clickStationName = e =>{
-    console.log('clickStationName====',e.target.innerText);
+    // console.log('clickStationName====',e.target.innerText);
     this.setState({showAimPlus:'none',showBarChart:'showBarChart',showLineChart:'showLineChart',station:e.target.innerText,aimIp:''},this.fetch);
   }
   drawBarAndLineChart(){
@@ -300,19 +316,24 @@ class AimTablePage extends Component{
       aimLineChart._$handlers.click.length = 0;
     }
     aimLineChart.on('click',(params)=>{
-      const startT = new Date(params.name).getTime()-8*3600*1000;        //点击的日期，默认开始时间是早8点，需要改为0-23:59:59点
-      const endT = new Date(params.name).getTime()+16*3600*1000-1000;
-      const timeR = {};
-      timeR.startTime = startT;
-      timeR.endTime = endT;
-      timeR.span = '8';
-      this.setState({clickLinePoint:true})
-      this.props.dispatch({
-        type:'global/saveTime',
-        payload:{
-          timeR
-        }
-      })
+      if(params.name.length >10){     //只有时间到日期格式2019-05-11时才能获取数据，否则不支持点击
+        console.log('此时间点不能点击!')
+      }else{
+        const startT = new Date(params.name).getTime()-8*3600*1000;        //点击的日期，默认开始时间是早8点，需要改为0-23:59:59点
+        const endT = new Date(params.name).getTime()+16*3600*1000-1000;
+        const timeR = {};
+        timeR.startTime = startT;
+        timeR.endTime = endT;
+        timeR.span = '8';
+        this.setState({clickLinePoint:true})
+        this.props.dispatch({
+          type:'global/saveTime',
+          payload:{
+            timeR
+          }
+        })
+      }
+
     })
   }
   clickStationPlus = e =>{
@@ -321,7 +342,7 @@ class AimTablePage extends Component{
   }
   clickPlusName = e =>{
     // console.log('clickplusName====',e.target.innerText);
-    this.setState({aimIp:e.target.innerText},this.fetch)
+    this.setState({aimIp:e.target.innerText,showBarChart:'showBarChart',showLineChart:'showLineChart'},this.fetch)
   }
 
   render(){
@@ -393,7 +414,7 @@ class AimTablePage extends Component{
         <div style={{width:'95%',margin:'0 auto'}}>
           <Table size="small" columns={stationColums} dataSource={this.state.stationDataSource} scroll={{x: 'max-content'}} pagination={false} />
           <div id={styles.aimPlusTable} className={this.state.showAimPlus}>
-            <p className={styles.tableName} >Reactive Table_Breakdown</p>
+            <p className={styles.tableName} style={{border:'none'}}>Reactive Table_Breakdown</p>
             <Table size="small" columns={plusTableColumns} dataSource={this.state.plusDataSource} scroll={{x: 'max-content'}} pagination={false} />
           </div>
         </div>

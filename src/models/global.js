@@ -12,14 +12,14 @@ export default {
       span:'8'
     },
     topSelectItem:{
-      site:'',
-      productCode:'',
-      color:'',
-      build:'',
-      speacilBuild:'',
-      wifiOr4g:'',
+      site: "",
+      product: "",
+      color: [],      //有全选和单选之分，全选时需要列出全部选择项
+      build: "",
+      special_build:"",
+      wifi: []
     },
-    mapping:''
+    mapping:{}
   },
 
   effects: {
@@ -39,7 +39,7 @@ export default {
       yield put({
         type:'saveSelect',
         payload:{
-          topSelectItem:  Object.assign({},oldTopSelectItem ,payload.item)
+          topSelectItem:  Object.assign({},oldTopSelectItem ,payload.selectItem)
         }
       })
     },
