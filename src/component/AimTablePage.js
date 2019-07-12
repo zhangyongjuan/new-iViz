@@ -6,95 +6,6 @@ import styles from './AimTablePage.less'
 import {connect} from "react-redux";
 
 //Aim station 表格头部信息
-// const stationTitle = ['Spline magnet loading force','Orion_gap_offset','RC/Strobe Gap/Offset','Inner XY','Datum A Flatness',
-//   'Split Width/Offset(4G)','Noodle_gap_offset','HE'];
-const plusTableTitle = ['AIM#1','AIM#2','AIM#3','AIM#4','AIM#5','AIM#6'];
-const stationDataSource = [
-  {
-    key: '1',
-    type:'Input',
-    'Spline magnet loading force': 115,
-    'Orion_gap_offset': 32,
-    'RC/Strobe Gap/Offset': 45545,
-    'Inner XY': 455,
-    'Datum A Flatness':54148,
-    'Split Width/Offset(4G)':454,
-    'Noodle_gap_offset':45889,
-    'HE':85258
-  },{
-    key: '2',
-    type:'Ok',
-    'Spline magnet loading force': 115,
-    'Orion_gap_offset': 32,
-    'RC/Strobe Gap/Offset': 45545,
-    'Inner XY': 455,
-    'Datum A Flatness':54148,
-    'Split Width/Offset(4G)':454,
-    'Noodle_gap_offset':45889,
-    'HE':85258
-  },{
-    key: '3',
-    type:'NG',
-    'Spline magnet loading force': 115,
-    'Orion_gap_offset': 32,
-    'RC/Strobe Gap/Offset': 45545,
-    'Inner XY': 455,
-    'Datum A Flatness':54148,
-    'Split Width/Offset(4G)':454,
-    'Noodle_gap_offset':45889,
-    'HE':85258
-  },{
-    key: '4',
-    type:'Yield',
-    'Spline magnet loading force': 115,
-    'Orion_gap_offset': 32,
-    'RC/Strobe Gap/Offset': 45545,
-    'Inner XY': 455,
-    'Datum A Flatness':54148,
-    'Split Width/Offset(4G)':454,
-    'Noodle_gap_offset':45889,
-    'HE':85258
-  }
-  ];
-const plusDataSource = [
-  {
-    key: '1',
-    type:'Input',
-    'AIM#1': 115,
-    'AIM#2': 32,
-    'AIM#3': 45545,
-    'AIM#4': 455,
-    'AIM#5':54148,
-    'AIM#6':454,
-  },{
-    key: '2',
-    type:'Ok',
-    'AIM#1': 115,
-    'AIM#2': 32,
-    'AIM#3': 45545,
-    'AIM#4': 455,
-    'AIM#5':54148,
-    'AIM#6':454,
-  },{
-    key: '3',
-    type:'NG',
-    'AIM#1': 115,
-    'AIM#2': 32,
-    'AIM#3': 45545,
-    'AIM#4': 455,
-    'AIM#5':54148,
-    'AIM#6':454,
-  },{
-    key: '4',
-    type:'Yield',
-    'AIM#1': 115,
-    'AIM#2': 32,
-    'AIM#3': 45545,
-    'AIM#4': 455,
-    'AIM#5':54148,
-    'AIM#6':454,
-  }
-]
 
 @connect(({global}) => ({
   global
@@ -154,7 +65,7 @@ class AimTablePage extends Component{
     const initcondition = {};
     initcondition.data = {};
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp}));
-    // console.log('取数据的条件',initcondition.data);
+    console.log('取数据的条件',initcondition.data);
     reqwest({
       url:`http://${global.constants.ip}:${global.constants.port}/condition/getYield`,
       method:'post',
@@ -401,6 +312,7 @@ class AimTablePage extends Component{
     firstColumn.key='type';
     firstColumn.dataIndex ='type';
     firstColumn.fixed='left';
+    firstColumn.width=10;
     stationColums.unshift(firstColumn);
     plusTableColumns.unshift(firstColumn);
     return(

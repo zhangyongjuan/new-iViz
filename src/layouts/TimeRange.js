@@ -15,14 +15,22 @@ const {Option} = Select;
 class TimeRange extends Component {
   state = {
     timeRange: {},
-    selectOption:{},
-    SelectItem:{
+    selectOption:{},   //selectOption为所有选择项
+    SelectItem:{       //SelectItem为已选择的项
       site: "",
       product: "",
       color: [],      //有全选和单选之分，全选时需要列出全部选择项
       build: "",
       special_build:"",
       wifi: []         //有全选和单选之分，全选时需要列出全部选择项
+    },
+    selectNowValue:{
+      sites: [],
+      products: [],
+      colors: [],
+      builds: [],
+      special_builds:[],
+      wifis: []
     }
   }
   timeChange = (value, dateString) => {
@@ -56,7 +64,7 @@ class TimeRange extends Component {
       data:con
     })
       .then(data=>{
-        // console.log('获取的顶部时间和下拉框===',data);
+        console.log('获取的顶部时间和下拉框===',data);
         //更新时间段
         const timeR = {};
         timeR.startTime = data.timeStart;
@@ -69,7 +77,7 @@ class TimeRange extends Component {
             timeR
           }
         })
-      //  更新下拉框
+      //  更新下拉框,selectOption为所有选择项
         data.colors.unshift('all');
         data.wifis.unshift('all');
         const selectOption = Object.assign({},data);
@@ -77,14 +85,21 @@ class TimeRange extends Component {
         delete selectOption.timeEnd;
         this.setState({selectOption:selectOption});
       //  更新默认选项
-        const selectItem = {};
+        const selectItem = {},nowValue={};
           selectItem.site= data.sites[0];
           selectItem.product= data.products[0];
           selectItem.color= data.colors;
           selectItem.build= data.builds[0];
           selectItem.special_build=data.special_builds[0];
           selectItem.wifi= data.wifis;
-        this.setState({SelectItem:selectItem});
+        nowValue.sites= [data.sites[0]];
+        nowValue.products= [data.products[0]];
+        nowValue.colors= data.colors;
+        nowValue.builds= [data.builds[0]];
+        nowValue.special_builds=[data.special_builds[0]];
+        nowValue.wifis= data.wifis;
+        this.setState({SelectItem:selectItem,selectNowValue:nowValue});
+        console.log('默认已选择项--',selectItem)
         //把默认选项存入store中
         this.props.dispatch({
           type:'global/saveSelectCondition',
@@ -96,29 +111,38 @@ class TimeRange extends Component {
   }
   handleChange = (value,key) => {
     console.log(`selected ${key}:${value}`);
-    const selectItem = {};
+    const selectItem = {},nowValue = {};
     switch (key) {
       case 'sites':
         selectItem.site = value;
+        nowValue.sites = [value];
         break;
       case 'products':
         selectItem.product = value;
+        nowValue.products = [value];
         break;
       case 'colors':
         value === 'all' ? selectItem.color = this.state.selectOption.colors : selectItem.color = [value];
+        value === 'all' ? nowValue.colors = this.state.selectOption.colors : nowValue.colors = [value];
         break;
       case 'builds':
         selectItem.build = value;
+        nowValue.builds = [value];
         break;
       case 'speacil_Builds':
         selectItem.special_build = value;
+        nowValue.special_builds = [value];
         break;
       case 'wifis':
         value === 'all' ? selectItem.wifi = this.state.selectOption.wifis : selectItem.wifi = [value];
+        value === 'all' ? nowValue.wifis = this.state.selectOption.wifis : nowValue.wifis = [value];
         break;
       default:
         break;
     }
+    const select = Object.assign({},this.state.SelectItem,selectItem);
+    const nowselct = Object.assign({},this.state.selectNowValue,nowValue);
+    this.setState({SelectItem:select,selectNowValue:nowselct});
     this.props.dispatch({
       type:'global/saveSelectCondition',
       payload:{
@@ -148,7 +172,7 @@ class TimeRange extends Component {
 
           {
             Object.keys(this.state.selectOption).map((key, i) =>
-              <Select key={key} defaultValue={this.state.selectOption[key].length !== 0 ? this.state.selectOption[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
+              <Select key={key} value={this.state.selectNowValue[key].length !== 0 ? this.state.selectNowValue[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
                 <Option className={styles.topselectOption} value='disabled' disabled>{key}</Option>
                 {
                   this.state.selectOption[key].map((v, k) =>
