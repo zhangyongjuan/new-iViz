@@ -6,7 +6,38 @@ import styles from './AimTablePage.less'
 import {connect} from "react-redux";
 
 //Aim station 表格头部信息
-
+const spcHead = [
+  {
+    key:'name',
+    title:'SPC',
+    dataIndex:'name',
+    render:(text)=><span style={{fontWeight:'bold',color:'rgba(0, 0, 0, 0.85)'}}>{text}</span>
+  },{
+    key:'lsl',
+    title:'LSL',
+    dataIndex:'lsl'
+  },{
+    key:'norminal',
+    title:'Norminal',
+    dataIndex:'norminal'
+  },{
+    key:'usl',
+    title:'USL',
+    dataIndex:'usl'
+  },{
+    key:'actualMean',
+    title:'Actual Mean',
+    dataIndex:'actualMean'
+  },{
+    key:'yield',
+    title:'Yield',
+    dataIndex:'yield'
+  },{
+    key:'cpk',
+    title:'cpk',
+    dataIndex:'cpk'
+  }
+]
 @connect(({global}) => ({
   global
 }))
@@ -39,7 +70,7 @@ class AimTablePage extends Component{
     lineTime:[],
     lineData:[],
   //  是否是通过点击线图更改时间
-    clickLinePoint:false
+    clickLinePoint:false,
   }
   componentDidMount() {
     this.fetch();
@@ -67,30 +98,30 @@ class AimTablePage extends Component{
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp}));
     console.log('取数据的条件',initcondition.data);
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getYield`,
+      url:`${global.constants.ip}/condition/getYield`,
       method:'post',
       type:'json',
       data:initcondition
     })
       .then(data=>{
-        // console.log("初始条件获得数据",data);
+        console.log("初始条件获得数据",data);
         if(data.stationYield !== null){
           const stationHead = [],stationDataSource=[];
           const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};
-          columnTitle1.type='input';
+          columnTitle1.type='Input';
           columnTitle1.key=1;
-          columnTitle2.type='ok';
+          columnTitle2.type='OK';
           columnTitle2.key=2;
-          columnTitle3.type='ng';
+          columnTitle3.type='NG';
           columnTitle3.key=3;
-          columnTitle4.type='yield';
+          columnTitle4.type='Yield';
           columnTitle4.key=4;
           data.stationYield.map((v,i)=>{
             stationHead.push(v.name);
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=(v.yield.toFixed(3));
+            columnTitle4[v.name]=((v.yield*100).toFixed(3))+'%';
             return ;
           })
           stationDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
@@ -98,25 +129,27 @@ class AimTablePage extends Component{
         }
         if(data.spcYields !== null && data.spcYields.length !== 0 ){      //条形图数据
           //整理出表格头(条形图x轴坐标值)
-          const spcHead = [],spcYield=[],spcname=[];
-          Object.keys(data.spcYields[0]).map((key,i)=>{
-            const object = {
-              key:key,
-              title:key,
-              dataIndex:key
-            }
-            return spcHead.push(object);
-          })
+          const spcYield=[],spcname=[];
+          // Object.keys(data.spcYields[0]).map((key,i)=>{
+          //   const object = {
+          //     key:key,
+          //     title:key,
+          //     dataIndex:key
+          //   }
+          //   return spcHead.push(object);
+          // })
           //给值加唯一的key值,整理条形图的数据
           data.spcYields.map((value,j)=>{
             spcname.push(value.name);
-            spcYield.push(value.yield.toFixed(3));
+            spcYield.push((value.yield*100).toFixed(3));
             //限制小数位数
             Object.keys(value).map((key,i)=>{
               if(key === 'name'){
                 return;
+              }else if(key === 'yield'){
+                return value[key] = (value[key]*100).toFixed(3) +'%'
               }else{
-                return value[key] = (value[key]).toFixed(3)
+                return value[key] = value[key].toFixed(3)
               }
             })
             return value.key=j;
@@ -130,7 +163,7 @@ class AimTablePage extends Component{
           const linetime=[],linedata=[]
           data.timeYields.map((linevalue,n)=>{
             linetime.push(linevalue.time);
-            return linedata.push(linevalue.yield.toFixed(3))
+            return linedata.push((linevalue.yield*100).toFixed(3))
           })
           this.setState({lineTime:linetime,lineData:linedata},this.drawBarAndLineChart)
         }else {
@@ -139,20 +172,20 @@ class AimTablePage extends Component{
         if(data.aimYield && data.aimYield !== null){       //下级数据
           const plusHead = [],plusDataSource=[];
           const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};
-          columnTitle1.type='input';
+          columnTitle1.type='Input';
           columnTitle1.key=1;
-          columnTitle2.type='ok';
+          columnTitle2.type='OK';
           columnTitle2.key=2;
-          columnTitle3.type='ng';
+          columnTitle3.type='NG';
           columnTitle3.key=3;
-          columnTitle4.type='yield';
+          columnTitle4.type='Yield';
           columnTitle4.key=4;
           data.aimYield.map((v,i)=>{
             plusHead.push(v.name);
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=v.yield.toFixed(3);
+            columnTitle4[v.name]=(v.yield*100).toFixed(3)+'%';
             return ;
           })
           plusDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
@@ -171,17 +204,18 @@ class AimTablePage extends Component{
       tooltip:{},
       xAxis: {
         type: 'value',
+        name: 'yield / %',
         axisLine:{
           show:false
         },
         splitLine:{
           show:false
-        }
+        },
+        scale:true,
       },
       yAxis: {
         data: this.state.spcname,
         type: 'category',
-
       },
       series: [{
         data: this.state.spcYield,
@@ -198,12 +232,14 @@ class AimTablePage extends Component{
       },
       yAxis: {
         type: 'value',
+        name: 'yield / %',
         axisLine:{
           show:false
         },
         splitLine:{
           show:false
-        }
+        },
+        scale:true,
       },
       series: [{
         data: this.state.lineData,
@@ -255,7 +291,6 @@ class AimTablePage extends Component{
     // console.log('clickplusName====',e.target.innerText);
     this.setState({aimIp:e.target.innerText,showBarChart:'showBarChart',showLineChart:'showLineChart'},this.fetch)
   }
-
   render(){
     // console.log('state----',this.props.global);
     const stationColums =[],plusTableColumns = [];
@@ -281,6 +316,8 @@ class AimTablePage extends Component{
           }
         }
       }
+      column.render = (text,record)=>record.type === 'Yield' && Number(text.split('%')[0]) > 95 ? <span style={{color:'green'}}>{text}</span> :<span style={{color:'black'}}>{text}</span>
+      
       return stationColums.push(column);
     });
     this.state.plusTitle.map((title,k)=>{

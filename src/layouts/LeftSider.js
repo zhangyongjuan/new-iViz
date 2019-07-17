@@ -37,20 +37,28 @@ class LeftSider extends Component{
         />
         <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.state.current]} defaultSelectedKeys={['4']}>
           <Menu.Item key="1">
-            <Icon type="line-chart" />
-            <span><Link to='/test'>Full Inspection</Link></span>
+            <Link to='/fullInspection'>
+              <Icon type="line-chart" />
+              <span>Full Inspection</span>
+            </Link>
           </Menu.Item>
           <Menu.Item key="2">
-            <Icon type="sliders" />
-            <span><Link to='/'>IPQC</Link></span>
+            <Link to='/'>
+              <Icon type="sliders" />
+              <span>IPQC</span>
+            </Link>
           </Menu.Item>
           <Menu.Item key="3">
-            <Icon type="cluster" />
-            <span><Link to='/'>ORT</Link></span>
+            <Link to='/'>
+              <Icon type="cluster" />
+              <span>ORT</span>
+            </Link>
           </Menu.Item>
           <Menu.Item key="4" >
-            <Icon type="bar-chart" />
-            <span><Link to='/'>AIM</Link></span>
+            <Link to='/'>
+              <Icon type="bar-chart" />
+              <span>AIM</span>
+            </Link>
           </Menu.Item>
           {/*<SubMenu*/}
           {/*  key="sub4"*/}

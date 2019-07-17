@@ -96,7 +96,7 @@ class NewHeader extends Component {
     let timeN = {};
     timeN.data = JSON.stringify(T);
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/get`,
+      url:`${global.constants.ip}/condition/get`,
       method:'get',
       type:'json',
       data:timeN
@@ -140,7 +140,7 @@ class NewHeader extends Component {
     bigContainer.data = JSON.stringify(data);
     this.setState({select2:data.aims,title2:e.key,title3:'condition3'},this.test)
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition3`,
+      url:`${global.constants.ip}/condition/getCondition3`,
       method:'get',
       type:'json',
       data:bigContainer
@@ -170,7 +170,7 @@ class NewHeader extends Component {
     container.data = JSON.stringify(d3_4)
     this.setState({title3_4:e.key,select3_4:s3_4,title4:'condition4',title5:'condition5'})
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition4`,
+      url:`${global.constants.ip}/condition/getCondition4`,
       method:'get',
       type:'json',
       data:container
@@ -209,7 +209,7 @@ class NewHeader extends Component {
     this.setState({select4:machine4,title4:e.key})
 
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition5`,
+      url:`${global.constants.ip}/condition/getCondition5`,
       method:'get',
       type:'json',
       data:container
@@ -241,7 +241,7 @@ class NewHeader extends Component {
     this.setState({select5:machine5,title5:e.key});
 
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition6`,
+      url:`${global.constants.ip}/condition/getCondition6`,
       method:'get',
       type:'json',
       data:container
@@ -262,7 +262,7 @@ class NewHeader extends Component {
   }
   getcondition7(getCondition7){
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition7`,
+      url:`${global.constants.ip}/condition/getCondition7`,
       method:'get',
       type:'json',
       data:getCondition7
@@ -370,7 +370,7 @@ class NewHeader extends Component {
       container.data = JSON.stringify(d3_4);
 
       reqwest({
-        url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition5`,
+        url:`${global.constants.ip}/condition/getCondition5`,
         method:'get',
         type:'json',
         data:container
@@ -385,7 +385,7 @@ class NewHeader extends Component {
   }
   getcondition6(container){
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getCondition6`,
+      url:`${global.constants.ip}/condition/getCondition6`,
       method:'get',
       type:'json',
       data:container

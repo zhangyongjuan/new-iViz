@@ -58,13 +58,13 @@ class TimeRange extends Component {
     const con = {};
     con.data=JSON.stringify(this.state.timeRange);
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/getTimeRange`,
+      url:`${global.constants.ip}/condition/getTimeRange`,
       method:'get',
       type:'json',
       data:con
     })
       .then(data=>{
-        console.log('获取的顶部时间和下拉框===',data);
+        // console.log('获取的顶部时间和下拉框===',data);
         //更新时间段
         const timeR = {};
         timeR.startTime = data.timeStart;
@@ -99,7 +99,7 @@ class TimeRange extends Component {
         nowValue.special_builds=[data.special_builds[0]];
         nowValue.wifis= data.wifis;
         this.setState({SelectItem:selectItem,selectNowValue:nowValue});
-        console.log('默认已选择项--',selectItem)
+        // console.log('默认已选择项--',selectItem)
         //把默认选项存入store中
         this.props.dispatch({
           type:'global/saveSelectCondition',
@@ -161,6 +161,7 @@ class TimeRange extends Component {
           format="YYYY-MM-DD HH:mm:ss"
           onChange={this.timeChange}
           onOk={this.onOk}
+          allowClear={false}
           showTime={{
             hideDisabledOptions: true,
             defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]
@@ -172,7 +173,7 @@ class TimeRange extends Component {
 
           {
             Object.keys(this.state.selectOption).map((key, i) =>
-              <Select key={key} value={this.state.selectNowValue[key].length !== 0 ? this.state.selectNowValue[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
+              <Select key={key} value={this.state.selectNowValue[key][0] !== undefined ? this.state.selectNowValue[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
                 <Option className={styles.topselectOption} value='disabled' disabled>{key}</Option>
                 {
                   this.state.selectOption[key].map((v, k) =>

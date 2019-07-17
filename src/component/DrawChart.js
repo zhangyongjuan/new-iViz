@@ -58,6 +58,7 @@ class DrawChart extends Component{
           xAxis: this.state.lineChart.xAxis,
           yAxis: [{
             type: 'value',
+            name: 'yield / %',
             splitLine: {show: true}
           }],
           // toolbox: {
@@ -119,6 +120,7 @@ class DrawChart extends Component{
           ],
           yAxis : [
             {
+              name: 'yield / %',
               type : 'value'
             }
           ],
@@ -256,11 +258,11 @@ class DrawChart extends Component{
                   // console.log('盒须图param===========',param)
                   return [
                     'Experiment ' + param.name + ': ',
-                    'upper: ' + param.data[5],
-                    'Q3: ' + param.data[4],
-                    'median: ' + param.data[3],
-                    'Q1: ' + param.data[2],
-                    'lower: ' + param.data[1],
+                    'upper: ' + param.data[5].toFixed(3),
+                    'Q3: ' + param.data[4].toFixed(3),
+                    'median: ' + param.data[3].toFixed(3),
+                    'Q1: ' + param.data[2].toFixed(3),
+                    'lower: ' + param.data[1].toFixed(3),
                     'errorCount: '+hexudata.series[0].errNum[param.dataIndex],
                     'totalCount: '+hexudata.series[0].total[param.dataIndex],
                     // 'count:' + hexudata.count[0][1]
@@ -270,12 +272,21 @@ class DrawChart extends Component{
               markLine : {
                 data:[
                   {
-                    name: '最小值',
+                    name: 'low_limit',
                     yAxis: hexudata.low_limit
                   },
                   {
-                    name: '最大值',
+                    name: 'up_limit',
                     yAxis: hexudata.up_limit
+                  },
+                  {
+                    name: 'normal',
+                    yAxis: hexudata.norminal,
+                    lineStyle:{
+                      type:'dashed',
+                      width:1,
+                      color:'#666',
+                    }
                   },
                 ],
                 lineStyle:{
@@ -306,23 +317,29 @@ class DrawChart extends Component{
     const container = {};
     container.data = JSON.stringify(selectData);
     reqwest({
-      url:`http://${global.constants.ip}:${global.constants.port}/condition/goChart`,
+      url:`${global.constants.ip}/condition/goChart`,
       method:'get',
       type:'json',
       data:container
     })
       .then(data=>{
-        // console.log('图表数据---',data);
+        console.log('图表数据---',data);
         // react data
         if(data.blockChart !== null && data.blockChart !== undefined){
           data.blockChart.series[0].data = data.blockChart.series[0].data.map((num,i)=>{
-            return parseFloat(num).toFixed(2);
+            return (parseFloat(num)*100).toFixed(3);
           })
           this.setState({reactChart:data.blockChart})
         }else{
           this.setState({reactChart:{}})
         }
         if(data.lineChart !== null && data.lineChart !== undefined){
+          data.lineChart.series.map((item,i)=>{
+            item.data = item.data.map((d,j)=>{
+              return (parseFloat(d)*100).toFixed(3);
+               // console.log(item)
+            })
+          })
           this.setState({lineChart:data.lineChart})
         }else{
           this.setState({lineChart:{}})
