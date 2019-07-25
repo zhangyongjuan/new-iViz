@@ -1,7 +1,7 @@
 
 html, body, #root {
   height: 100%;
-  font-family: "Arial Rounded";
+  font-family: "Arial";
 }
 
 body {
@@ -32,11 +32,24 @@ body {
   transform: translateY(200px);
   z-index: 1 !important;
 }
+.particularHeatmap{
+  transition: all 1s;
+  height: 700px !important;
+  transform: translateY(220px);
+  z-index: 1 !important;
+}
+.particularLine{
+  transition: all 1s;
+  height: 320px !important;
+  transform: translateY(220px);
+  z-index: 1 !important;
+}
 .ant-table table{
   text-align: center;
   color:black;
 }
-.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th{
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th,
+.ant-table-small > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th{
   text-align: center;
   /*color:black;*/
   font-weight: bold;

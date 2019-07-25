@@ -22,4 +22,13 @@
 .list code {
   background: #f7f7f7;
 }
+.tableName{
+  border-left:4px #ff6d02 solid;
+  height: 36px;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 36px;
+  padding-left: 20px;
+  color:rgba(0,0,0,0.85)
+}
 

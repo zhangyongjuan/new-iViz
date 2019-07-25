@@ -22,15 +22,17 @@
   position: fixed;
   z-index: 999;
 }
-.title {
+.title{
   height: 45px;
   margin-left: 20px;
   display: inline-block;
   line-height: 45px;
   font-size: 16px;
-  color: #ff6d02;
   float: left;
   font-weight: bold;
+}
+.title > a{
+  color: #ff6d02;
 }
 .setting{
   display:inline-block;
@@ -50,7 +52,7 @@
   height:135px;
   /*border:1px yellow solid;*/
   line-height: 135px;
-  padding-left: 100px;
+  padding-left: 50px;
   overflow: hidden;
 }
 .topSelect{

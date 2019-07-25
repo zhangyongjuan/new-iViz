@@ -8,7 +8,7 @@ const { Sider } = Layout;
 class LeftSider extends Component{
   state = {
     collapsed: false,
-    current:'4',
+    current:'0',
   };
   componentDidMount() {
     if(localStorage.getItem('current')){
@@ -35,7 +35,7 @@ class LeftSider extends Component{
           onClick={this.toggle}
           style={{color:'white',fontSize:'16px',position:'relative',margin:'20px'}}
         />
-        <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.state.current]} defaultSelectedKeys={['4']}>
+        <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.state.current]}>
           <Menu.Item key="1">
             <Link to='/fullInspection'>
               <Icon type="line-chart" />
@@ -55,7 +55,7 @@ class LeftSider extends Component{
             </Link>
           </Menu.Item>
           <Menu.Item key="4" >
-            <Link to='/'>
+            <Link to='/aim'>
               <Icon type="bar-chart" />
               <span>AIM</span>
             </Link>

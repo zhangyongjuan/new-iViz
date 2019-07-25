@@ -64,7 +64,7 @@ class TimeRange extends Component {
       data:con
     })
       .then(data=>{
-        // console.log('获取的顶部时间和下拉框===',data);
+        console.log('获取的顶部时间和下拉框===',data);
         //更新时间段
         const timeR = {};
         timeR.startTime = data.timeStart;
@@ -78,8 +78,15 @@ class TimeRange extends Component {
           }
         })
       //  更新下拉框,selectOption为所有选择项
-        data.colors.unshift('all');
-        data.wifis.unshift('all');
+        if(data.colors.length !== 0){
+          data.colors.unshift('all');
+        }
+        if(data.wifis.length !== 0){
+          data.wifis.unshift('all');
+        }
+        if(data.special_builds.length !== 0){
+          data.special_builds.unshift('all');
+        }
         const selectOption = Object.assign({},data);
         delete selectOption.timeStart;
         delete selectOption.timeEnd;
@@ -90,16 +97,16 @@ class TimeRange extends Component {
           selectItem.product= data.products[0];
           selectItem.color= data.colors;
           selectItem.build= data.builds[0];
-          selectItem.special_build=data.special_builds[0];
+          selectItem.special_build=data.special_builds;
           selectItem.wifi= data.wifis;
         nowValue.sites= [data.sites[0]];
         nowValue.products= [data.products[0]];
         nowValue.colors= data.colors;
         nowValue.builds= [data.builds[0]];
-        nowValue.special_builds=[data.special_builds[0]];
+        nowValue.special_builds=data.special_builds;
         nowValue.wifis= data.wifis;
         this.setState({SelectItem:selectItem,selectNowValue:nowValue});
-        // console.log('默认已选择项--',selectItem)
+        // console.log('初始条件--',selectItem)
         //把默认选项存入store中
         this.props.dispatch({
           type:'global/saveSelectCondition',
@@ -129,9 +136,9 @@ class TimeRange extends Component {
         selectItem.build = value;
         nowValue.builds = [value];
         break;
-      case 'speacil_Builds':
-        selectItem.special_build = value;
-        nowValue.special_builds = [value];
+      case 'special_builds':
+        value === 'all' ? selectItem.special_build = this.state.selectOption.special_builds : selectItem.special_build = [value];
+        value === 'all' ? nowValue.special_builds = this.state.selectOption.special_builds : nowValue.special_builds = [value];
         break;
       case 'wifis':
         value === 'all' ? selectItem.wifi = this.state.selectOption.wifis : selectItem.wifi = [value];
@@ -143,6 +150,7 @@ class TimeRange extends Component {
     const select = Object.assign({},this.state.SelectItem,selectItem);
     const nowselct = Object.assign({},this.state.selectNowValue,nowValue);
     this.setState({SelectItem:select,selectNowValue:nowselct});
+    console.log('更改条件---',select)
     this.props.dispatch({
       type:'global/saveSelectCondition',
       payload:{

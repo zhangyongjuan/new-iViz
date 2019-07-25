@@ -25,17 +25,13 @@ const spcHead = [
     title:'USL',
     dataIndex:'usl'
   },{
-    key:'actualMean',
-    title:'Actual Mean',
-    dataIndex:'actualMean'
-  },{
     key:'yield',
     title:'Yield',
     dataIndex:'yield'
   },{
-    key:'cpk',
-    title:'cpk',
-    dataIndex:'cpk'
+    key:'std',
+    title:'std',
+    dataIndex:'std'
   }
 ]
 @connect(({global}) => ({
@@ -96,7 +92,7 @@ class AimTablePage extends Component{
     const initcondition = {};
     initcondition.data = {};
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp}));
-    console.log('取数据的条件',initcondition.data);
+    // console.log('取数据的条件',initcondition.data);
     reqwest({
       url:`${global.constants.ip}/condition/getYield`,
       method:'post',
@@ -128,6 +124,10 @@ class AimTablePage extends Component{
           this.setState({stationTitle:stationHead,stationDataSource:stationDataSource})
         }
         if(data.spcYields !== null && data.spcYields.length !== 0 ){      //条形图数据
+          //首先从大到小排序
+          data.spcYields.sort((a,b)=>{
+            return b.yield-a.yield
+          })
           //整理出表格头(条形图x轴坐标值)
           const spcYield=[],spcname=[];
           // Object.keys(data.spcYields[0]).map((key,i)=>{
@@ -141,9 +141,12 @@ class AimTablePage extends Component{
           //给值加唯一的key值,整理条形图的数据
           data.spcYields.map((value,j)=>{
             spcname.push(value.name);
-            spcYield.push((value.yield*100).toFixed(3));
+            //条形图不良率计算
+            spcYield.push(((1-value.yield)*100).toFixed(3));
             //限制小数位数
             Object.keys(value).map((key,i)=>{
+              if(value[key] === null)
+                return;
               if(key === 'name'){
                 return;
               }else if(key === 'yield'){
@@ -204,7 +207,7 @@ class AimTablePage extends Component{
       tooltip:{},
       xAxis: {
         type: 'value',
-        name: 'yield / %',
+        name: 'defect yield / %',
         axisLine:{
           show:false
         },
@@ -220,7 +223,13 @@ class AimTablePage extends Component{
       series: [{
         data: this.state.spcYield,
         type: 'bar',
-        barWidth:'60%'
+        barWidth:'60%',
+        label: {
+          normal: {
+            show: true,
+              position: 'insideRight'
+          }
+        },
       }]
     };
     const aimlineOption = {
@@ -354,7 +363,7 @@ class AimTablePage extends Component{
     plusTableColumns.unshift(firstColumn);
     return(
       <div>
-        <p className={styles.tableName} >Reactive Table</p>
+        <p className={styles.tableName} >AIM dash board</p>
         {/*
           ** AIM table ，AIM# table ,barchart ,table ,linechart dispaly none;
           ** click station name,barchart ,table and linecahrt will change , for the selected station

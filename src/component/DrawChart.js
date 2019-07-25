@@ -59,7 +59,8 @@ class DrawChart extends Component{
           yAxis: [{
             type: 'value',
             name: 'yield / %',
-            splitLine: {show: true}
+            splitLine: {show: true},
+            scale: true
           }],
           // toolbox: {
           //   show: true,
@@ -114,14 +115,15 @@ class DrawChart extends Component{
                 interval: 0,
                 // rotate:-10,
                 align:'center',
-                margin:20,
+                margin:10,
               }
             }
           ],
           yAxis : [
             {
               name: 'yield / %',
-              type : 'value'
+              type : 'value',
+              scale: true
             }
           ],
           dataZoom: [
@@ -129,19 +131,25 @@ class DrawChart extends Component{
               show: true,
               realtime: true,
               start: 0,
-              end: 100,
+              end: 70,
+              showDataShadow: false,
+              height:15,
+              handleSize:20,
+              handleStyle:{
+                color:'gray'
+              }
             },
             {
               type: 'inside',
               realtime: true,
               start: 0,
-              end: 100,
+              end: 70,
             }
           ],
           series : this.state.reactChart.series,
           label: {
             show: true,
-            position: 'insideTop'
+            position: 'top'
           },
         };
         rectChart.setOption(rectoption);
@@ -156,6 +164,7 @@ class DrawChart extends Component{
         hexudata.count.push(['0','100'])
         let limit_min = hexudata.low_limit;
         let limit_max = hexudata.up_limit;
+        console.log('hexudata.series[0].data',hexudata.series[0].data)
         const hexuoption = {
           title: [
             {
@@ -173,7 +182,6 @@ class DrawChart extends Component{
             //   top: '85%'
             // }
           ],
-
           itemStyle:{
             borderColor:'#333',
             color:'#333'
@@ -195,14 +203,36 @@ class DrawChart extends Component{
               realtime: true,
               start: 0,
               end: 100,
+              bottom:40,
+              xAxisIndex:[0],
+              showDataShadow: false,
+              height:15,
+              handleSize:20,
+              handleStyle:{
+                color:'gray'
+              }
 
             },
             {
               type: 'inside',
               realtime: true,
+              xAxisIndex:[0],
               start: 0,
               end: 100,
-
+            },
+            {
+              type: 'slider',
+              showDetail:false,
+              show: true,
+              yAxisIndex: 0,
+              // filterMode: 'empty',
+              width: 15,
+              handleSize:20,
+              showDataShadow: false,
+              left: '6%',
+              handleStyle:{
+                color:'gray'
+              }
             }
           ],
           xAxis: {
@@ -313,7 +343,7 @@ class DrawChart extends Component{
     let now = {};
     now.timeRange= this.props.global.dateTime;
     let selectData = Object.assign({},{mapping:this.props.global.topSelectItem},now,this.state.drawchartRequest);
-    console.log('selectData',selectData)
+    // console.log('selectData',selectData)
     const container = {};
     container.data = JSON.stringify(selectData);
     reqwest({
@@ -323,11 +353,20 @@ class DrawChart extends Component{
       data:container
     })
       .then(data=>{
-        console.log('图表数据---',data);
+        // console.log('图表数据---',data);
         // react data
         if(data.blockChart !== null && data.blockChart !== undefined){
           data.blockChart.series[0].data = data.blockChart.series[0].data.map((num,i)=>{
             return (parseFloat(num)*100).toFixed(3);
+          })
+          //柱子宽度改为30%
+          data.blockChart.series[0].barWidth='30%';
+          //柱状图的目录值过长，奇数坐标添加\n
+          data.blockChart.xAxis.data = data.blockChart.xAxis.data.map((categroy,j)=>{
+            if(j % 2 === 1)
+              return `\n${categroy}`
+            else
+              return categroy
           })
           this.setState({reactChart:data.blockChart})
         }else{
