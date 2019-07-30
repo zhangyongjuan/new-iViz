@@ -25,6 +25,8 @@ body {
   height: 800px !important;
   transform: translateY(200px);
   z-index: 1 !important;
+  /*overflow-y: scroll;*/
+  /*overflow-x: hidden;*/
 }
 .showLineChart{
   transition: all 1s;
@@ -58,3 +60,63 @@ body {
   font-weight: bold;
   color:rgba(0,0,0,0.85);
 }
+.ant-table-small > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th{
+  text-align: center;
+  font-weight: bold;
+}
+/*  下载弹框  */
+.ant-drawer-open{
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  position: fixed;
+}
+.ant-drawer{
+  transition: transform .3s cubic-bezier(.7, .3, .1, 1),
+  -webkit-transform .3s cubic-bezier(.7, .3, .1, 1);
+}
+.ant-drawer.ant-drawer-open .ant-drawer-mask{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.25);
+}
+
+.ant-drawer-content-wrapper{
+  width: 256px;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.15);
+  right: 0;
+  position: fixed;
+  height: 100%;
+  background: white;
+}
+.ant-drawer>*{
+  transition: transform .3s cubic-bezier(.7, .3, .1, 1),
+  box-shadow .3s cubic-bezier(.7, .3, .1, 1),
+  -webkit-transform .3s cubic-bezier(.7, .3, .1, 1),
+  -webkit-box-shadow .3s cubic-bezier(.7, .3, .1, 1);
+}
+.ant-drawer-header{
+  position: relative;
+  padding: 16px 24px;
+  color: rgba(0,0,0,0.65);
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  border-radius: 4px 4px 0 0;
+}
+.ant-drawer-header .ant-drawer-title{
+  margin: 0;
+  color: rgba(0,0,0,0.85);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 22px;
+}
+.ant-drawer-body ul>li{
+  height:40px;
+  line-height: 40px;
+}
+

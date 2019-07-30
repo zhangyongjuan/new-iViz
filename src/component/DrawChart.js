@@ -1,12 +1,12 @@
 import React,{ Component } from 'react';
-import {Button} from 'antd/lib/index';
+import { Button,Icon,Drawer } from 'antd/lib/index';
 import echarts from 'echarts';
-import NewHeader from './Condition'
+import NewHeader from './Condition';
 import styles from './index.css';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import reqwest from "reqwest";
-import '../global'
+import '../global';
 import {connect} from "react-redux";
 moment.locale('zh-cn');
 
@@ -431,10 +431,47 @@ class DrawChart extends Component{
             {/*</div>*/}
           </div>
         </div>
-
-
+        <DownLoadList />
       </div>
     );
+  }
+}
+class DownLoadList extends Component{
+  state = {
+    visible: false,
+    placement: 'right'
+  };
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+  render() {
+    return(
+      <div>
+        <div className={styles.downloadIcon} onClick={this.showDrawer}>
+          <Icon type="download" />
+        </div>
+        <Drawer
+          title="Download List"
+          placement={this.state.placement}
+          closable={false}
+          onClose={this.onClose}
+          visible={this.state.visible}
+        >
+            <ul>
+              <li>2019.7.25 15:30:30 下载一次...</li>
+              <li>2019.7.25 15:30:31 下载一次...</li>
+              <li>2019.7.25 15:30:32 下载一次...</li>
+            </ul>
+        </Drawer>
+      </div>
+    )
   }
 }
 

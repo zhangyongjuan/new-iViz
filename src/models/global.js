@@ -1,4 +1,4 @@
-// import {queryFakeList} from '@/services/api';
+import {summaryPage} from '@/services/api';
 // import select from "eslint-plugin-jsx-a11y/src/util/implicitRoles/select";
 
 export default {
@@ -16,13 +16,16 @@ export default {
       product: "",
       color: [],      //有全选和单选之分，全选时需要列出全部选择项
       build: "",
-      special_build:"",
+      special_build:[],
       wifi: []
     },
-    mapping:{}
+    mapping:{},
+  //  总结页
+    summaryPageDate:[]
   },
 
   effects: {
+    //timeRange部分
     * saveTime({payload}, {call, put}) {
       // const response = yield call(queryFakeList, payload);
       yield put({
@@ -43,6 +46,16 @@ export default {
         }
       })
     },
+  //  总结页
+    * saveSummaryPageData({payload}, {call, put}) {
+      console.log('model获取的条件----',payload);
+      const response = yield call(summaryPage, payload);
+      //response是请求的结果，在此处可以整合此数据
+      yield put({
+        type: 'saveSummaryPageDatas',
+        payload: response
+      });
+    },
   },
   reducers: {        //接收action，同步更新state
     saveDate(state, action) {
@@ -55,6 +68,13 @@ export default {
       return{
         ...state,
         ...action.payload
+      }
+    },
+    //  总结页
+    saveSummaryPageDatas(state,{payload}){
+      return{
+        ...state,
+        summaryPageDate:payload
       }
     }
   },

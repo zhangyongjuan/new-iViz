@@ -49,8 +49,8 @@ class NewHeader extends Component {
       title6:'',
       title7:'',
       spcId:'',
-      title1:'condition1',
-      title2:'condition2',
+      title1:'condition2',     //后面需求是条件一和二顺序调换，所以title序号反过来
+      title2:'condition1',
       title3:'condition3',
       title3_4:'condition3_4',
       title4:'condition4',
@@ -612,17 +612,17 @@ class NewHeader extends Component {
     return (
       <ul id='headerItems'>
         <Dropdown
-          overlay={menu1}
-        >
-          <li className="ant-dropdown-link">
-            {this.state.title1} <Icon type="down" />
-          </li>
-        </Dropdown>
-        <Dropdown
           overlay={menu2}
         >
           <li className="ant-dropdown-link">
             {this.state.title2} <Icon type="down" />
+          </li>
+        </Dropdown>
+        <Dropdown
+          overlay={menu1}
+        >
+          <li className="ant-dropdown-link">
+            {this.state.title1} <Icon type="down" />
           </li>
         </Dropdown>
         <Dropdown

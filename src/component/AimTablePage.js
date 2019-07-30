@@ -11,29 +11,35 @@ const spcHead = [
     key:'name',
     title:'SPC',
     dataIndex:'name',
+    width:100,
     render:(text)=><span style={{fontWeight:'bold',color:'rgba(0, 0, 0, 0.85)'}}>{text}</span>
   },{
     key:'lsl',
     title:'LSL',
-    dataIndex:'lsl'
+    dataIndex:'lsl',
+    width:100,
   },{
     key:'norminal',
     title:'Norminal',
-    dataIndex:'norminal'
+    dataIndex:'norminal',
+    width:100,
   },{
     key:'usl',
     title:'USL',
-    dataIndex:'usl'
+    dataIndex:'usl',
+    width:100,
   },{
     key:'yield',
     title:'Yield',
-    dataIndex:'yield'
+    dataIndex:'yield',
+    width:100,
   },{
     key:'std',
     title:'std',
-    dataIndex:'std'
+    dataIndex:'std',
+    width:100,
   }
-]
+];
 @connect(({global}) => ({
   global
 }))
@@ -72,11 +78,6 @@ class AimTablePage extends Component{
     this.fetch();
   }
   componentWillReceiveProps(nextProps) {
-    // console.log('条件改变--',nextProps.global)
-    // let mapping = '';
-    // Object.keys(nextProps.global.topSelectItem).map((v,i)=>{
-    //   return mapping += nextProps.global.topSelectItem[v];
-    // })
     if(this.state.clickLinePoint === true){      //如果是通过点击线图更改时间，则不需要把station和aimIp条件置空，及页面显示不变
       if(JSON.stringify(nextProps.global.dateTime) !== JSON.stringify(this.state.timeRange) || JSON.stringify(nextProps.global.topSelectItem) !== JSON.stringify(this.state.mapping)){
         this.setState({timeRange:nextProps.global.dateTime,mapping: nextProps.global.topSelectItem,clickLinePoint:false},this.fetch)
@@ -163,11 +164,11 @@ class AimTablePage extends Component{
           this.setState({showBarChart:'none',spcTitle:[],spcDataSource:[],spcYield:[],spcname:[]},this.drawBarAndLineChart)
         }
         if(data.timeYields !== null && data.timeYields.length !== 0){     //线图数据
-          const linetime=[],linedata=[]
-          data.timeYields.map((linevalue,n)=>{
-            linetime.push(linevalue.time);
-            return linedata.push((linevalue.yield*100).toFixed(3))
+          let linedata=[]
+          data.timeYields.series[0].data.map((v,i)=>{
+            linedata.push((v*100).toFixed(3));
           })
+          const linetime = data.timeYields.xAxis.data;
           this.setState({lineTime:linetime,lineData:linedata},this.drawBarAndLineChart)
         }else {
           this.setState({showLineChart:'none',lineTime:[],lineData:[]},this.drawBarAndLineChart)
@@ -205,6 +206,9 @@ class AimTablePage extends Component{
     const barOption = {
       color:['#f5bd27'],
       tooltip:{},
+      grid:{
+        top:15
+      },
       xAxis: {
         type: 'value',
         name: 'defect yield / %',
@@ -272,7 +276,7 @@ class AimTablePage extends Component{
       aimLineChart._$handlers.click.length = 0;
     }
     aimLineChart.on('click',(params)=>{
-      if(params.name.length >10){     //只有时间到日期格式2019-05-11时才能获取数据，否则不支持点击
+      if(params.name.length === 5){     //只有时间到日期格式2019-05-11时才能获取数据，否则不支持点击
         console.log('此时间点不能点击!')
       }else{
         const startT = new Date(params.name).getTime()-8*3600*1000;        //点击的日期，默认开始时间是早8点，需要改为0-23:59:59点
@@ -380,8 +384,12 @@ class AimTablePage extends Component{
         <p className={styles.tableName} >AIM defect MIL</p>
         {/* no click event */}
         <div id={styles.showBarChart} className={this.state.showBarChart}>
-          <div style={{height:'400px',margin:'0 auto'}} id='barchart'></div>
-          <Table size="small" columns={this.state.spcTitle} dataSource={this.state.spcDataSource} scroll={{x: 'max-content'}} pagination={false} />
+          <div style={{height:'400px',overflowY:'scroll'}}>
+            <div style={{minHeight:'1000px',margin:'0 auto'}} id='barchart'></div>
+          </div>
+          <div style={{marginTop:'10px'}}>
+            <Table size="small" columns={this.state.spcTitle} dataSource={this.state.spcDataSource} scroll={{y:370}} pagination={false} />
+          </div>
         </div>
         <p className={styles.tableName} >AIM yield trend plot</p>
         <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart'></div>

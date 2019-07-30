@@ -3,6 +3,7 @@ import { Table,Card ,Statistic, Row, Col}from 'antd';
 import echarts from 'echarts';
 import TimeRange from '../layouts/TimeRange'
 import styles from './summaryChart.less';
+import {connect} from "react-redux";
 
 const reactiveTableColumn = [
   {
@@ -45,6 +46,10 @@ const reactiveTableData = [
   }
 ]
 
+@connect(({global}) => ({
+  global
+}))
+
 class SummaryPage extends Component{
   componentDidMount() {
     const cosmeticIssuesOption ={
@@ -82,13 +87,13 @@ class SummaryPage extends Component{
       },
       yAxis: {
         type: 'category',
-        data: ['巴西','印尼','美国','印度','中国']
+        data: ['DDS@Sidewall','Ano Discoloration','DDS@buttom','Deformation','Black Line']
       },
       series: [
         {
-          name: '2012年',
+          // name: '2012年',
           type: 'bar',
-          data: [191325, 123438, 310100, 121594, 134141].sort(),
+          data: [0.53, 0.44, 0.70, 0.65, 0.31].sort(),
           barWidth:'50%'
         }
       ]
@@ -128,13 +133,13 @@ class SummaryPage extends Component{
       },
       yAxis: {
         type: 'category',
-        data: ['巴西','印尼','印度','中国','世界人口(万)']
+        data: ['Bowing/KinKing','Inner Width','CNC_FAI_282_RC thickness','Split Gap','CNC_IC_SPC_0.53_thickness@W/D']
       },
       series: [
         {
-          name: '2012年',
+          // name: '2019年',
           type: 'bar',
-          data: [191325, 123438, 121594, 134141, 681807].sort(),
+          data: [0.25, 0.35, 0.011, 0.08, 0.33].sort(),
           barWidth:'50%'
         }
       ]
@@ -143,6 +148,16 @@ class SummaryPage extends Component{
     const topDimensionalIssues = echarts.init(document.getElementById('topDimensionalIssues'));
     topCosmeticIssues.setOption(cosmeticIssuesOption);
     topDimensionalIssues.setOption(dimensionalIssues);
+
+    // const requestCon = {};
+    // const param = Object.assign({},this.props.global.dateTime,this.props.global.topSelectItem);
+    // requestCon.data = JSON.stringify(param);
+    // const { dispatch } = this.props;
+    // dispatch({
+    //   type: 'global/saveSummaryPageData',
+    //   payload: requestCon,
+    // });
+    // console.log('test===',this.props)
   }
   render(){
     return (

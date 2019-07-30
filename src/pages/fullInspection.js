@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './index.css';
 import Commetic from '../component/fullInspection/Cosmetic';
+import Dimensional from '../component/fullInspection/Dimensional';
 import TimeRange from '../layouts/TimeRange';
 import {Icon, Tabs} from "antd";
 
@@ -19,7 +20,7 @@ export default function() {
             <Commetic />
           </TabPane>
           <TabPane key="2" tab={<span><Icon type="bar-chart" />Dimensional</span>}>
-            <Commetic />
+            <Dimensional />
           </TabPane>
         </Tabs>
       </div>

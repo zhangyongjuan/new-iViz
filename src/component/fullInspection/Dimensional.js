@@ -34,7 +34,7 @@ data = data.map(function (item) {
   return [item[1], item[0], item[2] || '-'];
 });
 
-class Commetic extends Component{
+class Dimensional extends Component{
   state={
     showParticularHeatmap:'none',
     showParticularLine:'none'
@@ -42,7 +42,7 @@ class Commetic extends Component{
   componentDidMount() {
     const overallXHighlightData = ['', '', '', '', '', '', '', '', '', '','',''];
     const overallYHighlightData = ['', '', '', '', '', '', '','','', '', '', '', '', '', '',''];
-    const overallHeatmap = echarts.init(document.getElementById('overallHeatmap'));
+    const overallHeatmap = echarts.init(document.getElementById('DimOverallHeatmap'));
     const overallOption = {
       tooltip: {
         position: 'top'
@@ -129,55 +129,55 @@ class Commetic extends Component{
           axisTick:{
             interval:0
           },
-        splitArea: {
-          show: true,
-        },
-        axisLabel:{
-          padding:10,
-          interval:0,
-          rich:{},
-          height:10,
-          backgroundColor:'white',
-          lineHeight:10,
-          formatter: function(value,index){
-            return(
-              `${value}    ${heatmapYield[index]}`
-            )
-          }
-        },
-        triggerEvent:true,
-      },{
-        type: 'category',
-        data: overallYHighlightData,
-        axisTick:{
-          interval:0
-        },
-        splitArea: {
-          show: true
-        },
-        position:'left',
-        axisLabel:{
-          padding:8,
-          interval:0,
-          rich:{},
-          height:10,
-          // width:100,
-          lineHeight:10,
-          backgroundColor:'red',
-          showMinLabel:true,
-          formatter: function (value,index) {
-            return(
-              value !== ''? `${value}    ${heatmapYield[index]}`:``
-            )
-          }
-        },
-        triggerEvent:true,
-      }],
+          splitArea: {
+            show: true,
+          },
+          axisLabel:{
+            padding:10,
+            interval:0,
+            rich:{},
+            height:10,
+            backgroundColor:'white',
+            lineHeight:10,
+            formatter: function(value,index){
+              return(
+                `${value}    ${heatmapYield[index]}`
+              )
+            }
+          },
+          triggerEvent:true,
+        },{
+          type: 'category',
+          data: overallYHighlightData,
+          axisTick:{
+            interval:0
+          },
+          splitArea: {
+            show: true
+          },
+          position:'left',
+          axisLabel:{
+            padding:8,
+            interval:0,
+            rich:{},
+            height:10,
+            // width:100,
+            lineHeight:10,
+            backgroundColor:'red',
+            showMinLabel:true,
+            formatter: function (value,index) {
+              return(
+                value !== ''? `${value}    ${heatmapYield[index]}`:``
+              )
+            }
+          },
+          triggerEvent:true,
+        }],
       visualMap: {
         min: 0,
         max: 10,
         splitNumber: 4,
-        color: ['#d94e5d','#eac736','#50a3ba'],
+        color: ['red','#ff6d02','#37A2DA'],
         orient: 'horizontal',
         align:'left',
         left: 'center',
@@ -238,7 +238,7 @@ class Commetic extends Component{
     //ParticularHeatmap
     const particularXHighlightData = ['', '', '', '', '', '', '', '', '', '','',''];
     const particularYHighlightData = ['', '', '', '', '', '', '','','', '', '', '', '', '', '',''];
-    const particularHeatmap = echarts.init(document.getElementById('particularHeatmap'));
+    const particularHeatmap = echarts.init(document.getElementById('DimParticularHeatmap'));
     const particularOption = {
       tooltip: {
         position: 'top'
@@ -357,7 +357,7 @@ class Commetic extends Component{
         min: 0,
         max: 10,
         splitNumber: 4,
-        color: ['#d94e5d','#eac736','#50a3ba'],
+        color: ['red','#ff6d02','#37A2DA'],
         orient: 'horizontal',
         align:'left',
         left: 'center',
@@ -410,8 +410,8 @@ class Commetic extends Component{
       particularHeatmap.setOption(particularOption, true);
     });
 
-  //  Particular Line chart
-    const particularLine = echarts.init(document.getElementById('paiticularLine'));
+    //  Particular Line chart
+    const particularLine = echarts.init(document.getElementById('DimPaiticularLine'));
     const particularLineOption = {
       color:['#188fff'],
       tooltip:{},
@@ -457,38 +457,38 @@ class Commetic extends Component{
   }
   render(){
     return (
+      <div>
         <div>
+          <p className={styles.title} >
+            Defect Analysis - Dimensional Page - Overall dashboard of F/R in process flow
+          </p>
           <div>
-            <p className={styles.title} >
-              Defect Analysis - Cosmetic Page - Overall Heatmap of defects in process flow
-            </p>
-            <div>
-              <div id='overallHeatmap' style={{display:'inline-block'}} className={styles.overallHeatmap}></div>
-            </div>
-          </div>
-          {/* 下级热力图 */}
-          <div id={styles.particularHeatmapCon} className={this.state.showParticularHeatmap}>
-            <p className={styles.title} >
-              Defect Analysis - Cosmetic Page - Particular defect and step defect heatmap
-            </p>
-            <Select defaultValue='title' style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
-              <Option value='title' disabled>Please choose one</Option>
-              <Option value="CNC-7">CNC-7</Option>
-              <Option value="CNC-8">CNC-8</Option>
-              <Option value="CNC-9">CNC-9</Option>
-              <Option value="CNC-10">CNC-10</Option>
-            </Select>
-            <div id='particularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap}></div>
-          </div>
-          {/* line chart  Trend analysis of paiticular defect and machine*/}
-          <div id={styles.particularLineCon} className={this.state.showParticularLine}>
-            <p className={styles.title} >
-              Defect Analysis - Cosmetic Page - Trend analysis of paiticular defect and machine
-            </p>
-            <div id='paiticularLine' className={styles.particularLine}></div>
+            <div id='DimOverallHeatmap' style={{display:'inline-block'}} className={styles.overallHeatmap}></div>
           </div>
         </div>
+        {/* 下级热力图 */}
+        <div id={styles.particularHeatmapCon} className={this.state.showParticularHeatmap}>
+          <p className={styles.title} >
+            Defect Analysis - Dimensional Page - Particular defect and step defect heatmap
+          </p>
+          <Select defaultValue='title' style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
+            <Option value='title' disabled>Please choose one</Option>
+            <Option value="CNC-7">CNC-7</Option>
+            <Option value="CNC-8">CNC-8</Option>
+            <Option value="CNC-9">CNC-9</Option>
+            <Option value="CNC-10">CNC-10</Option>
+          </Select>
+          <div id='DimParticularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap}></div>
+        </div>
+        {/* line chart  Trend analysis of paiticular defect and machine*/}
+        <div id={styles.particularLineCon} className={this.state.showParticularLine}>
+          <p className={styles.title} >
+            Defect Analysis - Dimensional Page - Trend analysis of paiticular defect and machine
+          </p>
+          <div id='DimPaiticularLine' className={styles.particularLine}></div>
+        </div>
+      </div>
     )
   }
 }
-export default Commetic;
+export default Dimensional;

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {DatePicker, Select} from 'antd';
+import {DatePicker, Select,Button} from 'antd';
 import {connect} from 'dva';
 import moment from 'moment';
 import reqwest from 'reqwest';
@@ -161,6 +161,12 @@ class TimeRange extends Component {
   onOk = (value) => {
     // console.log('onOk: ', value);
   }
+  latestWeek = () => {
+    const nowtime = new Date().getTime();
+    const lastSenven = nowtime-1000*60*60*24*7
+    console.log(nowtime)
+    // this.setState({ open: false,nowtime:nowtime,lastSenven: lastSenven});
+  }
   render() {
     return (
       <div className={styles.timeRangeCon}>
@@ -177,6 +183,11 @@ class TimeRange extends Component {
           defaultValue={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
           value={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
           style={{marginRight: '20px', fontSize: '12px'}} locale={locale}
+          // renderExtraFooter={() => (            //后续需要添加最近一周，最近一月等按钮
+          //   <Button size="small" type="primary" onClick={this.latestWeek}>
+          //     latest week
+          //   </Button>
+          // )}
         />
 
           {
