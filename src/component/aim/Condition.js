@@ -1,8 +1,8 @@
 import React,{ Component } from 'react'
 import { Menu, Dropdown, Icon ,Checkbox } from 'antd/lib/index';
 import reqwest from 'reqwest'
-import styles from './index.css';
-import '../global'
+import styles from '../index.css';
+import '../../global'
 import {connect} from "react-redux";
 const CheckboxGroup = Checkbox.Group;
 
@@ -469,7 +469,7 @@ class NewHeader extends Component {
   }
   render() {
     const menu1 = (
-      <Menu onClick={this.handleMenuClick1} selectable >
+      <Menu onClick={this.handleMenuClick1} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
           this.state.condition1.modes ?(
             this.state.condition1.modes.map((v,i)=>
@@ -480,7 +480,7 @@ class NewHeader extends Component {
       </Menu>
     );
     const menu2 = (
-      <Menu onClick={this.handleMenuClick2} selectable >
+      <Menu onClick={this.handleMenuClick2} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
           this.state.condition2.aims ?(
             this.state.condition2.aims.map((v,i)=>
@@ -491,7 +491,7 @@ class NewHeader extends Component {
       </Menu>
     );
     const menu3 = (
-      <Menu onClick={this.handleMenuClick3} selectable >
+      <Menu onClick={this.handleMenuClick3} selectable style={{maxHeight:'300px',overflowY:'scroll'}} >
         {
           this.state.condition3.spcs && this.state.condition3.spcs.length!==0 ?(
             this.state.condition3.spcs.map((v,i)=>
@@ -503,7 +503,7 @@ class NewHeader extends Component {
     );
     const menu4 = (
       this.state.condition4.machines && this.state.condition4.machines.length ===0 ?(
-          <div>
+          <div style={{maxHeight:'300px',overflowY:'scroll'}}>
             <Checkbox
               indeterminate={this.state.indeterminate4}
               onChange={this.onCheckAllChange4}
@@ -517,7 +517,7 @@ class NewHeader extends Component {
             />
           </div>
         ):
-        <Menu onClick={this.handleMenuClick4} selectable >
+        <Menu onClick={this.handleMenuClick4} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
           {
             this.state.condition4.machines ?(
               this.state.condition4.machines.map((v,i)=>
@@ -529,7 +529,7 @@ class NewHeader extends Component {
     );
     const menu5 = (
       this.state.title3_4 === 'Line' ?(
-          <Menu onClick={this.handleMenuClick5} selectable >
+          <Menu onClick={this.handleMenuClick5} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
             {
               this.state.condition5 ?(
                 this.state.condition5D.map((v,i)=>
@@ -539,7 +539,7 @@ class NewHeader extends Component {
             }
           </Menu>
         ) :
-      <div>
+      <div style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
           this.state.condition5D && this.state.condition5D.length !==0 ?
             <div>
@@ -560,7 +560,7 @@ class NewHeader extends Component {
       </div>
     );
     const menu6 = (
-      <div>
+      <div style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
           this.state.condition6D && this.state.condition6D.length !==0 ?
             <div>
@@ -581,7 +581,7 @@ class NewHeader extends Component {
       </div>
     );
     const menu7 = (
-      <div>
+      <div style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
           this.state.condition7D && this.state.condition7D.length !==0 ?
             <div>

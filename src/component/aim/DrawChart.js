@@ -2,11 +2,11 @@ import React,{ Component } from 'react';
 import { Button,Icon,Drawer } from 'antd/lib/index';
 import echarts from 'echarts';
 import NewHeader from './Condition';
-import styles from './index.css';
+import styles from '../index.css';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import reqwest from "reqwest";
-import '../global';
+import '../../global';
 import {connect} from "react-redux";
 moment.locale('zh-cn');
 
@@ -465,9 +465,9 @@ class DownLoadList extends Component{
           visible={this.state.visible}
         >
             <ul>
-              <li>2019.7.25 15:30:30 下载一次...</li>
-              <li>2019.7.25 15:30:31 下载一次...</li>
-              <li>2019.7.25 15:30:32 下载一次...</li>
+              <li>2019.7.25 15:30:30 downloading...</li>
+              <li>2019.7.25 15:30:31 downloading...</li>
+              <li>2019.7.25 15:30:32 downloading...</li>
             </ul>
         </Drawer>
       </div>

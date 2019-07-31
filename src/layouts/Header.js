@@ -2,16 +2,29 @@ import React,{Component} from 'react';
 import { Layout, Icon ,Badge} from 'antd';
 import styles from './index.css'
 import Link from "umi/link";
+import {connect} from "react-redux";
 
 const { Header } = Layout;
 
+@connect(({global}) => ({
+  global
+}))
+
 class HeaderView extends Component{
-  state={
-}
+  state={}
+  backHome = ()=>{
+    localStorage.setItem('current','0');
+    this.props.dispatch({
+      type:'global/saveCurrentPageKey',
+      payload:{
+        currentPage:'0'
+      }
+    })
+  }
   render(){
     return(
         <Header className={styles.header}>
-          <div className={styles.title} >
+          <div className={styles.title} onClick={this.backHome}>
             <Link to='/'>
               Welcome to iViz system!
             </Link>

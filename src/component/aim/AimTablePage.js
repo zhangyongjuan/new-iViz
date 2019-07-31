@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { Table,Icon } from 'antd';
+import { Table,Icon } from 'antd/lib/index';
 import echarts from 'echarts';
 import reqwest from 'reqwest';
 import styles from './AimTablePage.less'

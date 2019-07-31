@@ -2,8 +2,13 @@ import React,{Component} from 'react';
 import {Layout, Icon, Menu} from 'antd';
 import Link from "umi/link";
 import styles from './LeftSider.less'
+import {connect} from "react-redux";
 const { Sider } = Layout;
-// const { SubMenu } = Menu;
+const { SubMenu } = Menu;
+
+@connect(({global}) => ({
+  global
+}))
 
 class LeftSider extends Component{
   state = {
@@ -12,14 +17,20 @@ class LeftSider extends Component{
   };
   componentDidMount() {
     if(localStorage.getItem('current')){
-      const current = localStorage.getItem('current')
+      const current = localStorage.getItem('current');
       this.setState({current:current})
     }
   }
   handleClick=(e)=>{
-    this.setState({current:e.key});
+    // this.setState({current:e.key});
     localStorage.setItem('current',e.key);
-    // e.domEvent.currentTarget.style.background='yellow'
+    // e.domEvent.currentTarget.style.background='yellow';
+    this.props.dispatch({
+      type:'global/saveCurrentPageKey',
+      payload:{
+        currentPage:e.key
+      }
+    })
   }
   toggle = () => {
     this.setState({
@@ -35,7 +46,7 @@ class LeftSider extends Component{
           onClick={this.toggle}
           style={{color:'white',fontSize:'16px',position:'relative',margin:'20px'}}
         />
-        <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.state.current]}>
+        <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.props.global.currentPage]}>
           <Menu.Item key="1">
             <Link to='/fullInspection'>
               <Icon type="line-chart" />
@@ -61,21 +72,25 @@ class LeftSider extends Component{
             </Link>
           </Menu.Item>
           {/*<SubMenu*/}
-          {/*  key="sub4"*/}
+          {/*  key="4"*/}
           {/*  title={*/}
-          {/*    <span>*/}
-          {/*    <Icon type="setting" />*/}
-          {/*    <span>AIM</span>*/}
-          {/*  </span>*/}
+          {/*    <Link to='/aim'>*/}
+          {/*      <Icon type="bar-chart" />*/}
+          {/*      <span>AIM</span>*/}
+          {/*    </Link>*/}
           {/*  }*/}
           {/*>*/}
           {/*  <Menu.Item key="9">*/}
-          {/*    <Icon type="bar-chart" />*/}
-          {/*    <span><Link to='/'>AIM</Link></span>*/}
+          {/*    <Link to='/aim'  target="_blank">*/}
+          {/*      <Icon type="bar-chart" />*/}
+          {/*      <span>AIM1</span>*/}
+          {/*    </Link>*/}
           {/*  </Menu.Item>*/}
           {/*  <Menu.Item key="10">*/}
-          {/*    <Icon type="bar-chart" />*/}
-          {/*    <span><Link to='/'>AIM</Link></span>*/}
+          {/*    <Link to='/'>*/}
+          {/*      <Icon type="bar-chart" />*/}
+          {/*      <span>AIM2</span>*/}
+          {/*    </Link>*/}
           {/*  </Menu.Item>*/}
           {/*</SubMenu>*/}
         </Menu>

@@ -6,6 +6,7 @@ export default {
 
   state: {
     list: [],
+    currentPage:localStorage.getItem('current'),
     dateTime: {
       startTime:1557763200000,
       endTime:1557935999000,
@@ -25,6 +26,15 @@ export default {
   },
 
   effects: {
+    //back home page ,currentpage=0
+    * saveCurrentPageKey({payload}, {call, put}) {
+      yield put({
+        type: 'saveCurrentKey',
+        payload: {
+          currentPage:payload.currentPage
+        }
+      });
+    },
     //timeRange部分
     * saveTime({payload}, {call, put}) {
       // const response = yield call(queryFakeList, payload);
@@ -58,6 +68,13 @@ export default {
     },
   },
   reducers: {        //接收action，同步更新state
+    //保存当前页的key
+    saveCurrentKey(state, action){
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     saveDate(state, action) {
       return {
         ...state,
