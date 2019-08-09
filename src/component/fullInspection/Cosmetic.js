@@ -5,6 +5,7 @@ import styles from "./fullInspection.less";
 
 const { Option } = Select;
 
+//overallHeatmap
 var hours = ['2d-bc-qc', 'cnc5-qc', 'tri-qc', '2d-bc-le', 'im-qc', 'sf-qc', 'cnc8-wcnc4-qc',
   'sb-qc', 'ano-qc', 'cnc10-wcnc5-qc','laser-qc','fqc'];
 var days = ['Under Milling@Inner Surface', 'Under Milling@Screw Hole', 'DDS@Bottom',
@@ -29,6 +30,21 @@ var data = [[0,0,5],[0,1,1],[0,2,10],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,
   [14,0,0], [14,2,2],[14,3,3],[14,4,4],[14,5,5],[14,6,10],[14,11,3],
   [15,0,1],[15,1,0],[15,2,0],[15,3,0],[15,4,0],[15,5,0],[15,6,0],[15,7,0],
 ];
+//particularHeatmap
+var particularHeatmaphours = ['cell-1', 'cell-2', 'cell-3', 'cell-4', 'cell-5', 'cell-6', 'cell-7', 'cell-8', 'cell-9', 'cell-10'];
+var particularHeatmapdays = ['10', '9', '8', '7', '6', '5', '4','3','2', '1'];
+var particularHeatmapdata = [[0,1,1],[0,3,3],[0,4,9],[0,5,1],[0,7,7],[0,8,9],[0,9,4],
+  [1,0,3],[1,1,1],[1,2,5],[1,3,4],[1,4,2], [1,5,7],[1,6,3],[1,7,9],[1,8,6],[1,9,1],
+  [2,0,1],[2,1,1],[2,3,10],[2,4,9],[2,5,5],[2,6,0],[2,8,5],[2,9,4],
+  [3,0,7],[3,1,3],[3,2,7],[3,3,6],[3,4,10],[3,6,100],[3,7,1],[3,8,1],[3,9,0],
+  [4,0,1],[4,1,3],[4,4,2],[4,5,1],[4,6,6],[4,7,7],[4,9,2],
+  [5,0,9], [5,1,1],[5,3,3],[5,5,1],[5,6,8],[5,8,2],[5,9,0],
+  [6,1,1],[6,2,5],[6,3,6],[6,4,6],[6,6,2],[6,7,1],[6,8,10], [6,9,5],
+  [7,0,5], [7,2,0],[7,3,3],[7,4,6],[7,5,0],[7,6,2],
+  [8,0,1],[8,2,2],[8,3,6],[8,4,3],[8,5,9],[8,6,0],[8,7,7], [8,9,8],
+  [9,3,3],[9,4,0],[9,5,5],[9,6,3],[9,7,0],[9,8,2],
+];
+
 // [x坐标,y坐标,value]
 data = data.map(function (item) {
   return [item[1], item[0], item[2] || '-'];
@@ -236,8 +252,8 @@ class Commetic extends Component{
   }
   drawParticularChart=()=>{
     //ParticularHeatmap
-    const particularXHighlightData = ['', '', '', '', '', '', '', '', '', '','',''];
-    const particularYHighlightData = ['', '', '', '', '', '', '','','', '', '', '', '', '', '',''];
+    const particularXHighlightData = ['', '', '', '', '', '', '', '', '', ''];
+    const particularYHighlightData = ['', '', '', '', '', '', '','','', ''];
     const particularHeatmap = echarts.init(document.getElementById('particularHeatmap'));
     const particularOption = {
       tooltip: {
@@ -271,7 +287,7 @@ class Commetic extends Component{
       xAxis: [
         {
           type: 'category',
-          data: hours,
+          data: particularHeatmaphours,
           axisTick:{
             interval:0
           },
@@ -315,7 +331,7 @@ class Commetic extends Component{
       yAxis: [
         {
           type: 'category',
-          data: days,
+          data: particularHeatmapdays,
           axisTick:{
             interval:0
           },
@@ -370,7 +386,7 @@ class Commetic extends Component{
       series: [{
         name: 'Punch Card',
         type: 'heatmap',
-        data: data,
+        data: particularHeatmapdata,
         label: {
           normal: {
             show: true
@@ -460,7 +476,7 @@ class Commetic extends Component{
         <div>
           <div>
             <p className={styles.title} >
-              Defect Analysis - Cosmetic Page - Overall Heatmap of defects in process flow
+              Overall heatmap
             </p>
             <div>
               <div id='overallHeatmap' style={{display:'inline-block'}} className={styles.overallHeatmap}></div>
@@ -469,7 +485,7 @@ class Commetic extends Component{
           {/* 下级热力图 */}
           <div id={styles.particularHeatmapCon} className={this.state.showParticularHeatmap}>
             <p className={styles.title} >
-              Defect Analysis - Cosmetic Page - Particular defect and step defect heatmap
+              Heatmap by CNC
             </p>
             <Select defaultValue='title' style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
               <Option value='title' disabled>Please choose one</Option>
@@ -483,7 +499,7 @@ class Commetic extends Component{
           {/* line chart  Trend analysis of paiticular defect and machine*/}
           <div id={styles.particularLineCon} className={this.state.showParticularLine}>
             <p className={styles.title} >
-              Defect Analysis - Cosmetic Page - Trend analysis of paiticular defect and machine
+              Yield trend
             </p>
             <div id='paiticularLine' className={styles.particularLine}></div>
           </div>

@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { Table,Icon } from 'antd/lib/index';
+import { Table,Icon } from 'antd';
 import echarts from 'echarts';
 import reqwest from 'reqwest';
 import styles from './AimTablePage.less'
@@ -93,9 +93,9 @@ class AimTablePage extends Component{
     const initcondition = {};
     initcondition.data = {};
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp}));
-    // console.log('取数据的条件',initcondition.data);
+    console.log('取数据的条件',initcondition);
     reqwest({
-      url:`${global.constants.ip}/condition/getYield`,
+      url:`${global.constants.ip}/condition/getBackYield`,
       method:'post',
       type:'json',
       data:initcondition
@@ -231,7 +231,8 @@ class AimTablePage extends Component{
         label: {
           normal: {
             show: true,
-              position: 'insideRight'
+              position: 'right',
+              color:'#000'
           }
         },
       }]
@@ -367,7 +368,7 @@ class AimTablePage extends Component{
     plusTableColumns.unshift(firstColumn);
     return(
       <div>
-        <p className={styles.tableName} >AIM dash board</p>
+        <p className={styles.tableName} >AIM Dashboard</p>
         {/*
           ** AIM table ，AIM# table ,barchart ,table ,linechart dispaly none;
           ** click station name,barchart ,table and linecahrt will change , for the selected station
@@ -381,18 +382,18 @@ class AimTablePage extends Component{
           </div>
         </div>
 
-        <p className={styles.tableName} >AIM defect MIL</p>
+        <p className={styles.tableName} >Major issue list</p>
         {/* no click event */}
         <div id={styles.showBarChart} className={this.state.showBarChart}>
           <div style={{height:'400px',overflowY:'scroll'}}>
-            <div style={{minHeight:'1000px',margin:'0 auto'}} id='barchart'></div>
+            <div style={{minHeight:'1000px',margin:'0 auto'}} id='barchart' />
           </div>
           <div style={{marginTop:'10px'}}>
             <Table size="small" columns={this.state.spcTitle} dataSource={this.state.spcDataSource} scroll={{y:370}} pagination={false} />
           </div>
         </div>
-        <p className={styles.tableName} >AIM yield trend plot</p>
-        <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart'></div>
+        <p className={styles.tableName} >Yield trend</p>
+        <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart' />
       </div>
     )
   }

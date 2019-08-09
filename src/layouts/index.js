@@ -35,13 +35,12 @@ class LayoutSider extends Component{
           <Header />
           <Layout style={{marginTop:'45px'}}>
             <LeftSider />
-            {/*<Layout style={{marginLeft:'160px'}}>*/}
+            {/*<Layout style={{}}>*/}
             {/*  <TimeRange />*/}
-              <Content className='mainContent' style={{margin: '0 0 0 160px',padding: '0 10px 70px 70px',background: '#fff',minHeight: 280}}>
+              <Content className='mainContent' style={{padding: '0 10px 70px 70px',background: '#fff',overflowY:'scroll',maxHeight: '96vh'}}>
                 {this.props.children}
               </Content>
             {/*</Layout>*/}
-
           </Layout>
 
         </Layout>

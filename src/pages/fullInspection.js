@@ -14,7 +14,7 @@ export default function() {
         <TimeRange />
       </div>
       <div>
-        <p className={styles.tableName} >Defect Analysis</p>
+        <p className={styles.tableName} >Defect F/R heatmap</p>
         <Tabs type="card">
           <TabPane key="1" tab={<span><Icon type="table" />Cosmetic</span>}>
             <Commetic />

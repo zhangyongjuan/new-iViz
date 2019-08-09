@@ -1,5 +1,5 @@
 import React,{ Component } from 'react'
-import { Menu, Dropdown, Icon ,Checkbox } from 'antd/lib/index';
+import { Menu, Dropdown, Icon ,Checkbox } from 'antd';
 import reqwest from 'reqwest'
 import styles from '../index.css';
 import '../../global'
@@ -49,9 +49,9 @@ class NewHeader extends Component {
       title6:'',
       title7:'',
       spcId:'',
-      title1:'condition2',     //后面需求是条件一和二顺序调换，所以title序号反过来
-      title2:'condition1',
-      title3:'condition3',
+      title1:'Distribution/Yield',     //后面需求是条件一和二顺序调换，所以title序号反过来
+      title2:'Station',
+      title3:'SPC',
       title3_4:'condition3_4',
       title4:'condition4',
       category:'',
@@ -138,7 +138,7 @@ class NewHeader extends Component {
     data.aims = [];
     data.aims.push(e.key);
     bigContainer.data = JSON.stringify(data);
-    this.setState({select2:data.aims,title2:e.key,title3:'condition3'},this.test)
+    this.setState({select2:data.aims,title2:e.key,title3:'SPC'},this.test)
     reqwest({
       url:`${global.constants.ip}/condition/getCondition3`,
       method:'get',

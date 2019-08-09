@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { Button,Icon,Drawer } from 'antd/lib/index';
+import { Button,Icon,Drawer } from 'antd';
 import echarts from 'echarts';
 import NewHeader from './Condition';
 import styles from '../index.css';
@@ -168,7 +168,7 @@ class DrawChart extends Component{
         const hexuoption = {
           title: [
             {
-              text: hexudata.title.text,
+              // text: hexudata.title.text,
               left: 'center',
             },
             // {
@@ -287,7 +287,7 @@ class DrawChart extends Component{
                 formatter: function (param) {
                   // console.log('盒须图param===========',param)
                   return [
-                    'Experiment ' + param.name + ': ',
+                     param.name + ': ',
                     'upper: ' + param.data[5].toFixed(3),
                     'Q3: ' + param.data[4].toFixed(3),
                     'median: ' + param.data[3].toFixed(3),

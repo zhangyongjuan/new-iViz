@@ -23,4 +23,13 @@ export async function summaryPage(params) {
   });
 }
 
+//aim Statistical Analysis
+export async function getStation(params) {
+  return request(`${global.constants.ip}/spc/getStations`, {
+    method: 'post',
+    type:'json',
+    data: params
+  });
+}
+
 

@@ -2,6 +2,7 @@
 .normal {
   /*font-family: "Microsoft YaHei";*/
   height: 100%;
+  overflow: hidden;
   /*text-align: center;*/
 }
 
