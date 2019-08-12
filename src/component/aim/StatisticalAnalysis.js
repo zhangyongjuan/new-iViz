@@ -77,7 +77,6 @@ class Statistical extends Component{
     this.setState({loading:true})
     const requestCon = {};
     const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem},{station:this.state.selectStation,spc:this.state.selectSpc});
-
     requestCon.data = JSON.stringify(param);
     reqwest({
       url:`${global.constants.ip}/spc/getSigmaChart`,
@@ -86,7 +85,7 @@ class Statistical extends Component{
       data:requestCon
     })
       .then(data=>{
-        console.log('统计分析的所有chart数据--',data);
+        // console.log('统计分析的所有chart数据--',data);
         if(data === null){
           this.setState({showChart:'none'})
         }else{
@@ -96,7 +95,7 @@ class Statistical extends Component{
               return (value*100).toFixed(2)
             })
           });
-          this.setState({loading:false,showChart:'block',capabilityChart:data.gaussChart,IChart:data.iChart,MRChart:data.mrChart,lastLineChart:data.lastChart},this.drawChart)
+          this.setState({loading:false,showChart:'block',boxplot:data.boxChart,capabilityChart:data.gaussChart,IChart:data.iChart,MRChart:data.mrChart,lastLineChart:data.lastChart},this.drawChart)
         }
 
       })
@@ -104,11 +103,7 @@ class Statistical extends Component{
   }
   drawChart=()=>{
     //boxPlot
-    var boxPlotData = {
-      axisData: ["0", "1", "2"],
-      boxData:[[655, 850, 940, 980, 1070], [760, 800, 845, 885, 960], [780, 840, 855, 880, 940]],
-      outliers:[[0, 650],[2, 620],[2, 720],[2, 720]],
-    };
+    const boxplotD= this.state.boxplot;
     const boxPlotOption = {
       color:['#0096ff'],
       tooltip: {
@@ -124,48 +119,100 @@ class Statistical extends Component{
       },
       xAxis: {
         type: 'category',
-        data: boxPlotData.axisData,
+        data: boxplotD.xAxis.data,
         boundaryGap: true,
         nameGap: 30,
         splitArea: {
           show: false
         },
         axisLabel: {
-          formatter: '{value}'
+          formatter: '{value}',
+          interval: 0,
+          // rotate:-90,
+          align:'center',
+        },
+        axisLine:{
+          show:false
         },
         splitLine: {
           show: false
-        }
+        },
+        axisTick: {
+          alignWithLabel: true,
+          interval:0
+        },
       },
       yAxis: {
         type: 'value',
         // name: 'km/s minus 299,000',
         splitArea: {
           show: true
-        }
+        },
+        splitLine:{
+          show:false
+        },
+        scale:true,
       },
       series: [
         {
           name: 'boxplot',
           type: 'boxplot',
-          data: boxPlotData.boxData,
+          data: boxplotD.series[0].data,
           tooltip: {
             formatter: function (param) {
               return [
-                'Experiment ' + param.name + ': ',
-                'upper: ' + param.data[5],
-                'Q3: ' + param.data[4],
-                'median: ' + param.data[3],
-                'Q1: ' + param.data[2],
-                'lower: ' + param.data[1]
+                param.name + ': ',
+                'upper: ' + param.data[5].toFixed(3),
+                'Q3: ' + param.data[4].toFixed(3),
+                'median: ' + param.data[3].toFixed(3),
+                'Q1: ' + param.data[2].toFixed(3),
+                'lower: ' + param.data[1].toFixed(3),
+                'errorCount: '+boxplotD.series[0].errNum[param.dataIndex],
+                'totalCount: '+boxplotD.series[0].total[param.dataIndex],
               ].join('<br/>');
+            }
+          },
+          markLine : {
+            data:[
+              {
+                name: 'low_limit',
+                yAxis: Number(boxplotD.low_limit).toFixed(3),
+                lineStyle:{
+                  type:'dashed',
+                  width:1,
+                  color:'#666',
+                }
+              },
+              {
+                name: 'up_limit',
+                yAxis: Number(boxplotD.up_limit).toFixed(3),
+                lineStyle:{
+                  type:'dashed',
+                  width:1,
+                  color:'#666',
+                }
+              },
+              {
+                name: 'normal',
+                yAxis: Number(boxplotD.norminal).toFixed(3),
+                lineStyle:{
+                  type:'dashed',
+                  width:1,
+                  color:'#666',
+                }
+              },
+            ],
+            lineStyle:{
+              type:'dashed',
+              width:2,
+              color:'#333',
             }
           }
         },
         {
           name: 'outlier',
           type: 'scatter',
-          data: boxPlotData.outliers
+          data: boxplotD.series[1].data
         }
       ]
     };
@@ -182,8 +229,8 @@ class Statistical extends Component{
       yAxis: {
         type: 'value',
         // interval: 0.1,
-        max: 100,
-        min: 0,
+        // max: 100,
+        // min: 0,
         // name: "Gauss",
         scale:true,
         splitLine:{
@@ -194,7 +241,7 @@ class Statistical extends Component{
         },
         axisLabel:{
           show:false
-        }
+        },
       },
       series: [
         {
@@ -204,7 +251,7 @@ class Statistical extends Component{
             data:[
               {
                 name: 'LSL',
-                xAxis: '0.5',
+                xAxis: this.state.capabilityChart.lsl.toString(),
                 lineStyle:{
                   type:'dashed',
                   width:1,
@@ -213,7 +260,7 @@ class Statistical extends Component{
               },
               {
                 name: 'USL',
-                xAxis: '2',
+                xAxis: this.state.capabilityChart.usl.toString(),
                 lineStyle:{
                   type:'dashed',
                   width:1,
@@ -222,7 +269,7 @@ class Statistical extends Component{
               },
               {
                 name: 'Target',
-                xAxis: '1',
+                xAxis: this.state.capabilityChart.target.toString(),
                 lineStyle:{
                   type:'dashed',
                   width:1,
@@ -280,8 +327,8 @@ class Statistical extends Component{
         markLine : {
           data:[
             {
-              name: 'USL',
-              yAxis: this.state.IChart.usl,
+              name: 'UCL',
+              yAxis: this.state.IChart.ucl,
               lineStyle:{
                 type:'dashed',
                 width:1,
@@ -289,8 +336,8 @@ class Statistical extends Component{
               }
             },
             {
-              name: 'CL',
-              yAxis: this.state.IChart.cl,
+              name: 'Mean',
+              yAxis: this.state.IChart.mean,
               lineStyle:{
                 type:'dashed',
                 width:1,
@@ -298,8 +345,8 @@ class Statistical extends Component{
               }
             },
             {
-              name: 'LSL',
-              yAxis: this.state.IChart.lsl,
+              name: 'LCL',
+              yAxis: this.state.IChart.lcl,
               lineStyle:{
                 type:'dashed',
                 width:1,
@@ -470,7 +517,7 @@ class Statistical extends Component{
               <Row  gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
                 <Col span={11}>
                 </Col>
-                <CapabilityData />
+                <CapabilityData value={this.state.capabilityChart} />
               </Row>
             </div>
             {/* MR Chart and I Chart */}
@@ -485,7 +532,7 @@ class Statistical extends Component{
               </Row>
               {/* Ichart下面的字段解释 */}
               <Row  gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
-                <IchartData />
+                <IchartData value={this.state.IChart} />
               </Row>
               <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
                 <Col span={20}>
@@ -511,51 +558,50 @@ class Statistical extends Component{
   }
 }
 //分布图的解释字段
-function CapabilityData() {
+function CapabilityData(data) {
   return(
     <Col span={11}>
       <ul className={styles.capabilityUl}>
-        <li>Number of obs = 998</li>
-        <li>Center = -0.01768337</li>
-        <li>StdDev = 0.01852543</li>
+        <li>Sample N = {data.value.numberOfObs}</li>
+        <li>Mean = {data.value.mean}</li>
+        <li>StdDev = {data.value.stdDev}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Target = 0</li>
-        <li>LSL = -0.05</li>
-        <li>USL = 0.03</li>
+        <li>Target = {data.value.target}</li>
+        <li>LSL = {data.value.lsl}</li>
+        <li>USL = {data.value.usl}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Cp = 0.72</li>
-        <li>Cp_l = 0.581</li>
-        <li>Cp_u = 0.858</li>
-        <li>Cp_k = 0.581</li>
-        <li>Cpm = 0.521</li>
+        <li>Cp = {data.value.cp}</li>
+        <li>Cp_l = {data.value.cpl}</li>
+        <li>Cp_u = {data.value.cpu}</li>
+        <li>Cp_k = {data.value.cpk}</li>
+        <li>Cpm = {data.value.cpm}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Exp &lt; LSL 4.1%</li>
-        <li>Exp &gt; USL 5.0%</li>
-        <li>Obs &lt; LSL 2%</li>
-        <li>Obs &gt; USL 0%</li>
+        <li>Exp &lt; LSL {(data.value.expLtLsl * 100).toFixed(2)+'%'}</li>
+        <li>Exp &gt; USL {data.value.expGtUsl}</li>
+        <li>Obs &lt; LSL {data.value.obsLtLsl}</li>
+        <li>Obs &gt; USL {data.value.obsGtUsl}</li>
       </ul>
     </Col>
   )
 }
 // IChart的解释字段
-function IchartData() {
+function IchartData(data) {
   return(
     <Col span={20}>
       <ul className={styles.capabilityUl}>
-        <li>Number of obs =998</li>
-        <li>Center = -0.01768337</li>
-        <li>StdDev = 0.01852543</li>
+        <li>Sample N = {data.value.numberOfObs}</li>
+        <li>Mean = {data.value.mean}</li>
+        <li>StdDev = {data.value.stdDev}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>LCL = -0.07325967</li>
-        <li>UCL = 0.03789294</li>
+        <li>LCL = {data.value.lcl}</li>
+        <li>UCL = {data.value.ucl}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Number beyond limits = 1</li>
-        <li>Number violating runs = 12</li>
+        <li>Number beyond limits = {data.value.numberBeyondLimits}</li>
       </ul>
     </Col>
   )

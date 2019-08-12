@@ -1,63 +1,279 @@
 import React ,{ Component }from 'react';
 import echarts from 'echarts';
-import {Select} from "antd";
+import {Select,Spin} from "antd";
 import styles from "./fullInspection.less";
+import reqwest from "reqwest";
+import {connect} from "react-redux";
 
 const { Option } = Select;
 
-var hours = ['2d-bc-qc', 'cnc5-qc', 'tri-qc', '2d-bc-le', 'im-qc', 'sf-qc', 'cnc8-wcnc4-qc',
-  'sb-qc', 'ano-qc', 'cnc10-wcnc5-qc','laser-qc','fqc'];
-var days = ['Under Milling@Inner Surface', 'Under Milling@Screw Hole', 'DDS@Bottom',
-  'DDS@Datum A', 'DDS@Inner surface', 'DDS@Lip', 'DDS@Logo','DDS@Scorpius Cover','DDS@Sidewall',
-  'DDS@Volcano Base','DDS@Woofer','DDS@Magnet','Al impurity to Split','Split Bright Edge','Split Chalkiness','Split Extra Plastic'];
-const heatmapYield = ['11.40%','2.22%','34.46%','3.65%','4.56%','11.40%','2.22%','34.46%','3.65%','4.56%','11.40%','2.22%','34.46%','3.65%','4.56%','6.45%']
-// [y坐标,x坐标,value]
-var data = [[0,0,5],[0,1,1],[0,2,10],[0,3,0],[0,4,0],[0,5,0],[0,6,0],[0,7,0],[0,8,0],[0,9,0],[0,10,0],[0,11,2],
-  [1,0,0],[1,1,0],[1,2,0],[1,3,0],[1,4,0], [1,5,0],[1,6,0],[1,7,0],[1,8,0],[1,9,0],[1,10,5],[1,11,2],
-  [2,0,1],[2,1,1],[2,2,0],[2,3,0],[2,4,0],[2,5,0],[2,6,0],[2,7,0],[2,8,0],[2,9,0],[2,10,3],[2,11,2],
-  [3,0,7],[3,1,3],[3,2,0],[3,3,0],[3,4,0],[3,5,0],[3,6,0],[3,7,0],[3,8,1],[3,9,0],[3,10,5],[3,11,4],
-  [4,0,1],[4,1,3],[4,2,0],[4,3,0],[4,4,0],[4,5,1],[4,6,0],[4,7,0],[4,8,0],[4,9,2], [4,10,4],[4,11,4],
-  [5,0,9], [5,1,1],[5,2,0],[5,3,3],[5,4,0],[5,5,0],[5,6,0],[5,7,0],[5,8,2],[5,9,0],[5,10,4],[5,11,1],
-  [6,0,0],[6,1,0],[6,2,0],[6,3,0],[6,4,0],[6,5,0],[6,6,0],[6,7,0],[6,8,0], [6,9,0],[6,10,1],[6,11,0],
-  [7,0,5], [7,2,0],[7,3,3],[7,4,6],[7,5,0],[7,6,2],[7,11,8],
-  [8,0,1],[8,1,0],[8,2,0],[8,3,0],[8,4,0],[8,5,0],[8,6,0],[8,7,0],[8,8,0], [8,9,0],[8,11,0],
-  [9,3,3],[9,4,0],[9,5,5],[9,6,3],[9,7,0],[9,8,2],[9,11,1],
-  [10,0,0],[10,1,0],[10,2,0], [10,11,0],
-  [11,0,5], [11,2,0],[11,3,3],[11,4,6],[11,5,0],[11,6,2],[11,11,8],
-  [12,0,1],[12,1,0],[12,2,0],[12,3,0],[12,4,0],[12,5,0],[12,6,0],[12,7,0],
-  [13,5,5],[13,6,10],[13,8,8], [13,11,11],
-  [14,0,0], [14,2,2],[14,3,3],[14,4,4],[14,5,5],[14,6,10],[14,11,3],
-  [15,0,1],[15,1,0],[15,2,0],[15,3,0],[15,4,0],[15,5,0],[15,6,0],[15,7,0],
-];
-//particularHeatmap
-var particularHeatmaphours = ['cell-1', 'cell-2', 'cell-3', 'cell-4', 'cell-5', 'cell-6', 'cell-7', 'cell-8', 'cell-9', 'cell-10'];
-var particularHeatmapdays = ['10', '9', '8', '7', '6', '5', '4','3','2', '1'];
-var particularHeatmapdata = [[0,1,1],[0,3,3],[0,4,9],[0,5,1],[0,7,7],[0,8,9],[0,9,4],
-  [1,0,3],[1,1,1],[1,2,5],[1,3,4],[1,4,2], [1,5,7],[1,6,3],[1,7,9],[1,8,6],[1,9,1],
-  [2,0,1],[2,1,1],[2,3,10],[2,4,9],[2,5,5],[2,6,0],[2,8,5],[2,9,4],
-  [3,0,7],[3,1,3],[3,2,7],[3,3,6],[3,4,10],[3,6,100],[3,7,1],[3,8,1],[3,9,0],
-  [4,0,1],[4,1,3],[4,4,2],[4,5,1],[4,6,6],[4,7,7],[4,9,2],
-  [5,0,9], [5,1,1],[5,3,3],[5,5,1],[5,6,8],[5,8,2],[5,9,0],
-  [6,1,1],[6,2,5],[6,3,6],[6,4,6],[6,6,2],[6,7,1],[6,8,10], [6,9,5],
-  [7,0,5], [7,2,0],[7,3,3],[7,4,6],[7,5,0],[7,6,2],
-  [8,0,1],[8,2,2],[8,3,6],[8,4,3],[8,5,9],[8,6,0],[8,7,7], [8,9,8],
-  [9,3,3],[9,4,0],[9,5,5],[9,6,3],[9,7,0],[9,8,2],
-];
-
-// [x坐标,y坐标,value]
-data = data.map(function (item) {
-  return [item[1], item[0], item[2] || '-'];
-});
-
+@connect(({global}) => ({
+  global
+}))
 class Dimensional extends Component{
   state={
+    loading:false,
     showParticularHeatmap:'none',
-    showParticularLine:'none'
+    showParticularLine:'none',
+    //  overall sumYield,
+    overallChart:[],
+    heatmapYield:[],
+    overallStation:[],
+    overallDefectName:[],
+    overallData:[],
+    //  Particular heatmap
+    particularChart:[],
+    particularXData:[],
+    particularYData:[],
+    particularData:[],
+    //  线图数据
+    lineChartData:[],
+    //  点击的各个字段名
+    clickDefectName:'',
+    clickStationName:'',
+    machineName:'CNC-7',
+    //  点击particularChart的值
+    clickParticularX:'',
+    clickParticularY:''
   }
   componentDidMount() {
-    const overallXHighlightData = ['', '', '', '', '', '', '', '', '', '','',''];
-    const overallYHighlightData = ['', '', '', '', '', '', '','','', '', '', '', '', '', '',''];
+    this.fetch();
+    // const overallXHighlightData = ['', '', '', '', '', '', '', '', '', '','',''];
+    // const overallYHighlightData = ['', '', '', '', '', '', '','','', '', '', '', '', '', '',''];
+    // const overallHeatmap = echarts.init(document.getElementById('DimOverallHeatmap'));
+    // const overallOption = {
+    //   tooltip: {
+    //     position: 'top'
+    //   },
+    //   animation: false,
+    //   grid: {
+    //     height: '80%',
+    //     y: '10%',
+    //     left:'15%',
+    //     top:'10%',
+    //     bottom:'10%'
+    //   },
+    //   // dataZoom: [
+    //   //   {
+    //   //     show: true,
+    //   //     realtime: true,
+    //   //     start: 0,
+    //   //     end: 60,
+    //   //     top:0,
+    //   //     xAxisIndex:[0,1],
+    //   //     // handleStyle: {
+    //   //     //   color: '#ff0000' ,
+    //   //     //   borderWidth: 0 ,
+    //   //     // },
+    //   //     height:15,
+    //   //     showDetail:false
+    //   //   },
+    //   //   {
+    //   //     type: 'inside',
+    //   //     realtime: true,
+    //   //     start: 0,
+    //   //     end: 60,
+    //   //   },
+    //   //
+    //   // ],
+    //   xAxis: [
+    //     {
+    //       type: 'category',
+    //       data: hours,
+    //       axisTick:{
+    //         interval:0
+    //       },
+    //       splitArea: {
+    //         show: true
+    //       },
+    //
+    //       position:'top',
+    //       triggerEvent:true,
+    //       axisLabel:{
+    //         interval:0,
+    //         rich:{},
+    //         // width:40,
+    //         // height:10,
+    //         padding:10,
+    //         // backgroundColor:'red',
+    //       }
+    //     },{
+    //       type: 'category',
+    //       data: overallXHighlightData,
+    //       axisTick:{
+    //         // show:false,
+    //         interval:0
+    //       },
+    //       splitArea: {
+    //         show: true
+    //       },
+    //
+    //       position:'top',
+    //       triggerEvent:true,
+    //       axisLabel:{
+    //         interval:0,
+    //         rich:{},
+    //         width:80,
+    //         // // height:10,
+    //         padding:10,
+    //         backgroundColor:'red',
+    //       }
+    //     }
+    //   ],
+    //   yAxis: [
+    //     {
+    //       type: 'category',
+    //       data: days,
+    //       axisTick:{
+    //         interval:0
+    //       },
+    //       splitArea: {
+    //         show: true,
+    //       },
+    //       axisLabel:{
+    //         padding:10,
+    //         interval:0,
+    //         rich:{},
+    //         height:10,
+    //         backgroundColor:'white',
+    //         lineHeight:10,
+    //         formatter: function(value,index){
+    //           return(
+    //             `${value}    ${heatmapYield[index]}`
+    //           )
+    //         }
+    //       },
+    //       triggerEvent:true,
+    //     },{
+    //       type: 'category',
+    //       data: overallYHighlightData,
+    //       axisTick:{
+    //         interval:0
+    //       },
+    //       splitArea: {
+    //         show: true
+    //       },
+    //       position:'left',
+    //       axisLabel:{
+    //         padding:8,
+    //         interval:0,
+    //         rich:{},
+    //         height:10,
+    //         // width:100,
+    //         lineHeight:10,
+    //         backgroundColor:'red',
+    //         showMinLabel:true,
+    //         formatter: function (value,index) {
+    //           return(
+    //             value !== ''? `${value}    ${heatmapYield[index]}`:``
+    //           )
+    //         }
+    //       },
+    //       triggerEvent:true,
+    //     }],
+    //   visualMap: {
+    //     min: 0,
+    //     max: 10,
+    //     splitNumber: 4,
+    //     color: ['red','#ff6d02','#37A2DA'],
+    //     orient: 'horizontal',
+    //     align:'left',
+    //     left: 'center',
+    //     bottom: '0%',
+    //     textStyle: {
+    //       color: '#000',
+    //
+    //     }
+    //   },
+    //   series: [{
+    //     name: 'Punch Card',
+    //     type: 'heatmap',
+    //     data: data,
+    //     label: {
+    //       normal: {
+    //         show: true
+    //       }
+    //     },
+    //     itemStyle: {
+    //       emphasis: {
+    //         shadowBlur: 10,
+    //         shadowColor: 'rgba(0, 0, 0, 0.5)'
+    //       }
+    //     }
+    //   }]
+    // };
+    // overallHeatmap.setOption(overallOption);
+    // //Axis添加点击事件
+    // overallHeatmap.on('click',(e)=>{
+    //   if(e.componentType === 'xAxis'){
+    //     for (var i = 0; i < overallXHighlightData.length; i++) {
+    //       if (e.value === hours[i]) {
+    //         overallXHighlightData[i] = e.value;
+    //       }
+    //       else {
+    //         overallXHighlightData[i] = '';
+    //       }
+    //     }
+    //     this.setState({showParticularHeatmap:'particularHeatmap'});
+    //   }else if(e.componentType === 'yAxis'){
+    //     for (var j = 0; j < overallYHighlightData.length; j++) {
+    //       if (e.value === days[j]) {
+    //         overallYHighlightData[j] = e.value;
+    //       }
+    //       else {
+    //         overallYHighlightData[j] = '';
+    //       }
+    //     }
+    //     this.setState({showParticularHeatmap:'none'});
+    //   }else{
+    //     console.log('点击的是值--',e.value)
+    //   }
+    //   overallHeatmap.setOption(overallOption, true);
+    //   this.setState({showParticularLine:'particularLine'},this.drawParticularChart);
+    // })
+  }
+  fetch=()=>{
+    this.setState({loading:true});
+    const requestCon = {};
+    const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem});
+    requestCon.data = JSON.stringify(param);
+    // console.log('requestCon---', requestCon);
+    reqwest({
+      url: `${global.constants.ip}/full/dimensional/home`,
+      method:'post',
+      type:'json',
+      data:requestCon
+    })
+      .then(data=>{
+        console.log('dimensional 数据==',data);
+        //整理overallData数据
+        const defectYield = [],defectName=[],chartData=[];
+        //  1.overall总不良率,不良类型
+        data.defectLines.map((item,i)=>{
+          defectYield.push(item.sumYield);
+          return defectName.push(item.defectName);
+        })
+
+        data.defectLines.map((item,n)=>{
+          item.defectYields.map((v,i)=>{
+            const defectyield = (v.yield*100).toFixed(2);
+            return chartData.push([i,n,defectyield])
+          })
+        })
+        // console.log('热力图表格数据---',chartData);
+        this.setState({overallChart:data.defectLines,overallStation:data.stations,heatmapYield:defectYield,overallDefectName:defectName,overallData:chartData,loading:false},this.drawOverallHeatmap)
+      })
+  }
+  drawOverallHeatmap=()=>{
+    //overallXHighlightData和overallYHighlightData是用于隐藏的x，y轴做准备，点击热力图时使用
+    const overallXHighlightData = this.state.overallStation.map((v,i)=>{
+      return ''
+    });
+    const overallYHighlightData = this.state.overallDefectName.map((v,i)=>{
+      return ''
+    });
     const overallHeatmap = echarts.init(document.getElementById('DimOverallHeatmap'));
+    const sumYield = this.state.heatmapYield;
     const overallOption = {
       tooltip: {
         position: 'top'
@@ -66,7 +282,7 @@ class Dimensional extends Component{
       grid: {
         height: '80%',
         y: '10%',
-        left:'15%',
+        left:'17%',
         top:'10%',
         bottom:'10%'
       },
@@ -96,7 +312,8 @@ class Dimensional extends Component{
       xAxis: [
         {
           type: 'category',
-          data: hours,
+          name:'value/%',
+          data: this.state.overallStation,
           axisTick:{
             interval:0
           },
@@ -114,7 +331,8 @@ class Dimensional extends Component{
             padding:10,
             // backgroundColor:'red',
           }
-        },{
+        },
+        {
           type: 'category',
           data: overallXHighlightData,
           axisTick:{
@@ -140,7 +358,7 @@ class Dimensional extends Component{
       yAxis: [
         {
           type: 'category',
-          data: days,
+          data: this.state.overallDefectName,
           axisTick:{
             interval:0
           },
@@ -156,12 +374,13 @@ class Dimensional extends Component{
             lineHeight:10,
             formatter: function(value,index){
               return(
-                `${value}    ${heatmapYield[index]}`
+                `${value}    ${(sumYield[index]*100).toFixed(2)+'%'}`
               )
             }
           },
           triggerEvent:true,
-        },{
+        },
+        {
           type: 'category',
           data: overallYHighlightData,
           axisTick:{
@@ -182,17 +401,18 @@ class Dimensional extends Component{
             showMinLabel:true,
             formatter: function (value,index) {
               return(
-                value !== ''? `${value}    ${heatmapYield[index]}`:``
+                value !== ''? `${value}    ${(sumYield[index]*100).toFixed(2)+'%'}`:``
               )
             }
           },
           triggerEvent:true,
-        }],
+        }
+      ],
       visualMap: {
         min: 0,
-        max: 10,
+        max: 100,
         splitNumber: 4,
-        color: ['red','#ff6d02','#37A2DA'],
+        color: ['#d94e5d','#eac736','#50a3ba'],
         orient: 'horizontal',
         align:'left',
         left: 'center',
@@ -205,7 +425,7 @@ class Dimensional extends Component{
       series: [{
         name: 'Punch Card',
         type: 'heatmap',
-        data: data,
+        data: this.state.overallData,
         label: {
           normal: {
             show: true
@@ -222,37 +442,130 @@ class Dimensional extends Component{
     overallHeatmap.setOption(overallOption);
     //Axis添加点击事件
     overallHeatmap.on('click',(e)=>{
-      if(e.componentType === 'xAxis'){
-        for (var i = 0; i < overallXHighlightData.length; i++) {
-          if (e.value === hours[i]) {
-            overallXHighlightData[i] = e.value;
+      if(e.componentType === 'xAxis' || e.componentType === 'series'){
+        if(e.componentType === 'xAxis'){
+          for (var i = 0; i < overallXHighlightData.length; i++) {
+            if (e.value === this.state.overallStation[i]) {
+              overallXHighlightData[i] = e.value;
+            }
+            else {
+              overallXHighlightData[i] = '';
+            }
           }
-          else {
-            overallXHighlightData[i] = '';
-          }
+          this.setState({clickStationName:e.value});
         }
-        this.setState({showParticularHeatmap:'particularHeatmap'});
-      }else if(e.componentType === 'yAxis'){
+        else{              //点击的值
+          let clickY = '';
+          for (var m = 0; m < overallXHighlightData.length; m++) {            // 对应的x轴背景变红色
+            if (e.name === this.state.overallStation[m]) {
+              overallXHighlightData[m] = e.name;
+            }
+            else {
+              overallXHighlightData[m] = '';
+            }
+          }
+          for (var n = 0; n < overallYHighlightData.length; n++) {        // 对应的y轴背景变红色
+            if (e.value[1] === n) {
+              overallYHighlightData[n] = this.state.overallDefectName[n];
+              clickY = this.state.overallDefectName[n]
+            }
+            else {
+              overallYHighlightData[n] = '';
+            }
+          }
+          this.setState({clickDefectName:clickY,clickStationName:e.name});
+        }
+        this.clickChartRequest('clickOverallHeatmapX');
+      }
+      else if(e.componentType === 'yAxis'){
         for (var j = 0; j < overallYHighlightData.length; j++) {
-          if (e.value === days[j]) {
+          if (e.value === this.state.overallDefectName[j]) {
             overallYHighlightData[j] = e.value;
           }
           else {
             overallYHighlightData[j] = '';
           }
         }
-        this.setState({showParticularHeatmap:'none'});
-      }else{
-        console.log('点击的是值--',e.value)
+        this.setState({clickDefectName:e.value});
+        this.clickChartRequest('clickOverallHeatmapY')
       }
       overallHeatmap.setOption(overallOption, true);
-      this.setState({showParticularLine:'particularLine'},this.drawParticularChart);
     })
+  }
+  clickChartRequest = (type)=>{
+    this.setState({loading:true});
+    if(type === 'clickOverallHeatmapX'){
+      const requestCon = {};
+      const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem},
+        {stationName: this.state.clickStationName, machineName: this.state.machineName, defectName: this.state.clickDefectName});
+      requestCon.data = JSON.stringify(param);
+      // console.log('requestCon---', requestCon);
+      reqwest({
+        url:`${global.constants.ip}/full/dimensional/oneStation`,
+        method:'post',
+        type:'json',
+        data:requestCon,
+      })
+        .then(data=>{
+          console.log('点击x轴或者值后，获得的图表数据==',data);
+          //整理overallData数据
+          const chartData=[];
+          data.machineTable.yields.map((item,n)=>{
+            item.map((v,i)=>{
+              const defectyield = (v.yield*100).toFixed(2);
+              return chartData.push([n,i,defectyield])
+            })
+          })
+          this.setState({lineChartData:data.lineChart,showParticularLine:'particularLine'},this.drawLineChart);
+          this.setState({particularChart:data.machineTable,particularXData:data.machineTable.cells,
+            particularYData:data.machineTable.mcs,particularData:chartData,showParticularHeatmap:'particularHeatmap',loading:false},this.drawParticularChart)
+        })
+    }
+    else if(type === 'clickOverallHeatmapY'){
+      const requestCon = {};
+      const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem},{defectName:this.state.clickDefectName});
+      requestCon.data = JSON.stringify(param);
+      // console.log('requestCon---', requestCon);
+      reqwest({
+        url:`${global.constants.ip}/full/dimensional/oneDefect`,
+        method:'post',
+        type:'json',
+        data:requestCon,
+      })
+        .then(data=>{
+          // console.log('点击Y轴后，获得的lineChart数据==',data);
+          this.setState({lineChartData:data,showParticularLine:'particularLine',showParticularHeatmap:'none',loading:false},this.drawLineChart)
+        })
+    }
+    else if(type === 'clickParticularHeatmapValue'){
+      const requestCon = {},condition={};
+      condition.defectName = this.state.clickDefectName;
+      condition.stationName = this.state.clickStationName;
+      condition.machineName = this.state.machineName;
+      condition.cell = this.state.clickParticularX;
+      condition.mc = this.state.clickParticularY;
+      const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem},condition);
+      requestCon.data = JSON.stringify(param);
+      reqwest({
+        url:`${global.constants.ip}/full/dimensional/oneMachine`,
+        method:'post',
+        type:'json',
+        data:requestCon,
+      })
+        .then(data=>{
+          console.log('点击Particular heatmap后，获得的lineChart数据==',data);
+          this.setState({lineChartData:data,loading:false},this.drawLineChart)
+        })
+    }
   }
   drawParticularChart=()=>{
     //ParticularHeatmap
-    const particularXHighlightData = ['', '', '', '', '', '', '', '', '', ''];
-    const particularYHighlightData = ['', '', '', '', '', '', '','','', ''];
+    const particularXHighlightData = this.state.particularXData.map((v,i)=>{
+      return ''
+    });
+    const particularYHighlightData = this.state.particularYData.map((v,i)=>{
+      return ''
+    });
     const particularHeatmap = echarts.init(document.getElementById('DimParticularHeatmap'));
     const particularOption = {
       tooltip: {
@@ -286,7 +599,8 @@ class Dimensional extends Component{
       xAxis: [
         {
           type: 'category',
-          data: particularHeatmaphours,
+          name:'value/%',
+          data: this.state.particularXData,
           axisTick:{
             interval:0
           },
@@ -330,7 +644,7 @@ class Dimensional extends Component{
       yAxis: [
         {
           type: 'category',
-          data: particularHeatmapdays,
+          data: this.state.particularYData,
           axisTick:{
             interval:0
           },
@@ -372,7 +686,7 @@ class Dimensional extends Component{
         min: 0,
         max: 10,
         splitNumber: 4,
-        color: ['red','#ff6d02','#37A2DA'],
+        color: ['#d94e5d','#eac736','#50a3ba'],
         orient: 'horizontal',
         align:'left',
         left: 'center',
@@ -385,7 +699,7 @@ class Dimensional extends Component{
       series: [{
         name: 'Punch Card',
         type: 'heatmap',
-        data: particularHeatmapdata,
+        data: this.state.particularData,
         label: {
           normal: {
             show: true
@@ -401,38 +715,44 @@ class Dimensional extends Component{
     };
     particularHeatmap.setOption(particularOption);
     particularHeatmap.on('click',(e)=>{
-      if(e.componentType === 'xAxis'){
-        for (var i = 0; i < particularXHighlightData.length; i++) {
-          if (e.value === hours[i]) {
-            particularXHighlightData[i] = e.value;
+      let clickparticularY = '';
+      if(e.componentType === 'series'){       //只能点击值，获取线图数据
+        for (var m = 0; m < particularXHighlightData.length; m++) {            // 对应的x轴背景变红色
+          if (e.name === this.state.particularXData[m]) {
+            particularXHighlightData[m] = e.name;
           }
           else {
-            particularXHighlightData[i] = '';
+            particularXHighlightData[m] = '';
           }
         }
-      }else if(e.componentType === 'yAxis'){
-        for (var j = 0; j < particularYHighlightData.length; j++) {
-          if (e.value === days[j]) {
-            particularYHighlightData[j] = e.value;
+        for (var n = 0; n < particularYHighlightData.length; n++) {        // 对应的x轴背景变红色
+          if (e.value[1] === n) {
+            particularYHighlightData[n] = this.state.particularYData[n];
+            clickparticularY = this.state.particularYData[n]
           }
           else {
-            particularYHighlightData[j] = '';
+            particularYHighlightData[n] = '';
           }
         }
-      }else{
-        console.log('点击的是值--',e.value)
+        this.setState({clickParticularX:e.name, clickParticularY:clickparticularY});
+        this.clickChartRequest('clickParticularHeatmapValue');
       }
       particularHeatmap.setOption(particularOption, true);
     });
-
+  }
+  drawLineChart = ()=>{
     //  Particular Line chart
+    const lineD =this.state.lineChartData;
+    // lineD.series[0].data = lineD.series[0].data.map((v,i)=>{
+    //   return (Number(v)*100).toFixed(2)
+    // })
     const particularLine = echarts.init(document.getElementById('DimPaiticularLine'));
     const particularLineOption = {
       color:['#188fff'],
       tooltip:{},
       xAxis: {
         type: 'category',
-        data:  ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data:  lineD.xAxis.data
       },
       yAxis: {
         type: 'value',
@@ -446,7 +766,7 @@ class Dimensional extends Component{
         scale:true,
       },
       series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
+        data: lineD.series[0].data,
         type: 'line',
         symbol:'circle',
         symbolSize:8,
@@ -460,12 +780,12 @@ class Dimensional extends Component{
     };
     particularLine.setOption(particularLineOption);
     //防止多次点击事件
-    if(particularLine._$handlers.click){
-      particularLine._$handlers.click.length = 0;
-    }
-    particularLine.on('click',(param)=>{
-      alert('被点击了！！')
-    })
+    // if(particularLine._$handlers.click){
+    //   particularLine._$handlers.click.length = 0;
+    // }
+    // particularLine.on('click',(param)=>{
+    //   alert('被点击了！！')
+    // })
   }
   handleChange(value) {
     console.log(`selected ${value}`);
@@ -473,12 +793,13 @@ class Dimensional extends Component{
   render(){
     return (
       <div>
+        <Spin spinning={this.state.loading}>
         <div>
           <p className={styles.title} >
             Overall heatmap
           </p>
           <div>
-            <div id='DimOverallHeatmap' style={{display:'inline-block'}} className={styles.overallHeatmap}></div>
+            <div id='DimOverallHeatmap' style={{display:'inline-block'}} className={styles.overallHeatmap} />
           </div>
         </div>
         {/* 下级热力图 */}
@@ -493,15 +814,16 @@ class Dimensional extends Component{
             <Option value="CNC-9">CNC-9</Option>
             <Option value="CNC-10">CNC-10</Option>
           </Select>
-          <div id='DimParticularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap}></div>
+          <div id='DimParticularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap} />
         </div>
         {/* line chart  Trend analysis of paiticular defect and machine*/}
         <div id={styles.particularLineCon} className={this.state.showParticularLine}>
           <p className={styles.title} >
             Yield trend
           </p>
-          <div id='DimPaiticularLine' className={styles.particularLine}></div>
+          <div id='DimPaiticularLine' className={styles.particularLine} />
         </div>
+        </Spin>
       </div>
     )
   }

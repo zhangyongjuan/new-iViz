@@ -54,7 +54,7 @@ class TimeRange extends Component {
     //首先获取顶部六个下拉条件，其中color和wifis是全选和多选两个选项
     this.fetch();
   }
-  fetch=()=>{
+  fetch= ()=>{
     const con = {};
     con.data=JSON.stringify(this.state.timeRange);
     reqwest({
@@ -76,7 +76,8 @@ class TimeRange extends Component {
           payload:{
             timeR
           }
-        })
+        });
+
       //  更新下拉框,selectOption为所有选择项
         if(data.colors.length !== 0){
           data.colors.unshift('all');
@@ -114,6 +115,12 @@ class TimeRange extends Component {
             selectItem
           }
         })
+        this.props.dispatch({
+          type:'global/changeTimeRangeStatus',
+          payload:{
+            status:true
+          }
+        });
       })
   }
   handleChange = (value,key) => {

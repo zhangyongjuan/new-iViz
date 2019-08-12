@@ -45,7 +45,7 @@ const columns = [
     key: 'testPoint',
   },
   {
-    title: 'N',
+    title: 'Sample N',
     dataIndex: 'n',
     key: 'n',
   },
@@ -179,7 +179,6 @@ class Comparative extends Component{
     this.setState({loading:true});
     const requestCon = {};
     const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem},{spcs:this.state.requestSpcs});
-    console.log(param)
     requestCon.data = JSON.stringify(param);
     reqwest({
       url:`${global.constants.ip}/spc/getDisChart`,
@@ -188,7 +187,7 @@ class Comparative extends Component{
       data:requestCon
     })
       .then(data=>{
-        console.log('对比分析的boxchart数据--',data);
+        // console.log('对比分析的boxchart数据--',data);
         if(data === null){
           this.setState({showChart:'none'})
         }else{
@@ -284,6 +283,9 @@ class Comparative extends Component{
         name: 'value',
         splitArea: {
           show: true
+        },
+        splitLine: {
+          show:false
         }
       },
       series: [
@@ -303,6 +305,42 @@ class Comparative extends Component{
                 'errorCount: '+boxplotData.series[0].errNum[param.dataIndex],
                 'totalCount: '+boxplotData.series[0].total[param.dataIndex],
               ].join('<br/>');
+            }
+          },
+          markLine : {
+            data:[
+              {
+                name: 'low_limit',
+                yAxis: Number(boxplotData.low_limit).toFixed(3),
+                lineStyle:{
+                  type:'dashed',
+                  width:1,
+                  color:'#666',
+                }
+              },
+              {
+                name: 'up_limit',
+                yAxis: Number(boxplotData.up_limit).toFixed(3),
+                lineStyle:{
+                  type:'dashed',
+                  width:1,
+                  color:'#666',
+                }
+              },
+              {
+                name: 'normal',
+                yAxis: Number(boxplotData.norminal).toFixed(3),
+                lineStyle:{
+                  type:'dashed',
+                  width:1,
+                  color:'#666',
+                }
+              },
+            ],
+            lineStyle:{
+              type:'dashed',
+              width:2,
+              color:'#333',
             }
           }
         },

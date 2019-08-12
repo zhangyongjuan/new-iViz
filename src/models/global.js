@@ -24,7 +24,9 @@ export default {
     //  总结页
     summaryPageDate:[],
     //aim Statistical Analysis
-    stationInfo:{}
+    stationInfo:{},
+  //  timeRange 优先于每个页面加载标志
+    timeRangeComplete:false
   },
 
   effects: {
@@ -45,6 +47,15 @@ export default {
         type: 'saveDate',
         payload: {
           dateTime:payload.timeR
+        }
+      });
+    },
+    //更改timeRange是否加载完成的标志
+    * changeTimeRangeStatus({payload}, {call, put}) {
+      yield put({
+        type: 'changeTimeRangeStatusD',
+        payload: {
+          timeRangeComplete:payload.status
         }
       });
     },
@@ -89,6 +100,12 @@ export default {
       };
     },
     saveDate(state, action) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
+    changeTimeRangeStatusD(state, action) {
       return {
         ...state,
         ...action.payload,
