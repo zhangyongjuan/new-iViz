@@ -6,6 +6,7 @@ import DrawChart from '../component/aim/DrawChart';
 import AimTablePage from '../component/aim/AimTablePage';
 import Statistical from '../component/aim/StatisticalAnalysis';
 import Comparative from '../component/aim/ComparativeAnalysis'
+import BowingKinking from './BowingKinking';
 
 const { TabPane } = Tabs;
 
@@ -30,6 +31,9 @@ class AIM extends Component{
             </TabPane>
             <TabPane key="4" tab={<span><Icon type="box-plot" />Measurement point comparison</span>}>
               <Comparative />
+            </TabPane>
+            <TabPane key="5" tab={<span><Icon type="area-chart" />Bowing/kinking_module</span>}>
+              <BowingKinking />
             </TabPane>
           </Tabs>
         </div>

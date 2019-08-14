@@ -9,7 +9,9 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "@antv/data-set": "^0.10.2",
     "antd": "^3.19.5",
+    "bizcharts": "^3.5.5",
     "dva": "^2.6.0-beta.6",
     "echarts": "^4.2.1",
     "react": "^16.8.6",
