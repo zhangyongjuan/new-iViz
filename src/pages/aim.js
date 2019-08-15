@@ -7,6 +7,7 @@ import AimTablePage from '../component/aim/AimTablePage';
 import Statistical from '../component/aim/StatisticalAnalysis';
 import Comparative from '../component/aim/ComparativeAnalysis'
 import BowingKinking from './BowingKinking';
+import AimFlyBar from './AimFlyBar';
 
 const { TabPane } = Tabs;
 
@@ -34,6 +35,9 @@ class AIM extends Component{
             </TabPane>
             <TabPane key="5" tab={<span><Icon type="area-chart" />Bowing/kinking_module</span>}>
               <BowingKinking />
+            </TabPane>
+            <TabPane key="6" tab={<span><Icon type="area-chart" />Color_Flybar_Module</span>}>
+              <AimFlyBar />
             </TabPane>
           </Tabs>
         </div>

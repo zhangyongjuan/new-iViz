@@ -5,6 +5,7 @@ import request from '@/utils/request';
 export async function queryFakeList(params) {
   return request(`/api/rule?${stringify(params)}`);
 }
+
 export async function removeRule(params) {
   return request('/api/rule', {
     method: 'POST',
@@ -27,9 +28,34 @@ export async function summaryPage(params) {
 export async function getStation(params) {
   return request(`${global.constants.ip}/spc/getStations`, {
     method: 'post',
-    type:'json',
-    data: params
+    type: 'json',
+    data: params,
   });
 }
 
 
+export async function fetchChartData(params) {
+  return request('/api/story/getBowingKinking', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+
+//get Box data of IM
+export async function fetchIMBox(params) {
+  return request('/api/story/getBowingSpcBox', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+
+//get Box data of SB
+export async function fetchSBBox(params) {
+  return request('/api/story/getKinkingSpcBox', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}

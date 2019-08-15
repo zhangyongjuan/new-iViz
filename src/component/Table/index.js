@@ -1,102 +1,61 @@
 import React from 'react';
 import { Table } from 'antd';
 
-
-const dataSource = [
-  {
-    key: '1',
-    SPC: 'SPC_01',
-    LSL: 32,
-    Norminal: '1.23',
-    USL: '1.344',
-    ActualMean: '3.4',
-    Yield: '2.5',
-    cpk: '9.0',
-  },
-  {
-    key: '1',
-    SPC: 'SPC_01',
-    LSL: 32,
-    Norminal: '1.23',
-    USL: '1.344',
-    ActualMean: '3.4',
-    Yield: '2.5',
-    cpk: '9.0',
-  },
-  {
-    key: '1',
-    SPC: 'SPC_01',
-    LSL: 32,
-    Norminal: '1.23',
-    USL: '1.344',
-    ActualMean: '3.4',
-    Yield: '2.5',
-    cpk: '9.0',
-  },
-  {
-    key: '1',
-    SPC: 'SPC_01',
-    LSL: 32,
-    Norminal: '1.23',
-    USL: '1.344',
-    ActualMean: '3.4',
-    Yield: '2.5',
-    cpk: '9.0',
-  },
-];
-
 const columns = [
   {
-    title: 'SPC',
-    dataIndex: 'SPC',
-    key: 'SPC',
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
     align:'center'
   },
   {
     title: 'LSL',
-    dataIndex: 'LSL',
-    key: 'LSL',
+    dataIndex: 'lsl',
+    key: 'lsl',
     align:'center'
   },
   {
     title: 'Norminal',
-    dataIndex: 'Norminal',
-    key: 'Norminal',
+    dataIndex: 'norminal',
+    key: 'norminal',
     align:'center'
   },
   {
     title: 'USL',
-    dataIndex: 'USL',
-    key: 'USL',
+    dataIndex: 'usl',
+    key: 'usl',
     align:'center'
   },
   {
     title: 'Actual Mean',
-    dataIndex: 'ActualMean',
-    key: 'ActualMean',
+    dataIndex: 'actualMean',
+    key: 'actualMean',
     align:'center'
   },
   {
     title: 'Yield',
-    dataIndex: 'Yield',
-    key: 'Yield',
+    dataIndex: 'yield',
+    key: 'yield',
     align:'center'
   },
   {
-    title: 'cpk',
-    dataIndex: 'cpk',
-    key: 'cpk',
+    title: 'Std',
+    dataIndex: 'std',
+    key: 'std',
     align:'center'
   },
 ];
 
 class BasicTable extends React.Component {
   render() {
+    const {data,rowKey,loading}=this.props;
     return (
       <div>
         <Table
+          rowKey={r=>r[rowKey]}
           bordered
-          dataSource={dataSource}
+          loading={loading}
+          dataSource={data}
           columns={columns}
           pagination={false}
         />
