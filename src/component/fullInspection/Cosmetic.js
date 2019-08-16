@@ -32,7 +32,7 @@ class Commetic extends Component{
   //  点击的各个字段名
     clickDefectName:'',
     clickStationName:'',
-    machineName:'CNC-7',
+    machineName:'CNC7 Machine#',
   //  点击particularChart的值
     clickParticularX:'',
     clickParticularY:''
@@ -89,7 +89,7 @@ class Commetic extends Component{
     const sumYield = this.state.heatmapYield;
     const overallOption = {
       tooltip: {
-        position: 'top'
+        position: 'bottom'
       },
       animation: false,
       grid: {
@@ -125,7 +125,7 @@ class Commetic extends Component{
       xAxis: [
         {
           type: 'category',
-          name:'value/%',
+          // name:'value/%',
           data: this.state.overallStation,
           axisTick:{
             interval:0
@@ -253,11 +253,20 @@ class Commetic extends Component{
       }]
     };
     overallHeatmap.setOption(overallOption);
+    window.addEventListener('resize', () => {
+      overallHeatmap.resize();
+    });
     //Axis添加点击事件
     overallHeatmap.on('click',(e)=>{
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
-          for (var i = 0; i < overallXHighlightData.length; i++) {
+          //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
+          if(e.value == 'cnc8_wcnc4_qc' || e.value == 'cnc10_wcnc5_qc' || e.value == 'laser_qc'){
+            this.setState({machineName:'CNC7 Machine#'})
+          }else{
+            return;
+          }
+          for (var i = 0; i < overallXHighlightData.length; i++) {        //对应的x轴背景变色
             if (e.value === this.state.overallStation[i]) {
               overallXHighlightData[i] = e.value;
             }
@@ -265,9 +274,18 @@ class Commetic extends Component{
               overallXHighlightData[i] = '';
             }
           }
-          this.setState({clickStationName:e.value});
+          //y轴若有选中状态，则取消，变为全未选中状态
+          for (var k = 0; k < overallYHighlightData.length; k++) {
+              overallYHighlightData[k] = '';
+          }
+          this.setState({clickStationName:e.value,clickDefectName:''});
         }
         else{              //点击的值
+          if(e.name == 'cnc8_wcnc4_qc' || e.name == 'cnc10_wcnc5_qc' || e.name == 'laser_qc'){
+            this.setState({machineName:'CNC7 Machine#'})
+          }else{
+            return;
+          }
           let clickY = '';
           for (var m = 0; m < overallXHighlightData.length; m++) {            // 对应的x轴背景变红色
             if (e.name === this.state.overallStation[m]) {
@@ -291,7 +309,7 @@ class Commetic extends Component{
         this.clickChartRequest('clickOverallHeatmapX');
       }
       else if(e.componentType === 'yAxis'){
-        for (var j = 0; j < overallYHighlightData.length; j++) {
+        for (var j = 0; j < overallYHighlightData.length; j++) {    //y轴对应字段背景变色
           if (e.value === this.state.overallDefectName[j]) {
             overallYHighlightData[j] = e.value;
           }
@@ -299,11 +317,16 @@ class Commetic extends Component{
             overallYHighlightData[j] = '';
           }
         }
-        this.setState({clickDefectName:e.value});
+        //x轴若有选中状态，则取消，变为全未选中状态
+        for (var k = 0; k < overallXHighlightData.length; k++) {
+          overallXHighlightData[k] = '';
+        }
+        this.setState({clickStationName:'',clickDefectName:e.value});
         this.clickChartRequest('clickOverallHeatmapY')
       }
       overallHeatmap.setOption(overallOption, true);
     })
+
   }
   clickChartRequest = (type)=>{
     this.setState({loading:true});
@@ -366,7 +389,7 @@ class Commetic extends Component{
         data:requestCon,
       })
         .then(data=>{
-          console.log('点击Particular heatmap后，获得的lineChart数据==',data);
+          // console.log('点击Particular heatmap后，获得的lineChart数据==',data);
           this.setState({lineChartData:data,loading:false},this.drawLineChart)
         })
     }
@@ -412,7 +435,7 @@ class Commetic extends Component{
       xAxis: [
         {
           type: 'category',
-          name:'value/%',
+          // name:'value/%',
           data: this.state.particularXData,
           axisTick:{
             interval:0
@@ -600,8 +623,10 @@ class Commetic extends Component{
     //   alert('被点击了！！')
     // })
   }
-  handleChange(value) {
+  handleChange=(value)=> {
     console.log(`selected ${value}`);
+    this.setState({machineName:value});
+    this.clickChartRequest('clickOverallHeatmapX');
   }
   render(){
     return (
@@ -620,12 +645,12 @@ class Commetic extends Component{
               <p className={styles.title} >
                 Heatmap by CNC
               </p>
-              <Select defaultValue='title' style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
+              <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
                 <Option value='title' disabled>Please choose one</Option>
-                <Option value="CNC-7">CNC-7</Option>
-                <Option value="CNC-8">CNC-8</Option>
-                <Option value="CNC-9">CNC-9</Option>
-                <Option value="CNC-10">CNC-10</Option>
+                <Option value="CNC7 Machine#">CNC-7</Option>
+                <Option value="CNC8 Machine#">CNC-8</Option>
+                <Option value="CNC9 Machine#">CNC-9</Option>
+                <Option value="CNC10 Machine#">CNC-10</Option>
               </Select>
               <div id='particularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap} />
             </div>

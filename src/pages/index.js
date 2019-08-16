@@ -10,7 +10,8 @@ const reactiveTableColumn = [
   {
     title:'Name',
     key:'name',
-    dataIndex:'name'
+    dataIndex:'name',
+    width:250
   },{
     title:'First Pass Yield',
     key:'firstPass',
@@ -98,18 +99,57 @@ class SummaryPage extends Component{
     const discribeType=['cosmetic','dimensional'];
     const cosmeticCount = pieVale['cosmetic'];
     const dimensionalCount = pieVale['dimensional'];
-    const cosmeticLegend=['cosmetic'];
-    const dimensionalLegend=['dimensional'];
-    //外圈的数据整合,图例整合
-    const outerValue=[];
-    pieVale.defectYields.map((item,i)=>{
-      const d = {};
-      d.name=item.name;
-      d.value=item.count;
-      outerValue.push(d);
-      return item.type === 'cosmetic' ? cosmeticLegend.push(item.name) : dimensionalLegend.push(item.name)
+    const cosmeticLegend=[{icon:'roundRect',name:'cosmetic'}];
+    const dimensionalLegend=[{icon:'roundRect',name:'dimensional'}];
+    //首先把cosmetic和dimensional的数据分开，以便每个类型用于取top10
+    const cosmeticYield = [],dimensionalYield = [],outerValue=[];
+    let dimtop9Sum = 0,costop9Sum = 0;
+    pieVale.defectYields.map((item,j)=>{
+      const type = (item.type).toLocaleLowerCase();
+      if(type === 'cosmetic'){
+        cosmeticYield.push(item);
+      }else if(type === 'dimensional'){
+        dimensionalYield.push(item);
+      }
     })
-
+    //对两种类型进行排序
+    cosmeticYield.sort((cosA,cosB)=>{
+        return cosB.yield - cosA.yield
+    })
+    dimensionalYield.sort((cosA,cosB)=>{
+      return cosB.yield - cosA.yield
+    })
+    //获取top10
+    //外圈的数据整合,图例整合
+    cosmeticYield.map((cositem,j)=>{
+      const d = {};
+      if(j === 9){
+        d.name='cosmetic_other';
+        d.value=cosmeticCount - costop9Sum;
+        outerValue.push(d);
+        return cosmeticLegend.push(d.name);
+      }else if(j < 9){
+        d.name=cositem.name;
+        d.value=cositem.count;
+        outerValue.push(d);
+        return cosmeticLegend.push(cositem.name);
+      }
+    })
+    dimensionalYield.map((dimitem,i)=>{
+      const d = {};
+      if(i === 9){
+        d.name='dimensional_other';
+        d.value=dimensionalCount - dimtop9Sum;
+        outerValue.unshift(d);
+        return dimensionalLegend.push(d.name);
+      }else if(i < 9){
+        dimtop9Sum = dimtop9Sum + dimitem.count;
+        d.name=dimitem.name;
+        d.value=dimitem.count;
+        outerValue.unshift(d);
+        return dimensionalLegend.push(dimitem.name)
+      }
+    })
     //所有legend默认全选
     let cosmeticSelect = {},dimensionalSelect={};
     cosmeticLegend.map((legend,i)=>{
@@ -118,7 +158,7 @@ class SummaryPage extends Component{
     dimensionalLegend.map((legend,i)=>{
       dimensionalSelect[legend] = true
     })
-    console.log('outerValue---',outerValue)
+    // console.log('outerValue---',outerValue)
     const staPie = echarts.init(document.getElementById('topCosmeticIssues'));
     const staPieOption = {
       // color:['#2f4554','#c23531','#6e7074','#61a0a8','#d48265','#B03A5B'],
@@ -129,25 +169,28 @@ class SummaryPage extends Component{
       legend: [
         {
           // type: 'scroll',
-          name:'cosmeticLegend',
-          right:100,
+          name:'dimensionalLegend',
+          right:150,
           height:300,
           orient: 'vertical',
-          // x: 'right',
-          data:cosmeticLegend,
-          selected:cosmeticSelect,
+          // x: 'left',
+          icon:'circle',
+          data:dimensionalLegend,
+          selected:{},
+          // selectedMode:'multiple'
         },
         {
           // type: 'scroll',
-          name:'dimensionalLegend',
-          right:10,
+          name:'cosmeticLegend',
+          left:250,
           height:300,
           orient: 'vertical',
           x: 'left',
-          data:dimensionalLegend,
-          selected:dimensionalSelect,
-          selectedMode:true
-        }],
+          icon:'circle',
+          data:cosmeticLegend,
+          selected:cosmeticSelect,
+        },
+        ],
       series: [
         {
           name:'defect type',
@@ -166,8 +209,8 @@ class SummaryPage extends Component{
           },
           data:[
             // 内圈数据
+            {value:dimensionalCount, name:'dimensional'},
             {value:cosmeticCount, name:'cosmetic'},
-            {value:dimensionalCount, name:'dimensional'}
           ],
         },
         {
@@ -176,6 +219,7 @@ class SummaryPage extends Component{
           radius: ['40%', '55%'],
           label: {
             normal: {
+              show:false,
               // formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
               formatter: '{b|{b}：}{c}  {per|{d}%}  ',
               backgroundColor: '#eee',
@@ -226,43 +270,55 @@ class SummaryPage extends Component{
       ]
     };
     staPie.setOption(staPieOption);
-
+    window.addEventListener('resize', () => {
+      staPie.resize();
+    });
+    //是否是第一次点击legend标志
+    let onOff = true;
     staPie.on('legendselectchanged',(e)=>{
-      // console.log(e)
-      if(e.name === 'dimensional'){
-        e.selected.dimensional === false ? Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = false}) :
-          Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = true});
-        staPie.setOption(staPieOption);
-      }else if(e.name === 'cosmetic'){
-        e.selected.cosmetic === false ? Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = false}) :
-          Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = true});
-        staPie.setOption(staPieOption);
-      }else{
-        console.log('点的其他的legend--',e);
-        if(cosmeticLegend.indexOf(e.name) !== -1){
-          if(e.selected['cosmetic'] === false){
-            cosmeticSelect[e.name] = false;
-            staPie.setOption(staPieOption);
-          }else{
-            staPie.dispatchAction({
-              type: 'legendToggleSelect',
-              // 图例名称
-              batch: e.name
-            })
-          }
-        }else if((dimensionalLegend.indexOf(e.name) !== -1)){
-          if(e.selected['dimensional'] === false){
-            dimensionalSelect[e.name] = false;
-            staPie.setOption(staPieOption);
-          }else{
-            staPie.dispatchAction({
-              type: 'legendToggleSelect',
-              // 图例名称
-              batch: e.name
-            })
-          }
-
+        if(e.name === 'dimensional'){
+          console.log(e);
+          const selectAll = staPie.getOption().legend[1].data;
+          e.selected.dimensional === false ? selectAll.map((v,i)=>{dimensionalSelect[v] = false}) :
+            selectAll.map((v,i)=>{dimensionalSelect[v] = true});
+          // console.log('dimensionalSelect====',dimensionalSelect)
+          staPieOption.legend[1].selected = dimensionalSelect;
+          staPie.setOption(staPieOption);
         }
+        else if(e.name === 'cosmetic'){
+          e.selected.cosmetic === false ? Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = false}) :
+            Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = true});
+          staPie.setOption(staPieOption);
+        }
+        else{
+          if(e.selected != undefined){
+            console.log('点的其他的legend--',e);
+            if(cosmeticLegend.indexOf(e.name) !== -1){
+              if(e.selected['cosmetic'] === false){
+                cosmeticSelect[e.name] = false;
+                staPie.setOption(staPieOption);
+              }else{
+                staPie.dispatchAction({
+                  type: 'legendToggleSelect',
+                  // 图例名称
+                  batch: e.name
+                })
+              }
+          }
+            else if((dimensionalLegend.indexOf(e.name) !== -1)){
+            if(e.selected['dimensional'] === false){
+              dimensionalSelect[e.name] = false;
+              staPie.setOption(staPieOption);
+            }else{
+              staPie.dispatchAction({
+                type: 'legendToggleSelect',
+                // 图例名称
+                batch: e.name
+              })
+            }
+          }
+          }
+        onOff = false;
       }
     })
   }
