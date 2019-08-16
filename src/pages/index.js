@@ -176,7 +176,7 @@ class SummaryPage extends Component{
           // x: 'left',
           icon:'circle',
           data:dimensionalLegend,
-          selected:{},
+          selected:dimensionalSelect,
           // selectedMode:'multiple'
         },
         {
@@ -278,11 +278,8 @@ class SummaryPage extends Component{
     staPie.on('legendselectchanged',(e)=>{
         if(e.name === 'dimensional'){
           console.log(e);
-          const selectAll = staPie.getOption().legend[1].data;
-          e.selected.dimensional === false ? selectAll.map((v,i)=>{dimensionalSelect[v] = false}) :
-            selectAll.map((v,i)=>{dimensionalSelect[v] = true});
-          // console.log('dimensionalSelect====',dimensionalSelect)
-          staPieOption.legend[1].selected = dimensionalSelect;
+          e.selected.dimensional === false ? Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = false}) :
+            Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = true});
           staPie.setOption(staPieOption);
         }
         else if(e.name === 'cosmetic'){
