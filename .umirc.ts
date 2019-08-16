@@ -11,7 +11,7 @@ const config: IConfig =  {
       dynamicImport: false,
       title: 'new-iViz',
       dll: false,
-      
+
       routes: {
         exclude: [
           /models\//,
@@ -23,13 +23,13 @@ const config: IConfig =  {
       },
     }],
   ],
-  // proxy: {
-  //   '/api/': {
-  //     target: 'http://172.16.1.150:8080',
-  //     changeOrigin: true,
-  //     pathRewrite: { '^/api': '' },
-  //   },
-  // },
-}
+  proxy: {
+    '/api/': {
+      target: 'http://172.16.1.200:8080',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
+};
 
 export default config;

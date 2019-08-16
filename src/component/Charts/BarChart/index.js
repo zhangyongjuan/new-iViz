@@ -1,70 +1,52 @@
-import React from "react";
+import React from 'react';
+import { Spin } from 'antd';
 import {
-  G2,
   Chart,
   Geom,
   Axis,
   Tooltip,
   Coord,
-  Label,
-  Legend,
-  View,
-  Guide,
-  Shape,
-  Facet,
-  Util
-} from "bizcharts";
-import DataSet from "@antv/data-set";
+} from 'bizcharts';
+import DataSet from '@antv/data-set';
+import NoData from '../../NoData';
 
 class BasicBarChart extends React.Component {
+  handleClick = ({ data }) => {
+    console.log(data);
+  };
+
   render() {
-    const data = [
-      {
-        country: "中国",
-        population: 131744
-      },
-      {
-        country: "印度",
-        population: 104970
-      },
-      {
-        country: "美国",
-        population: 29034
-      },
-      {
-        country: "印尼",
-        population: 23489
-      },
-      {
-        country: "巴西",
-        population: 18203
-      }
-    ];
+    const { params } = this.props;
+    const { data, xAxis, yAxis, clickBar, loading } = params;
     const ds = new DataSet();
     const dv = ds.createView().source(data);
     dv.source(data).transform({
-      type: "sort",
+      type: 'sort',
 
       callback(a, b) {
         // 排序依据，和原生js的排序callback一致
-        return a.population - b.population > 0;
-      }
+        return Number(a[yAxis]) - Number(b[yAxis]) > 0;
+      },
     });
     return (
-      <div>
-        <Chart height={400} data={dv} forceFit>
-          <Coord transpose />
-          <Axis
-            name="country"
-            label={{
-              offset: 12
-            }}
-          />
-          <Axis name="population" />
-          <Tooltip />
-          <Geom color="#F5BD27" type="interval" position="country*population" />
-        </Chart>
-      </div>
+      <Spin spinning={loading}>
+        {data && data.length !== 0 || loading ? (
+          <Chart height={400} data={dv} forceFit onPlotClick={clickBar}>
+            <Coord transpose/>
+            <Axis
+              name={xAxis}
+              label={{
+                offset: 12,
+              }}
+            />
+            <Axis name={yAxis}/>
+            <Tooltip/>
+            <Geom
+              color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}/>
+          </Chart>
+        ) : <NoData height={400}/>
+        }
+      </Spin>
     );
   }
 }
