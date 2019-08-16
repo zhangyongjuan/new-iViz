@@ -42,10 +42,6 @@ class BasicBarChart extends React.Component {
             <Axis name={yAxis}/>
             <Tooltip/>
             <Geom
-              select={[true, {
-                mode: 'single', // 选中模式，单选、多选
-                style: { color: '#000' }, // 选中后 shape 的样式
-              }]}
               color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}/>
           </Chart>
         ) : <NoData height={400}/>
