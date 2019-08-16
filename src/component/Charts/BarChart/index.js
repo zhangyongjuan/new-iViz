@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spin} from 'antd';
+import { Spin } from 'antd';
 import {
   Chart,
   Geom,
@@ -8,15 +8,16 @@ import {
   Coord,
 } from 'bizcharts';
 import DataSet from '@antv/data-set';
+import NoData from '../../NoData';
 
 class BasicBarChart extends React.Component {
-  handleClick = ({data}) => {
+  handleClick = ({ data }) => {
     console.log(data);
   };
 
   render() {
     const { params } = this.props;
-    const { data, xAxis, yAxis,clickBar,loading } = params;
+    const { data, xAxis, yAxis, clickBar, loading } = params;
     const ds = new DataSet();
     const dv = ds.createView().source(data);
     dv.source(data).transform({
@@ -29,23 +30,26 @@ class BasicBarChart extends React.Component {
     });
     return (
       <Spin spinning={loading}>
-        <Chart height={400} data={dv} forceFit onPlotClick={clickBar}>
-          <Coord transpose/>
-          <Axis
-            name={xAxis}
-            label={{
-              offset: 12,
-            }}
-          />
-          <Axis name={yAxis}/>
-          <Tooltip/>
-          <Geom
-            select={[true, {
-              mode: 'single' , // 选中模式，单选、多选
-              style: {color:'#000'}, // 选中后 shape 的样式
-            }]}
-            color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}/>
-        </Chart>
+        {data && data.length !== 0 || loading ? (
+          <Chart height={400} data={dv} forceFit onPlotClick={clickBar}>
+            <Coord transpose/>
+            <Axis
+              name={xAxis}
+              label={{
+                offset: 12,
+              }}
+            />
+            <Axis name={yAxis}/>
+            <Tooltip/>
+            <Geom
+              select={[true, {
+                mode: 'single', // 选中模式，单选、多选
+                style: { color: '#000' }, // 选中后 shape 的样式
+              }]}
+              color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}/>
+          </Chart>
+        ) : <NoData height={400}/>
+        }
       </Spin>
     );
   }
