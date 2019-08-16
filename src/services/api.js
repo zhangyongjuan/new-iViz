@@ -59,3 +59,14 @@ export async function fetchSBBox(params) {
     requestType: 'form',
   });
 }
+
+
+
+
+export async function fetchFlyBarData(params) {
+  return request('/api/story/getFlyBar', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}

@@ -54,6 +54,7 @@ class BasicTable extends React.Component {
         <Table
           rowKey={r=>r[rowKey]}
           bordered
+          scroll={{ y: 400 }}
           loading={loading}
           dataSource={data}
           columns={columns}
