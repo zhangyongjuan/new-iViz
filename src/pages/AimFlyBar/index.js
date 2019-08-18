@@ -5,6 +5,7 @@ import _ from 'lodash';
 import styles from './index.less';
 import BasicColumn from '../../component/Charts/BarChart/BasicColumn';
 import GroupedColumn from '../../component/Charts/BarChart/GroupedColumn';
+import GroupBar from '../../component/Charts/BarChart/GroupBar';
 import SeriesLine from '../../component/Charts/LineChart/SeriesLine';
 import BoxPlot from '../../component/Charts/BoxChart/BoxPlot';
 import { connect } from 'dva';
@@ -121,7 +122,8 @@ class AimFlyBar extends React.Component {
     const { spc } = this.state;
     const singleBarData = FlyBar && FlyBar.barBlockChart && FlyBar.barBlockChart.series && FlyBar.barBlockChart.series.length !== 0 && FlyBar.barBlockChart.series[0].data || [];
     const seriesLineData = this.transLineData(FlyBar && FlyBar.barLineChart && FlyBar.barLineChart.lines || []);
-    const { spcs = [] } = FlyBar;
+    const { spcs = [], guaBlockChart = [] } = FlyBar;
+    const { series = [] } = guaBlockChart;
     console.log(FlyBar);
     return (
       <div className={styles.main}>
@@ -165,7 +167,12 @@ class AimFlyBar extends React.Component {
                 </Select>
               </div>
               <div className={styles.groupedColumn}>
-                <GroupedColumn/>
+                {/*<GroupedColumn/>*/}
+                <GroupBar
+                  params={{
+                    data: series,
+                  }}
+                />
               </div>
             </div>
 

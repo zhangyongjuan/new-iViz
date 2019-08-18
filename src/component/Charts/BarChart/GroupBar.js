@@ -11,15 +11,7 @@ import('echarts/lib/component/title');
 import('echarts/lib/component/tooltip');
 import('echarts/lib/component/legend');
 
-var data = prepareBoxplotData([
-  [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
-  [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
-  [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
-  [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
-  [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870],
-]);
-
-export default class BoxPlot extends React.Component {
+export default class GroupBar extends React.Component {
   constructor(props) {
     super(props);
     this.PieRef = React.createRef();
@@ -51,103 +43,74 @@ export default class BoxPlot extends React.Component {
 
   transformData = (data) => {
     const newData = {
-      axisData: [],
-      boxData: [],
-      outliers: [],
-      up_limit: null,
-      low_limit: null,
+      xAxis: [],
+      series: [],
     };
-    if (data && data.length !== 0) {
-      data.forEach((k, i) => {
-        newData.axisData.push(k.name);
-        newData.low_limit = k.low_limit;
-        newData.up_limit = k.up_limit;
-        newData.boxData.push([k.low, k.q1, k.q2, k.q3, k.upper]);
-        if (k.errData && k.errData.length !== 0) {
-          _.forEach(k.errData, (value) => {
-            newData.outliers.push([i, value]);
-          });
-        }
+    _.forEach(data, (k, i) => {
+      newData.xAxis.push(k.name);
+      _.forEach(k.data, (h, j) => {
+        const n = [].fill.call(new Array(data.length), null);
+        n[i] = h.value;
+        newData.series.push({
+          name: h.time,
+          type: 'bar',
+          barWidth: h.value === 0 ? 0 : 10,
+          barCategoryGap: 0,
+          z: 1,
+          data: n,
+          connectNulls: true,
+        });
       });
-      return newData;
-    }
+    });
+    console.log(newData);
     return newData;
   };
 
   // 一个基本的echarts图表配置函数
   setPieOption = data => ({
     tooltip: {
-      trigger: 'item',
       axisPointer: {
         type: 'shadow',
       },
+      trigger: 'axis',
     },
-    grid: {
-      left: '10%',
-      right: '10%',
-      bottom: '15%',
+    // grid: {
+    //   bottom: metadata.init().x_major_offset * 12 + 30,
+    // },
+    dataZoom: {
+      type: 'slider',
+      show: true,
+      start: 1,
+      end: 35,
     },
-    xAxis: {
-      type: 'category',
-      data: data.axisData,
-      boundaryGap: true,
-      nameGap: 30,
-      splitArea: {
-        show: false,
-      },
-      axisLabel: {
-        formatter: '{value}',
-      },
-      splitLine: {
-        show: false,
-      },
-    },
-    yAxis: {
-      type: 'value',
-      // name: 'km/s minus 299,000',
-      splitArea: {
-        show: true,
-      },
-    },
-    series: [
+    xAxis: [
       {
-        name: 'boxplot',
-        type: 'boxplot',
-        data: data.boxData,
-        tooltip: {
-          formatter: function(param) {
-            return [
-              'name：' + param.name,
-              'upper: ' + param.data[5],
-              'Q3: ' + param.data[4],
-              'median: ' + param.data[3],
-              'Q1: ' + param.data[2],
-              'lower: ' + param.data[1],
-            ].join('<br/>');
-          },
+        type: 'category',
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: {
+          rotate: 90,
         },
-        markLine: {
-          data: [
-            {
-              name: 'low_limit',
-              yAxis: data.low_limit,
-            },
-            {
-              name: 'up_limit',
-              yAxis: data.up_limit,
-            },
-          ],
-        },
+        splitArea: { show: false },
+        data: data.xAxis,
       },
+
+    ],
+    yAxis: [
       {
-        name: 'outlier',
-        type: 'scatter',
-        data: data.outliers,
+        type: 'value',
+        name: '水量',
+        axisLabel: {
+          formatter: '{value}',
+        },
       },
     ],
+    series: data.series,
   });
 
   render() {
+    const { data } = this.props.params;
+    console.log(this.transformData(data));
     return <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>;
   }
 }
