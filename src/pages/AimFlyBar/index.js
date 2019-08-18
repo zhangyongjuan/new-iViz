@@ -69,7 +69,7 @@ const linshiData = [
 @connect(({ global, FlyBar, loading }) => ({
   global,
   FlyBar,
-  // loading: loading.effects['BowKing/getChartData'],
+  loading: loading.effects['FlyBar/getChartData'],
 }))
 class AimFlyBar extends React.Component {
   constructor(props) {
@@ -77,6 +77,13 @@ class AimFlyBar extends React.Component {
     this.state = {
       spc: '',
     };
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    const { dateTime, topSelectItem } = this.props.global;
+    if (!(_.isEqual(dateTime, nextProps.global.dateTime) && _.isEqual(topSelectItem, nextProps.global.topSelectItem))) {
+      this.getFlyBarChart();
+    }
   }
 
 
@@ -117,12 +124,40 @@ class AimFlyBar extends React.Component {
     return newData;
   };
 
+  handleClickBar = (param) => {
+    console.log(param);
+    const { dispatch, global } = this.props;
+    const { topSelectItem } = global;
+    const { startTime, endTime } = global && global.dateTime;
+    const { spc } = this.state;
+    // seriesName
+    // name
+    if (param.componentType === 'series' && param.componentSubType === 'bar') {
+      if (spc) {
+        dispatch({
+          type: 'FlyBar/getHangData',
+          payload: {
+            data: JSON.stringify({
+              startTime,
+              endTime,
+              mapping: { ...topSelectItem },
+              flyBar: param.name,
+              hang: param.seriesName,
+              spc,
+            }),
+          },
+        });
+      }
+    }
+  };
+
   render() {
-    const { FlyBar } = this.props;
+    const { FlyBar,loading } = this.props;
     const { spc } = this.state;
     const singleBarData = FlyBar && FlyBar.barBlockChart && FlyBar.barBlockChart.series && FlyBar.barBlockChart.series.length !== 0 && FlyBar.barBlockChart.series[0].data || [];
     const seriesLineData = this.transLineData(FlyBar && FlyBar.barLineChart && FlyBar.barLineChart.lines || []);
-    const { spcs = [], guaBlockChart = [] } = FlyBar;
+    const { spcs = [], guaBlockChart = [], Hang = [] } = FlyBar;
+    const { boxList = '' } = Hang;
     const { series = [] } = guaBlockChart;
     console.log(FlyBar);
     return (
@@ -135,6 +170,7 @@ class AimFlyBar extends React.Component {
                 data: singleBarData,
                 xAxis: 'time',
                 yAxis: 'value',
+                loading
               }}
             />
           </div>
@@ -149,7 +185,9 @@ class AimFlyBar extends React.Component {
                 xAxis: 'time',
                 yAxis: 'value',
                 name: 'name',
+                loading
               }}
+
             />
           </div>
         </div>
@@ -159,7 +197,7 @@ class AimFlyBar extends React.Component {
           <div className={styles.lineChartGroup}>
             <div className={styles.goup}>
               <div>
-                <Select placeholder="Please select spcs" style={{ width: 180 }}
+                <Select placeholder="Please select spcs" value={spc} style={{ width: 180 }}
                         onChange={this.handleChangeSpc}>
                   {
                     spcs.map((k, i) => <Option key={`swdsf${i.toLocaleString()}`} value={k}>{k}</Option>)
@@ -171,7 +209,10 @@ class AimFlyBar extends React.Component {
                 <GroupBar
                   params={{
                     data: series,
+                    clickBar: this.handleClickBar,
+                    loading
                   }}
+
                 />
               </div>
             </div>
@@ -182,11 +223,15 @@ class AimFlyBar extends React.Component {
         <div className={styles.firstRow}>
           <p className={styles.headerTitle}>Flybar_Hang SPC Contrast</p>
           <div className={styles.lineChartGroup}>
-            <BoxPlot
-              params={{
-                data: linshiData,
-              }}
-            />
+            {
+              spc && boxList ? (
+                <BoxPlot
+                  params={{
+                    data: boxList || [],
+                  }}
+                />
+              ) : null
+            }
           </div>
         </div>
 

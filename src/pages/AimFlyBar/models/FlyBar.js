@@ -1,31 +1,37 @@
-import { fetchFlyBarData,fetchIMBox,fetchSBBox } from '@/services/api';
+import { fetchFlyBarData, fetchIMBox, fetchSBBox, fetchHangData } from '@/services/api';
 
 export default {
   namespace: 'FlyBar',
 
-  state: {
-
-  },
+  state: {},
 
   effects: {
-    *getChartData({payload}, { call, put }) {
-      const response = yield call(fetchFlyBarData,payload);
+    * getChartData({ payload }, { call, put }) {
+      const response = yield call(fetchFlyBarData, payload);
       yield put({
         type: 'save',
         payload: response,
       });
     },
 
-    *getIMBox({payload}, { call, put }) {
-      const response = yield call(fetchIMBox,payload);
+    * getHangData({ payload }, { call, put }) {
+      const response = yield call(fetchHangData, payload);
+      yield put({
+        type: 'saveHang',
+        payload: response,
+      });
+    },
+
+    * getIMBox({ payload }, { call, put }) {
+      const response = yield call(fetchIMBox, payload);
       yield put({
         type: 'saveIMBox',
         payload: response,
       });
     },
 
-    *getSBBox({payload}, { call, put }) {
-      const response = yield call(fetchSBBox,payload);
+    * getSBBox({ payload }, { call, put }) {
+      const response = yield call(fetchSBBox, payload);
       yield put({
         type: 'saveSBBox',
         payload: response,
@@ -43,13 +49,19 @@ export default {
     saveIMBox(state, { payload }) {
       return {
         ...state,
-        IMBox:{...payload},
+        IMBox: { ...payload },
       };
     },
     saveSBBox(state, { payload }) {
       return {
         ...state,
-        SBBox:{...payload},
+        SBBox: { ...payload },
+      };
+    },
+    saveHang(state, { payload }) {
+      return {
+        ...state,
+        Hang: { ...payload },
       };
     },
   },

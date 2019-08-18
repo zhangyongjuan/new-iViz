@@ -1,9 +1,11 @@
 import React from 'react';
+import { Spin } from 'antd';
 
 // 导入echarts
 import echarts from 'echarts/lib/echarts';
 import { prepareBoxplotData } from 'echarts/extension/dataTool';
 import _ from 'lodash';
+import NoData from '../../NoData';
 
 require('echarts/lib/chart/boxplot');
 
@@ -19,15 +21,24 @@ export default class GroupBar extends React.Component {
 
   componentDidMount() {
     this.initPie();
+    this.handleClick();
   }
 
   componentDidUpdate() {
     this.initPie();
   }
 
+  handleClick = () => {
+    const { data, clickBar } = this.props.params;
+    const myChart = echarts.init(this.PieRef.current);
+    myChart.on('click', function(param) {
+      clickBar(param);
+    });
+  };
+
   initPie = () => {
     // 外部传入的data数据
-    const { data } = this.props.params;
+    const { data, clickBar } = this.props.params;
     // 初始化echarts
     const myChart = echarts.init(this.PieRef.current);
 
@@ -39,6 +50,7 @@ export default class GroupBar extends React.Component {
     window.addEventListener('resize', () => {
       myChart.resize();
     });
+
   };
 
   transformData = (data) => {
@@ -54,8 +66,8 @@ export default class GroupBar extends React.Component {
         newData.series.push({
           name: h.time,
           type: 'bar',
-          barWidth: h.value === 0 ? 0 : 10,
-          barCategoryGap: 0,
+          barGap: 0,
+          // barWidth: 10,
           z: 1,
           data: n,
           connectNulls: true,
@@ -66,6 +78,55 @@ export default class GroupBar extends React.Component {
     return newData;
   };
 
+  // transData = (data) => {
+  //   const newData = {
+  //     xAxis: [],
+  //     series: [],
+  //   };
+  //
+  //   _.forEach(data, (k, i) => {
+  //
+  //     _.forEach(k.data, (h, j) => {
+  //       newData.xAxis.push(h.time);
+  //       newData.series.push(h.value);
+  //
+  //     });
+  //   });
+  //   return newData
+  // };
+  //
+  // setPieOption = (data)=>({
+  //   tooltip:{
+  //     axisPointer: {
+  //       type: 'shadow'
+  //     },
+  //     trigger: 'axis'
+  //   },
+  //   xAxis: {
+  //     type: 'category',
+  //     data: data.xAxis,
+  //     axisTick: {
+  //       lineStyle: {color: '#CCC'},
+  //       interval: function (index, value) {
+  //         return value!=='';
+  //       },
+  //
+  //     },
+  //   },
+  //     dataZoom: {
+  //       type: 'slider',
+  //       show: true,
+  //       // start: 1,
+  //       // end: 35,
+  //     },
+  //   yAxis: {
+  //     type: 'value'
+  //   },
+  //   series: [{
+  //     data: data.series,
+  //     type: 'bar',
+  //   }]
+  // })
   // 一个基本的echarts图表配置函数
   setPieOption = data => ({
     tooltip: {
@@ -73,6 +134,19 @@ export default class GroupBar extends React.Component {
         type: 'shadow',
       },
       trigger: 'axis',
+      tooltip: {
+        formatter: function(param) {
+          console.log(param);
+          return [
+            // 'name：' + param.name,
+            // 'upper: ' + param.data[5],
+            // 'Q3: ' + param.data[4],
+            // 'median: ' + param.data[3],
+            // 'Q1: ' + param.data[2],
+            // 'lower: ' + param.data[1],
+          ].join('<br/>');
+        },
+      },
     },
     // grid: {
     //   bottom: metadata.init().x_major_offset * 12 + 30,
@@ -109,8 +183,13 @@ export default class GroupBar extends React.Component {
   });
 
   render() {
-    const { data } = this.props.params;
-    console.log(this.transformData(data));
-    return <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>;
+    const { data = [], loading } = this.props.params;
+    // console.log(this.transformData(data));
+    // console.log(this.transData(data));
+    return (
+      <Spin spinning={loading}>
+        <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>
+      </Spin>
+    );
   }
 }
