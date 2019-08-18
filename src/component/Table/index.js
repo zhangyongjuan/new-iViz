@@ -50,10 +50,11 @@ class BasicTable extends React.Component {
   render() {
     const {data,rowKey,loading}=this.props;
     return (
-      <div>
+      <div style={{marginTop:30}}>
         <Table
           rowKey={r=>r[rowKey]}
           bordered
+          scroll={{ x: 900,y: 400 }}
           loading={loading}
           dataSource={data}
           columns={columns}

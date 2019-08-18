@@ -92,6 +92,17 @@ class GroupedColumn extends React.Component {
               }
             ]}
           />
+          <Geom
+            type="interval"
+            position="label*value"
+            color={"type"}
+            adjust={[
+              {
+                type: "dodge",
+                marginRatio: 0
+              }
+            ]}
+          />
         </Chart>
       </div>
     );

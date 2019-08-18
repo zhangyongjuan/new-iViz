@@ -7,7 +7,7 @@ import NoData from '../../NoData';
 class BasicLineChart extends React.Component {
   render() {
     const { params } = this.props;
-    const { data, xAxis, yAxis,loading } = params;
+    const { data, xAxis, yAxis,loading,title } = params;
     const cols = {
       [yAxis]: {
         min: 0,
@@ -21,7 +21,7 @@ class BasicLineChart extends React.Component {
         {
           data&&data.length!==0 || loading?(
             <div className={styles.main}>
-              <div className={styles.chartTitle}>Pre Inster Molding Input</div>
+              <div className={styles.chartTitle}>{title||''}</div>
               <Chart height={400} data={data || []} scale={cols} forceFit>
                 <Axis name={xAxis}/>
                 <Axis name={yAxis}/>

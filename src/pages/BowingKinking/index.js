@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col,Empty } from 'antd';
+import { Row, Col } from 'antd';
 import { connect } from 'dva';
 import _ from 'lodash';
 
@@ -108,7 +108,8 @@ class BowingKinking extends React.Component {
                     data: lines || [],
                     xAxis: 'time',
                     yAxis: 'value',
-                    loading
+                    loading,
+                    title:'Pre Inster Molding Input'
                   }}
                 />
                 <BasicBarChart
@@ -133,7 +134,8 @@ class BowingKinking extends React.Component {
                     data: linesSB || [],
                     xAxis: 'time',
                     yAxis: 'value',
-                    loading
+                    loading,
+                    title:'Pre Sandblasting Input'
                   }}
                 />
 

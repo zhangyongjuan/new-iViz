@@ -9,6 +9,7 @@ import {
 } from 'bizcharts';
 import DataSet from '@antv/data-set';
 import NoData from '../../NoData';
+import styles from './index.less';
 
 class BasicBarChart extends React.Component {
   handleClick = ({ data }) => {
@@ -31,19 +32,21 @@ class BasicBarChart extends React.Component {
     return (
       <Spin spinning={loading}>
         {data && data.length !== 0 || loading ? (
-          <Chart height={400} data={dv} forceFit onPlotClick={clickBar}>
-            <Coord transpose/>
-            <Axis
-              name={xAxis}
-              label={{
-                offset: 12,
-              }}
-            />
-            <Axis name={yAxis}/>
-            <Tooltip/>
-            <Geom
-              color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}/>
-          </Chart>
+         <div className={styles.main}>
+           <Chart padding={[ 'auto', 'auto', 'auto', 'auto']}  style={{minHeight:400}} height={30*data.length} data={dv} forceFit onPlotClick={clickBar}>
+             <Coord transpose/>
+             <Axis
+               name={xAxis}
+               label={{
+                 offset: 12,
+               }}
+             />
+             <Axis name={yAxis}/>
+             <Tooltip/>
+             <Geom
+               color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}/>
+           </Chart>
+         </div>
         ) : <NoData height={400}/>
         }
       </Spin>
