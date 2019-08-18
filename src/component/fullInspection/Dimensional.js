@@ -38,199 +38,11 @@ class Dimensional extends Component{
   }
   componentDidMount() {
     this.fetch();
-    // const overallXHighlightData = ['', '', '', '', '', '', '', '', '', '','',''];
-    // const overallYHighlightData = ['', '', '', '', '', '', '','','', '', '', '', '', '', '',''];
-    // const overallHeatmap = echarts.init(document.getElementById('DimOverallHeatmap'));
-    // const overallOption = {
-    //   tooltip: {
-    //     position: 'top'
-    //   },
-    //   animation: false,
-    //   grid: {
-    //     height: '80%',
-    //     y: '10%',
-    //     left:'15%',
-    //     top:'10%',
-    //     bottom:'10%'
-    //   },
-    //   // dataZoom: [
-    //   //   {
-    //   //     show: true,
-    //   //     realtime: true,
-    //   //     start: 0,
-    //   //     end: 60,
-    //   //     top:0,
-    //   //     xAxisIndex:[0,1],
-    //   //     // handleStyle: {
-    //   //     //   color: '#ff0000' ,
-    //   //     //   borderWidth: 0 ,
-    //   //     // },
-    //   //     height:15,
-    //   //     showDetail:false
-    //   //   },
-    //   //   {
-    //   //     type: 'inside',
-    //   //     realtime: true,
-    //   //     start: 0,
-    //   //     end: 60,
-    //   //   },
-    //   //
-    //   // ],
-    //   xAxis: [
-    //     {
-    //       type: 'category',
-    //       data: hours,
-    //       axisTick:{
-    //         interval:0
-    //       },
-    //       splitArea: {
-    //         show: true
-    //       },
-    //
-    //       position:'top',
-    //       triggerEvent:true,
-    //       axisLabel:{
-    //         interval:0,
-    //         rich:{},
-    //         // width:40,
-    //         // height:10,
-    //         padding:10,
-    //         // backgroundColor:'red',
-    //       }
-    //     },{
-    //       type: 'category',
-    //       data: overallXHighlightData,
-    //       axisTick:{
-    //         // show:false,
-    //         interval:0
-    //       },
-    //       splitArea: {
-    //         show: true
-    //       },
-    //
-    //       position:'top',
-    //       triggerEvent:true,
-    //       axisLabel:{
-    //         interval:0,
-    //         rich:{},
-    //         width:80,
-    //         // // height:10,
-    //         padding:10,
-    //         backgroundColor:'red',
-    //       }
-    //     }
-    //   ],
-    //   yAxis: [
-    //     {
-    //       type: 'category',
-    //       data: days,
-    //       axisTick:{
-    //         interval:0
-    //       },
-    //       splitArea: {
-    //         show: true,
-    //       },
-    //       axisLabel:{
-    //         padding:10,
-    //         interval:0,
-    //         rich:{},
-    //         height:10,
-    //         backgroundColor:'white',
-    //         lineHeight:10,
-    //         formatter: function(value,index){
-    //           return(
-    //             `${value}    ${heatmapYield[index]}`
-    //           )
-    //         }
-    //       },
-    //       triggerEvent:true,
-    //     },{
-    //       type: 'category',
-    //       data: overallYHighlightData,
-    //       axisTick:{
-    //         interval:0
-    //       },
-    //       splitArea: {
-    //         show: true
-    //       },
-    //       position:'left',
-    //       axisLabel:{
-    //         padding:8,
-    //         interval:0,
-    //         rich:{},
-    //         height:10,
-    //         // width:100,
-    //         lineHeight:10,
-    //         backgroundColor:'red',
-    //         showMinLabel:true,
-    //         formatter: function (value,index) {
-    //           return(
-    //             value !== ''? `${value}    ${heatmapYield[index]}`:``
-    //           )
-    //         }
-    //       },
-    //       triggerEvent:true,
-    //     }],
-    //   visualMap: {
-    //     min: 0,
-    //     max: 10,
-    //     splitNumber: 4,
-    //     color: ['red','#ff6d02','#37A2DA'],
-    //     orient: 'horizontal',
-    //     align:'left',
-    //     left: 'center',
-    //     bottom: '0%',
-    //     textStyle: {
-    //       color: '#000',
-    //
-    //     }
-    //   },
-    //   series: [{
-    //     name: 'Punch Card',
-    //     type: 'heatmap',
-    //     data: data,
-    //     label: {
-    //       normal: {
-    //         show: true
-    //       }
-    //     },
-    //     itemStyle: {
-    //       emphasis: {
-    //         shadowBlur: 10,
-    //         shadowColor: 'rgba(0, 0, 0, 0.5)'
-    //       }
-    //     }
-    //   }]
-    // };
-    // overallHeatmap.setOption(overallOption);
-    // //Axis添加点击事件
-    // overallHeatmap.on('click',(e)=>{
-    //   if(e.componentType === 'xAxis'){
-    //     for (var i = 0; i < overallXHighlightData.length; i++) {
-    //       if (e.value === hours[i]) {
-    //         overallXHighlightData[i] = e.value;
-    //       }
-    //       else {
-    //         overallXHighlightData[i] = '';
-    //       }
-    //     }
-    //     this.setState({showParticularHeatmap:'particularHeatmap'});
-    //   }else if(e.componentType === 'yAxis'){
-    //     for (var j = 0; j < overallYHighlightData.length; j++) {
-    //       if (e.value === days[j]) {
-    //         overallYHighlightData[j] = e.value;
-    //       }
-    //       else {
-    //         overallYHighlightData[j] = '';
-    //       }
-    //     }
-    //     this.setState({showParticularHeatmap:'none'});
-    //   }else{
-    //     console.log('点击的是值--',e.value)
-    //   }
-    //   overallHeatmap.setOption(overallOption, true);
-    //   this.setState({showParticularLine:'particularLine'},this.drawParticularChart);
-    // })
+  }
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.global.timeRangeComplete === true){
+      this.fetch();
+    }
   }
   fetch=()=>{
     this.setState({loading:true});
@@ -276,13 +88,13 @@ class Dimensional extends Component{
     const sumYield = this.state.heatmapYield;
     const overallOption = {
       tooltip: {
-        position: 'top'
+        position: 'bottom'
       },
       animation: false,
       grid: {
         height: '80%',
         y: '10%',
-        left:'17%',
+        left:'25%',
         top:'10%',
         bottom:'10%'
       },
@@ -366,7 +178,7 @@ class Dimensional extends Component{
             show: true,
           },
           axisLabel:{
-            padding:10,
+            padding:5,
             interval:0,
             rich:{},
             height:10,
@@ -391,7 +203,7 @@ class Dimensional extends Component{
           },
           position:'left',
           axisLabel:{
-            padding:8,
+            padding:5,
             interval:0,
             rich:{},
             height:10,
@@ -444,6 +256,12 @@ class Dimensional extends Component{
     overallHeatmap.on('click',(e)=>{
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
+          //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
+          if(e.value == 'cnc8_wcnc4_qc' || e.value == 'cnc10_wcnc5_qc' || e.value == 'laser_qc'){
+            this.setState({machineName:'CNC7 Machine#'})
+          }else{
+            return;
+          }
           for (var i = 0; i < overallXHighlightData.length; i++) {
             if (e.value === this.state.overallStation[i]) {
               overallXHighlightData[i] = e.value;
@@ -452,9 +270,18 @@ class Dimensional extends Component{
               overallXHighlightData[i] = '';
             }
           }
-          this.setState({clickStationName:e.value});
+          //y轴若有选中状态，则取消，变为全未选中状态
+          for (var k = 0; k < overallYHighlightData.length; k++) {
+            overallYHighlightData[k] = '';
+          }
+          this.setState({clickStationName:e.value,clickDefectName:''});
         }
         else{              //点击的值
+          if(e.name == 'cnc8_wcnc4_qc' || e.name == 'cnc10_wcnc5_qc' || e.name == 'laser_qc'){
+            this.setState({machineName:'CNC7 Machine#'})
+          }else{
+            return;
+          }
           let clickY = '';
           for (var m = 0; m < overallXHighlightData.length; m++) {            // 对应的x轴背景变红色
             if (e.name === this.state.overallStation[m]) {
@@ -486,7 +313,11 @@ class Dimensional extends Component{
             overallYHighlightData[j] = '';
           }
         }
-        this.setState({clickDefectName:e.value});
+        //x轴若有选中状态，则取消，变为全未选中状态
+        for (var k = 0; k < overallXHighlightData.length; k++) {
+          overallXHighlightData[k] = '';
+        }
+        this.setState({clickStationName:'',clickDefectName:e.value});
         this.clickChartRequest('clickOverallHeatmapY')
       }
       overallHeatmap.setOption(overallOption, true);
@@ -684,7 +515,7 @@ class Dimensional extends Component{
         }],
       visualMap: {
         min: 0,
-        max: 10,
+        max: 100,
         splitNumber: 4,
         color: ['#d94e5d','#eac736','#50a3ba'],
         orient: 'horizontal',
@@ -787,8 +618,10 @@ class Dimensional extends Component{
     //   alert('被点击了！！')
     // })
   }
-  handleChange(value) {
+  handleChange=(value)=> {
     console.log(`selected ${value}`);
+    this.setState({machineName:value});
+    this.clickChartRequest('clickOverallHeatmapX');
   }
   render(){
     return (
@@ -807,12 +640,12 @@ class Dimensional extends Component{
           <p className={styles.title} >
             Heatmap by CNC
           </p>
-          <Select defaultValue='title' style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
+          <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
             <Option value='title' disabled>Please choose one</Option>
-            <Option value="CNC-7">CNC-7</Option>
-            <Option value="CNC-8">CNC-8</Option>
-            <Option value="CNC-9">CNC-9</Option>
-            <Option value="CNC-10">CNC-10</Option>
+            <Option value="CNC7 Machine#">CNC-7</Option>
+            <Option value="CNC8 Machine#">CNC-8</Option>
+            <Option value="CNC9 Machine#">CNC-9</Option>
+            <Option value="CNC10 Machine#">CNC-10</Option>
           </Select>
           <div id='DimParticularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap} />
         </div>
