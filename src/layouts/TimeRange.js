@@ -196,6 +196,7 @@ class TimeRange extends Component {
           onChange={this.timeChange}
           onOk={this.onTimeOk}
           allowClear={false}
+          inputReadOnly={true}
           ranges={{
             Today: [moment().startOf('day'), moment().endOf('day')],
             'This Week': [moment().startOf('week'), moment().endOf('week')],
@@ -203,7 +204,7 @@ class TimeRange extends Component {
           }}
           showTime={{
             hideDisabledOptions: true,
-            // defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]
+            defaultValue: [moment('2019-5-14 08:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 20:00:00', 'YYYY-MM-DD HH:mm:ss')]
           }}
           defaultValue={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
           value={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}

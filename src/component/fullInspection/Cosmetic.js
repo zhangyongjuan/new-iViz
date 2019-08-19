@@ -343,12 +343,16 @@ class Commetic extends Component{
     })
 
   }
-  clickChartRequest = (type)=>{
+  clickChartRequest = (type,machineName)=>{
     this.setState({loading:true});
     if(type === 'clickOverallHeatmapX'){
+      let machine = this.state.machineName;
+      if(machineName !== undefined){
+        machine = machineName
+      }
       const requestCon = {};
       const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem},
-        {stationName: this.state.clickStationName, machineName: this.state.machineName, defectName: this.state.clickDefectName});
+        {stationName: this.state.clickStationName, machineName: machine, defectName: this.state.clickDefectName});
       requestCon.data = JSON.stringify(param);
       // console.log('requestCon---', requestCon);
       reqwest({
@@ -647,7 +651,7 @@ class Commetic extends Component{
   handleChange=(value)=> {
     console.log(`selected ${value}`);
     this.setState({machineName:value});
-    this.clickChartRequest('clickOverallHeatmapX');
+    this.clickChartRequest('clickOverallHeatmapX',value);
   }
   render(){
     return (
