@@ -58,22 +58,34 @@ class Dimensional extends Component{
     })
       .then(data=>{
         console.log('dimensional 数据==',data);
+        const dimStation = ['2d-bc-le','cnc5-qc','tri-qc', 'im-qc','sf-qc', 'cnc8-wcnc4-qc','sb-qc','ano-qc', 'cnc10-wcnc5-qc','laser-qc','fqc',]
         //整理overallData数据
-        const defectYield = [],defectName=[],chartData=[];
+        const defectYield = [],defectName=[],chartData=[],sliceArr = [];
         //  1.overall总不良率,不良类型
+        data.defectLines.sort((a,b)=>{
+          return a.sumYield - b.sumYield
+        })
+        if(data.defectLines.length >15){      //不良类型长度过长时，只保留top15
+          data.defectLines = data.defectLines.splice(data.defectLines.length-15);
+        }
         data.defectLines.map((item,i)=>{
           defectYield.push(item.sumYield);
           return defectName.push(item.defectName);
         })
 
-        data.defectLines.map((item,n)=>{
-          item.defectYields.map((v,i)=>{
-            const defectyield = (v.yield*100).toFixed(2);
-            return chartData.push([i,n,defectyield])
+        // ** 整理数据
+        dimStation.map((s,j)=>{
+          data.defectLines.map((item,n)=>{
+            item.defectYields.map((v,i)=>{
+              if(v.station === s){
+                const defectyield = (v.yield*100).toFixed(2);
+                return chartData.push([j,n,defectyield])
+              }
+            })
           })
         })
         // console.log('热力图表格数据---',chartData);
-        this.setState({overallChart:data.defectLines,overallStation:data.stations,heatmapYield:defectYield,overallDefectName:defectName,overallData:chartData,loading:false},this.drawOverallHeatmap)
+        this.setState({overallChart:data.defectLines,overallStation:dimStation,heatmapYield:defectYield,overallDefectName:defectName,overallData:chartData,loading:false},this.drawOverallHeatmap)
       })
   }
   drawOverallHeatmap=()=>{
@@ -124,7 +136,7 @@ class Dimensional extends Component{
       xAxis: [
         {
           type: 'category',
-          name:'value/%',
+          // name:'value/%',
           data: this.state.overallStation,
           axisTick:{
             interval:0
@@ -232,7 +244,12 @@ class Dimensional extends Component{
         textStyle: {
           color: '#000',
 
-        }
+        },
+        pieces: [
+          {min: 0,max:0,color: 'green'}, // 不指定 max，表示 max 为无限大（Infinity）。
+          {min: 0, max: 1,color: 'yellow'},
+          {min: 1, color: 'red'},
+        ]
       },
       series: [{
         name: 'Punch Card',
@@ -240,7 +257,8 @@ class Dimensional extends Component{
         data: this.state.overallData,
         label: {
           normal: {
-            show: true
+            show: true,
+            color:'#000'
           }
         },
         itemStyle: {
@@ -257,7 +275,7 @@ class Dimensional extends Component{
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
           //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
-          if(e.value == 'cnc8_wcnc4_qc' || e.value == 'cnc10_wcnc5_qc' || e.value == 'laser_qc'){
+          if(e.value == 'cnc8-wcnc4-qc' || e.value == 'cnc10-wcnc5-qc' || e.value == 'laser-qc'){
             this.setState({machineName:'CNC7 Machine#'})
           }else{
             return;
@@ -277,7 +295,7 @@ class Dimensional extends Component{
           this.setState({clickStationName:e.value,clickDefectName:''});
         }
         else{              //点击的值
-          if(e.name == 'cnc8_wcnc4_qc' || e.name == 'cnc10_wcnc5_qc' || e.name == 'laser_qc'){
+          if(e.name == 'cnc8-wcnc4-qc' || e.name == 'cnc10-wcnc5-qc' || e.name == 'laser-qc'){
             this.setState({machineName:'CNC7 Machine#'})
           }else{
             return;
@@ -525,7 +543,12 @@ class Dimensional extends Component{
         textStyle: {
           color: '#000',
 
-        }
+        },
+        pieces: [
+          {min: 0,max:0,color: 'green'}, // 不指定 max，表示 max 为无限大（Infinity）。
+          {min: 0, max: 10,color: 'yellow'},
+          {min: 10, color: 'red'},
+        ]
       },
       series: [{
         name: 'Punch Card',
@@ -533,7 +556,8 @@ class Dimensional extends Component{
         data: this.state.particularData,
         label: {
           normal: {
-            show: true
+            show: true,
+            color:'#000'
           }
         },
         itemStyle: {

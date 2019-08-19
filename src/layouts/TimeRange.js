@@ -48,7 +48,7 @@ class TimeRange extends Component {
         timeR
       }
     })
-    this.setState({timeRange: timeR},this.fetch)
+    // this.setState({timeRange: timeR},this.fetch)
   }
   componentDidMount() {
     //首先获取顶部六个下拉条件，其中color和wifis是全选和多选两个选项
@@ -165,8 +165,21 @@ class TimeRange extends Component {
       }
     })
   }
-  onOk = (value) => {
+  onTimeOk = (value) => {
     // console.log('onOk: ', value);
+    // const startT = new Date(value[0]).getTime();        //开始时间的毫秒
+    // const endT = new Date(value[1]).getTime();          //截止时间的毫秒
+    // const timeR = {};
+    // timeR.startTime = startT;
+    // timeR.endTime = endT;
+    // timeR.span = '8';
+    // this.props.dispatch({
+    //   type:'global/saveTime',
+    //   payload:{
+    //     timeR
+    //   }
+    // })
+    // this.setState({timeRange: timeR},this.fetch)
   }
   latestWeek = () => {
     const nowtime = new Date().getTime();
@@ -181,11 +194,16 @@ class TimeRange extends Component {
         <RangePicker
           format="YYYY-MM-DD HH:mm:ss"
           onChange={this.timeChange}
-          onOk={this.onOk}
+          onOk={this.onTimeOk}
           allowClear={false}
+          ranges={{
+            Today: [moment().startOf('day'), moment().endOf('day')],
+            'This Week': [moment().startOf('week'), moment().endOf('week')],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+          }}
           showTime={{
             hideDisabledOptions: true,
-            defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]
+            // defaultValue: [moment('2019-5-14 00:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 23:59:59', 'YYYY-MM-DD HH:mm:ss')]
           }}
           defaultValue={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
           value={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}

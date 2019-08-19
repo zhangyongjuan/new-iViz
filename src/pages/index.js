@@ -77,23 +77,61 @@ class SummaryPage extends Component{
       data: requestCon
     })
       .then(data => {
-        // console.log('总结页的数据====', data);
-        data.stationYileds.map((value, i) => {
-          value.firstPass = (value.firstPass * 100).toFixed(2) + '%';
-          value.finalPass = (value.finalPass * 100).toFixed(2) + '%';
-          return value.key = i;
+        console.log('总结页的数据====', data);
+        //整理表格数据，并按照station的固定顺序显示，鸡肋的功能
+        const newStation = [];
+        data.stationYileds.map((item, i) => {
+          item.firstPass = (item.firstPass * 100).toFixed(2) + '%';
+          item.finalPass = (item.finalPass * 100).toFixed(2) + '%';
+          item.key = i;
+          //排序了
+          switch (item.name) {
+            case '2d-bc-le':
+              newStation[0] = item;
+              break;
+            case 'cnc5-qc':
+              newStation[1] = item;
+              break;
+            case 'tri-qc':
+              newStation[2] = item;
+              break;
+            case 'im-qc':
+              newStation[3] = item;
+              break;
+            case 'sf-qc':
+              newStation[4] = item;
+              break;
+            case 'cnc8-wcnc4-qc':
+              newStation[5] = item;
+              break;
+            case 'sb-qc':
+              newStation[6] = item;
+              break;
+            case 'ano-qc':
+              newStation[7] = item;
+              break;case 'cnc10-wcnc5-qc':
+              newStation[8] = item;
+              break;
+            case 'laser-qc':
+              newStation[9] = item;
+              break;
+            case 'fqc':
+              newStation[10] = item;
+              break;
+          }
+          return newStation
         })
         this.setState({
           firstPass: data.firstPass,
           finalPass: data.finalPass,
-          stationYileds: data.stationYileds,
+          stationYileds: newStation,
           pieYield: data.pieYield,
           loading:false
         }, this.drawPieChart)
       })
   }
   drawPieChart=()=>{
-    console.log('环形图的数据==',this.state.pieYield);
+    // console.log('环形图的数据==',this.state.pieYield);
     const pieVale = this.state.pieYield;
     //内圈类型和数据
     const discribeType=['cosmetic','dimensional'];

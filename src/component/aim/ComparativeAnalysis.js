@@ -141,7 +141,7 @@ class Comparative extends Component{
   }
 
   stationChange=(stationValue)=> {
-    console.log(`selected station-- ${stationValue}`);
+    // console.log(`selected station-- ${stationValue}`);
     this.setState({selectStation:stationValue,spcInfo:[]});
     //  修改了station的选项，重新获取spc的可选项
     let requsetSpc = {};
@@ -161,7 +161,7 @@ class Comparative extends Component{
       })
   }
   spcChange = (spcValue)=>{
-    console.log(`selected spc-- ${spcValue}`);
+    // console.log(`selected spc-- ${spcValue}`);
     const spcs = [];
     spcValue.map((item,i)=>{
       const oneItem = {};
@@ -169,7 +169,7 @@ class Comparative extends Component{
       oneItem.spc=item.key;
       spcs.push(oneItem);
     })
-    console.log('已经选好的station和spc===',spcs);
+    // console.log('已经选好的station和spc===',spcs);
     this.setState({requestSpcs:spcs});
   }
   drawStatisticalChart=()=>{
