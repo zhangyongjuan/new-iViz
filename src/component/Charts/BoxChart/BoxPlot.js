@@ -54,8 +54,8 @@ export default class BoxPlot extends React.Component {
       axisData: [],
       boxData: [],
       outliers: [],
-      up_limit: null,
-      low_limit: null,
+      up_limit: [],
+      low_limit: [],
     };
     if (data && data.length !== 0) {
       data.forEach((k, i) => {

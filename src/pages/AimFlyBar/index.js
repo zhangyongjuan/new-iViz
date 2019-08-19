@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select } from 'antd';
+import { Select, message } from 'antd';
 import _ from 'lodash';
 
 import styles from './index.less';
@@ -82,19 +82,20 @@ class AimFlyBar extends React.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { dateTime, topSelectItem } = this.props.global;
     if (!(_.isEqual(dateTime, nextProps.global.dateTime) && _.isEqual(topSelectItem, nextProps.global.topSelectItem))) {
-      this.getFlyBarChart();
+      this.getFlyBarChart(nextProps.global.dateTime, nextProps.global.topSelectItem);
     }
   }
 
 
   componentDidMount() {
-    this.getFlyBarChart();
+    const { global } = this.props;
+    const { topSelectItem, dateTime } = global;
+    this.getFlyBarChart(dateTime, topSelectItem);
   }
 
-  getFlyBarChart = () => {
-    const { dispatch, global } = this.props;
-    const { topSelectItem } = global;
-    const { startTime, endTime } = global && global.dateTime;
+  getFlyBarChart = (dateTime, topSelectItem) => {
+    const { dispatch } = this.props;
+    const { startTime, endTime } = dateTime;
     dispatch({
       type: 'FlyBar/getChartData',
       payload: {
@@ -148,16 +149,19 @@ class AimFlyBar extends React.Component {
           },
         });
       }
+    } else {
+      message.warning('Please select Spc');
     }
   };
 
   render() {
-    const { FlyBar,loading } = this.props;
+    const { FlyBar, loading } = this.props;
     const { spc } = this.state;
     const singleBarData = FlyBar && FlyBar.barBlockChart && FlyBar.barBlockChart.series && FlyBar.barBlockChart.series.length !== 0 && FlyBar.barBlockChart.series[0].data || [];
-    const seriesLineData = this.transLineData(FlyBar && FlyBar.barLineChart && FlyBar.barLineChart.lines || []);
-    const { spcs = [], guaBlockChart = [], Hang = [] } = FlyBar;
+    const seriesLineData = (FlyBar && FlyBar.barLineChart && FlyBar.barLineChart.lines || []);
+    const { spcs = [], guaBlockChart = [], Hang = [], barLineChart = [] } = FlyBar;
     const { boxList = '' } = Hang;
+    const { timeList = [] } = barLineChart;
     const { series = [] } = guaBlockChart;
     console.log(FlyBar);
     return (
@@ -170,7 +174,7 @@ class AimFlyBar extends React.Component {
                 data: singleBarData,
                 xAxis: 'time',
                 yAxis: 'value',
-                loading
+                loading,
               }}
             />
           </div>
@@ -181,11 +185,9 @@ class AimFlyBar extends React.Component {
           <div className={styles.lineChartGroup}>
             <SeriesLine
               params={{
+                timeList,
+                loading,
                 data: seriesLineData,
-                xAxis: 'time',
-                yAxis: 'value',
-                name: 'name',
-                loading
               }}
 
             />
@@ -210,7 +212,7 @@ class AimFlyBar extends React.Component {
                   params={{
                     data: series,
                     clickBar: this.handleClickBar,
-                    loading
+                    loading,
                   }}
 
                 />

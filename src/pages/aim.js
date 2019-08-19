@@ -36,7 +36,7 @@ class AIM extends Component{
             <TabPane key="5" tab={<span><Icon type="area-chart" />Bowing/kinking_module</span>}>
               <BowingKinking />
             </TabPane>
-            <TabPane key="6" tab={<span><Icon type="area-chart" />Color_Flybar_Module</span>}>
+            <TabPane key="6" tab={<span><Icon type="stock" />Color_Flybar_Module</span>}>
               <AimFlyBar />
             </TabPane>
           </Tabs>
