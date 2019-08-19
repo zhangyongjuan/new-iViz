@@ -4,6 +4,7 @@ import {Select,Spin} from "antd";
 import styles from "./fullInspection.less";
 import reqwest from "reqwest";
 import {connect} from "react-redux";
+import _ from "lodash";
 
 const { Option } = Select;
 
@@ -37,17 +38,18 @@ class Dimensional extends Component{
     clickParticularY:''
   }
   componentDidMount() {
-    this.fetch();
+    this.fetch(this.props);
   }
   componentWillReceiveProps(nextProps, nextContext) {
-    if(nextProps.global.timeRangeComplete === true){
-      this.fetch();
+    const { dateTime, topSelectItem } = this.props.global;
+    if(nextProps.global.timeRangeComplete === true && !(_.isEqual(dateTime, nextProps.global.dateTime) && _.isEqual(topSelectItem, nextProps.global.topSelectItem))){
+      this.fetch(nextProps);
     }
   }
-  fetch=()=>{
+  fetch=(Props)=>{
     this.setState({loading:true});
     const requestCon = {};
-    const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem});
+    const param = Object.assign({}, Props.global.dateTime, {mapping: Props.global.topSelectItem});
     requestCon.data = JSON.stringify(param);
     // console.log('requestCon---', requestCon);
     reqwest({

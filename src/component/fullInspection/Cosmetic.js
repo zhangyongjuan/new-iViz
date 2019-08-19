@@ -4,6 +4,7 @@ import reqwest from 'reqwest';
 import {Select,Spin} from "antd";
 import styles from "./fullInspection.less";
 import {connect} from "react-redux";
+import _ from "lodash";
 
 const { Option } = Select;
 
@@ -42,13 +43,13 @@ class Commetic extends Component{
   // }
   componentWillReceiveProps(nextProps, nextContext) {
     if(nextProps.global.timeRangeComplete === true){
-      this.fetch();
+      this.fetch(nextProps);
     }
   }
-  fetch=()=>{
+  fetch=(Props)=>{
     this.setState({loading:true});
     const requestCon = {};
-    const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem});
+    const param = Object.assign({}, Props.global.dateTime, {mapping: Props.global.topSelectItem});
     requestCon.data = JSON.stringify(param);
     // console.log('requestCon---', requestCon);
     reqwest({

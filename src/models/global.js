@@ -63,10 +63,11 @@ export default {
       const oldTopSelectItem = yield select(
         state => state.global.topSelectItem
       )
+      const newItem = Object.assign({},oldTopSelectItem ,payload.selectItem);
       yield put({
         type:'saveSelect',
         payload:{
-          topSelectItem:  Object.assign({},oldTopSelectItem ,payload.selectItem)
+          topSelectItem:  newItem
         }
       })
     },

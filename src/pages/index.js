@@ -48,7 +48,7 @@ class SummaryPage extends Component{
   }
   componentWillReceiveProps(nextProps, nextContext) {
     if(nextProps.global.timeRangeComplete === true){
-      this.fetch();
+      this.fetch(nextProps);
     }
   }
 
@@ -64,10 +64,10 @@ class SummaryPage extends Component{
   //   // });
   //   // console.log('test===',this.props)
   // }
-  fetch=()=> {
+  fetch=(Props)=> {
     this.setState({loading:true});
     const requestCon = {};
-    const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem});
+    const param = Object.assign({}, Props.global.dateTime, {mapping: Props.global.topSelectItem});
     requestCon.data = JSON.stringify(param);
     // console.log('requestCon---', requestCon);
     reqwest({
