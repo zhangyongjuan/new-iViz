@@ -223,6 +223,9 @@ class AimTablePage extends Component{
       yAxis: {
         data: this.state.spcname,
         type: 'category',
+        axisTick:{
+          interval:0
+        }
       },
       series: [{
         data: this.state.spcYield,

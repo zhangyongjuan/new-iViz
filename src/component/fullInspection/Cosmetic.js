@@ -501,7 +501,7 @@ class Commetic extends Component{
           axisLabel:{
             interval:0,
             rich:{},
-            width:80,
+            // width:80,
             // // height:10,
             padding:10,
             backgroundColor:'red',
@@ -519,11 +519,11 @@ class Commetic extends Component{
             show: true
           },
           axisLabel:{
-            padding:10,
+            padding:2,
             interval:0,
             rich:{},
             height:10,
-            // width:100,
+            width:20,
             lineHeight:10,
           },
           triggerEvent:true,
@@ -538,11 +538,11 @@ class Commetic extends Component{
           },
           position:'left',
           axisLabel:{
-            padding:10,
+            padding:2,
             interval:0,
             rich:{},
             height:10,
-            // width:100,
+            width:20,
             lineHeight:10,
             backgroundColor:'red',
             showMinLabel:true
