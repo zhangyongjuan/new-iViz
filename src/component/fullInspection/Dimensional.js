@@ -365,10 +365,22 @@ class Dimensional extends Component{
           console.log('点击x轴或者值后，获得的图表数据==',data);
           //整理overallData数据
           const chartData=[];
-          data.machineTable.yields.map((item,n)=>{
-            item.map((v,i)=>{
-              const defectyield = (v.yield*100).toFixed(2);
-              return chartData.push([n,i,defectyield])
+          // data.machineTable.yields.map((item,n)=>{
+          //   item.map((v,i)=>{
+          //     const defectyield = (v.yield*100).toFixed(2);
+          //     return chartData.push([n,i,defectyield])
+          //   })
+          // })
+          data.machineTable.yields.map((item,n)=> {
+            item.map((v, n) => {
+              data.machineTable.cells.map((cell, i) => {
+                data.machineTable.mcs.map((mcs, j) => {
+                  if (v.cell === cell && v.mc === mcs) {
+                    const defectyield = (v.yield * 100).toFixed(2);
+                    return chartData.push([i, j, defectyield])
+                  }
+                })
+              })
             })
           })
           this.setState({lineChartData:data.lineChart,showParticularLine:'particularLine'},this.drawLineChart);

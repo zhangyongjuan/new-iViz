@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {DatePicker, Select,Button} from 'antd';
+import {DatePicker, Select,Button,LocaleProvider } from 'antd';
 import {connect} from 'dva';
 import moment from 'moment';
 import reqwest from 'reqwest';
 import styles from './index.css'
-import locale from 'antd/lib/date-picker/locale/zh_CN';
+import locale from 'antd/lib/date-picker/locale/en_US';
 
 const {RangePicker} = DatePicker;
 const {Option} = Select;
@@ -191,30 +191,33 @@ class TimeRange extends Component {
     return (
       <div className={styles.timeRangeCon}>
         <span style={{color:'black'}}>Time Range:</span>
-        <RangePicker
-          format="YYYY-MM-DD HH:mm:ss"
-          onChange={this.timeChange}
-          onOk={this.onTimeOk}
-          allowClear={false}
-          inputReadOnly={true}
-          ranges={{
-            Today: [moment().startOf('day'), moment().endOf('day')],
-            'This Week': [moment().startOf('week'), moment().endOf('week')],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-          }}
-          showTime={{
-            hideDisabledOptions: true,
-            defaultValue: [moment('2019-5-14 08:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 20:00:00', 'YYYY-MM-DD HH:mm:ss')]
-          }}
-          defaultValue={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
-          value={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
-          style={{marginRight: '20px', fontSize: '12px'}} locale={locale}
-          // renderExtraFooter={() => (            //后续需要添加最近一周，最近一月等按钮
-          //   <Button size="small" type="primary" onClick={this.latestWeek}>
-          //     latest week
-          //   </Button>
-          // )}
-        />
+        <LocaleProvider locale={locale}>
+          <RangePicker
+            format="YYYY-MM-DD HH:mm:ss"
+            onChange={this.timeChange}
+            onOk={this.onTimeOk}
+            allowClear={false}
+            inputReadOnly={true}
+            ranges={{
+              // Today: [moment().startOf('day'), moment().endOf('day')],
+              'This Week': [moment().startOf('week'), moment().endOf('week')],
+              'This Month': [moment().startOf('month'), moment().endOf('month')],
+            }}
+            showTime={{
+              hideDisabledOptions: true,
+              defaultValue: [moment('2019-5-14 08:00:00', 'YYYY-MM-DD HH:mm:ss'), moment('2019-5-15 20:00:00', 'YYYY-MM-DD HH:mm:ss')]
+            }}
+            defaultValue={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
+            value={[moment(new Date(this.props.global.dateTime.startTime),'YYYY-MM-DD HH:mm:ss'), moment(new Date(this.props.global.dateTime.endTime),'YYYY-MM-DD HH:mm:ss')]}
+            style={{marginRight: '20px', fontSize: '12px'}}
+            // renderExtraFooter={() => (            //后续需要添加最近一周，最近一月等按钮
+            //   <Button size="small" type="primary" onClick={this.latestWeek}>
+            //     latest week
+            //   </Button>
+            // )}
+          />
+        </LocaleProvider>
+
 
           {
             Object.keys(this.state.selectOption).map((key, i) =>

@@ -8,7 +8,6 @@ import _ from "lodash";
 
 const { Option } = Select;
 
-
 @connect(({global}) => ({
   global
 }))
@@ -364,13 +363,26 @@ class Commetic extends Component{
         .then(data=>{
           console.log('点击x轴或者值后，获得的图表数据==',data);
           //整理overallData数据
-          const chartData=[];
+          // ** 整理数据
           data.machineTable.yields.map((item,n)=>{
-            item.map((v,i)=>{
-              const defectyield = (v.yield*100).toFixed(2);
-              return chartData.push([n,i,defectyield])
+            item.sort((a,b)=>{
+              return a.mc-b.mc;
             })
           })
+          const chartData=[];
+          data.machineTable.yields.map((item,n)=> {
+            item.map((v, n) => {
+              data.machineTable.cells.map((cell, i) => {
+                data.machineTable.mcs.map((mcs, j) => {
+                  if (v.cell === cell && v.mc === mcs) {
+                    const defectyield = (v.yield * 100).toFixed(2);
+                    return chartData.push([i, j, defectyield])
+                  }
+                })
+              })
+            })
+          })
+
           this.setState({lineChartData:data.lineChart,showParticularLine:'particularLine'},this.drawLineChart);
           this.setState({particularChart:data.machineTable,particularXData:data.machineTable.cells,
             particularYData:data.machineTable.mcs,particularData:chartData,showParticularHeatmap:'particularHeatmap',loading:false},this.drawParticularChart)
