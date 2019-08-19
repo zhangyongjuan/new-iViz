@@ -61,7 +61,7 @@ export class SeriesLine extends React.Component {
           if (k.value !== 0 && !k.value) return;
           content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.seriesName}：${k.value*100}%</span></div>`;
         });
-        return `<div>Flybar：${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
+        return `<div>${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
       },
     },
     legend: {
