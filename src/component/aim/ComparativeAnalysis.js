@@ -41,12 +41,12 @@ const dataSource = [
 const columns = [
   {
     title: 'test point',
-    dataIndex: 'testPoint',
+    dataIndex: 'test_point',
     key: 'testPoint',
   },
   {
     title: 'Sample N',
-    dataIndex: 'n',
+    dataIndex: 'number',
     key: 'n',
   },
   {
@@ -118,6 +118,8 @@ class Comparative extends Component{
     requestSpcs:[],
     //  chart data
     boxplot:[],
+  //  table source
+    tableData:[]
   }
   componentDidMount() {
     const requestCon = {};
@@ -187,11 +189,11 @@ class Comparative extends Component{
       data:requestCon
     })
       .then(data=>{
-        // console.log('对比分析的boxchart数据--',data);
+        console.log('对比分析的boxchart数据--',data);
         if(data === null){
           this.setState({showChart:'none'})
         }else{
-          this.setState({showChart:'block',loading:false,boxplot:data},this.drawChart)
+          this.setState({showChart:'block',loading:false,boxplot:data,tableData:data.spcData},this.drawChart)
         }
 
       })
@@ -392,7 +394,7 @@ class Comparative extends Component{
               </Row>
               <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
                 <Col span={20}>
-                  <Table size="small"  columns={columns} dataSource={dataSource} pagination={false} />
+                  <Table size="small"  columns={columns} dataSource={this.state.tableData} pagination={false} />
                 </Col>
               </Row>
           </div>
