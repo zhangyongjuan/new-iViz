@@ -29,7 +29,7 @@ export default class GroupBar extends React.Component {
   }
 
   handleClick = () => {
-    const { data, clickBar } = this.props.params;
+    const { clickBar } = this.props.params;
     const myChart = echarts.init(this.PieRef.current);
     myChart.on('click', function(param) {
       clickBar(param);
@@ -38,7 +38,7 @@ export default class GroupBar extends React.Component {
 
   initPie = () => {
     // 外部传入的data数据
-    const { data, clickBar } = this.props.params;
+    const { data } = this.props.params;
     // 初始化echarts
     const myChart = echarts.init(this.PieRef.current);
 
@@ -68,9 +68,18 @@ export default class GroupBar extends React.Component {
           type: 'bar',
           barGap: 0,
           // barWidth: 10,
+          // normal:{
+          //   formatter: function(params){
+          //     if (params.value > 0) {
+          //       return params.value;
+          //     }else {
+          //       return '';
+          //     }
+          //   }
+          // },
           z: 1,
           data: n,
-          connectNulls: true,
+          connectNulls: false,
         });
       });
     });
@@ -78,55 +87,6 @@ export default class GroupBar extends React.Component {
     return newData;
   };
 
-  // transData = (data) => {
-  //   const newData = {
-  //     xAxis: [],
-  //     series: [],
-  //   };
-  //
-  //   _.forEach(data, (k, i) => {
-  //
-  //     _.forEach(k.data, (h, j) => {
-  //       newData.xAxis.push(h.time);
-  //       newData.series.push(h.value);
-  //
-  //     });
-  //   });
-  //   return newData
-  // };
-  //
-  // setPieOption = (data)=>({
-  //   tooltip:{
-  //     axisPointer: {
-  //       type: 'shadow'
-  //     },
-  //     trigger: 'axis'
-  //   },
-  //   xAxis: {
-  //     type: 'category',
-  //     data: data.xAxis,
-  //     axisTick: {
-  //       lineStyle: {color: '#CCC'},
-  //       interval: function (index, value) {
-  //         return value!=='';
-  //       },
-  //
-  //     },
-  //   },
-  //     dataZoom: {
-  //       type: 'slider',
-  //       show: true,
-  //       // start: 1,
-  //       // end: 35,
-  //     },
-  //   yAxis: {
-  //     type: 'value'
-  //   },
-  //   series: [{
-  //     data: data.series,
-  //     type: 'bar',
-  //   }]
-  // })
   // 一个基本的echarts图表配置函数
   setPieOption = data => ({
     tooltip: {
@@ -134,28 +94,30 @@ export default class GroupBar extends React.Component {
         type: 'shadow',
       },
       trigger: 'axis',
-      tooltip: {
-        formatter: (params) => {
-          console.log(params);
-          let content = '';
-          _.forEach(params, (k) => {
-            if (k.value !== 0 && !k.value) return;
-            content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.seriesName}：${k.value[1]}</span></div>`;
-          });
-          // return `<div>Count：${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
-          return 'sd'
-        },
+      formatter: (params) => {
+        console.log(params);
+        let content = '';
+        _.forEach(params, (k) => {
+          if (k.value !== 0 && !k.value) return;
+          content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.seriesName}：${k.value * 100}%</span></div>`;
+        });
+        return `<div>Flight Bar：${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
       },
     },
     // grid: {
     //   bottom: metadata.init().x_major_offset * 12 + 30,
     // },
-    dataZoom: {
+    dataZoom: [{
       type: 'slider',
       show: true,
       // start: 1,
       // end: 35,
-    },
+    }, {
+      type: 'inside',
+      show: true,
+      // start: 1,
+      // end: 35,
+    }],
     xAxis: [
       {
         type: 'category',
@@ -180,7 +142,7 @@ export default class GroupBar extends React.Component {
           },
         },
         scale: true,
-        max:1
+        max: 1,
       },
     ],
     series: data.series,
