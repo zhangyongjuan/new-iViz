@@ -29,11 +29,23 @@ class BasicBarChart extends React.Component {
         return Number(a[yAxis]) - Number(b[yAxis]) > 0;
       },
     });
+    const cols = {
+      [yAxis]: {
+        // min: 0,
+        formatter: val => {
+          val = (val * 100).toFixed(3) + "%";
+          return val;
+        }
+      },
+      // [xAxis]: {
+      //   range: [0, 1],
+      // },
+    };
     return (
       <Spin spinning={loading}>
         {data && data.length !== 0 || loading ? (
          <div className={styles.main}>
-           <Chart padding={[ 'auto', 'auto', 'auto', 'auto']}  style={{minHeight:400}} height={30*data.length} data={dv} forceFit onPlotClick={clickBar}>
+           <Chart padding={[ 'auto', 'auto', 'auto', 'auto']} scale={cols} style={{minHeight:400}} height={400} data={dv} forceFit onPlotClick={clickBar}>
              <Coord transpose/>
              <Axis
                name={xAxis}

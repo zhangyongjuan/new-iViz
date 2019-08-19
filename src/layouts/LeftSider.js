@@ -47,6 +47,12 @@ class LeftSider extends Component{
           style={{color:'white',fontSize:'16px',position:'relative',margin:'20px'}}
         />
         <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.props.global.currentPage]}>
+          <Menu.Item key="4" >
+            <Link to='/aim'>
+              <Icon type="bar-chart" />
+              <span>AIM</span>
+            </Link>
+          </Menu.Item>
           <Menu.Item key="1">
             <Link to='/fullInspection'>
               <Icon type="line-chart" />
@@ -63,12 +69,6 @@ class LeftSider extends Component{
             <Link to='/'>
               <Icon type="cluster" />
               <span>ORT</span>
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="4" >
-            <Link to='/aim'>
-              <Icon type="bar-chart" />
-              <span>AIM</span>
             </Link>
           </Menu.Item>
           {/*<SubMenu*/}
