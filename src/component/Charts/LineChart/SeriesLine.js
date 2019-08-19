@@ -112,7 +112,10 @@ export class SeriesLine extends React.Component {
     _.forEach(timeList, (k, i) => {
       _.forEach(data, (h, j) => {
         if (_.find(h.data, ko => ko.time === k)) {
-          itemData[h.name].push((_.find(h.data, (o) => o.time === k)).value);
+          const value = (_.find(h.data, (o) => o.time === k)).value;
+          if(value!==0){
+            itemData[h.name].push(value);
+          }
         } else {
           itemData[h.name].push('');
         }
