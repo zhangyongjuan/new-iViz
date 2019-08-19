@@ -24,19 +24,19 @@ class AIM extends Component{
             <TabPane key="1" tab={<span><Icon type="table" />AIM Dashboard</span>}>
               <AimTablePage />
             </TabPane>
-            <TabPane key="2" tab={<span><Icon type="bar-chart" />AIM Chart-commonality analysis module</span>}>
+            <TabPane key="2" tab={<span><Icon type="bar-chart" />AIM Chart-commonality Analysis Module</span>}>
               <DrawChart />
             </TabPane>
             <TabPane key="3" tab={<span><Icon type="line-chart" />SPC Statistical Analysis</span>}>
               <Statistical />
             </TabPane>
-            <TabPane key="4" tab={<span><Icon type="box-plot" />Measurement point comparison</span>}>
+            <TabPane key="4" tab={<span><Icon type="box-plot" />Measurement Point Comparison</span>}>
               <Comparative />
             </TabPane>
-            <TabPane key="5" tab={<span><Icon type="area-chart" />Bowing/kinking_module</span>}>
+            <TabPane key="5" tab={<span><Icon type="area-chart" />Bowing/Kinking_Module</span>}>
               <BowingKinking />
             </TabPane>
-            <TabPane key="6" tab={<span><Icon type="stock" />Color_Flybar_Module</span>}>
+            <TabPane key="6" tab={<span><Icon type="stock" />Color_Flight_Bar_Module</span>}>
               <AimFlyBar />
             </TabPane>
           </Tabs>

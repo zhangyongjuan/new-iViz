@@ -138,6 +138,11 @@ export default class BoxPlot extends React.Component {
             },
           ],
         },
+        // itemStyle:{
+        //   opacity:(x)=>{
+        //     console.log(x)
+        //   }
+        // }
       },
       {
         name: 'outlier',

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Spin} from 'antd';
+import { Spin } from 'antd';
 import { Chart, Geom, Axis, Tooltip } from 'bizcharts';
 import styles from './index.less';
 import NoData from '../../NoData';
@@ -7,10 +7,14 @@ import NoData from '../../NoData';
 class BasicLineChart extends React.Component {
   render() {
     const { params } = this.props;
-    const { data, xAxis, yAxis,loading,title } = params;
+    const { data, xAxis, yAxis, loading, title } = params;
     const cols = {
       [yAxis]: {
-        min: 0,
+        // min: 0,
+        formatter: val => {
+          val = val * 100 + "%";
+          return val;
+        }
       },
       [xAxis]: {
         range: [0, 1],
@@ -19,12 +23,12 @@ class BasicLineChart extends React.Component {
     return (
       <Spin spinning={loading}>
         {
-          data&&data.length!==0 || loading?(
+          data && data.length !== 0 || loading ? (
             <div className={styles.main}>
-              <div className={styles.chartTitle}>{title||''}</div>
+              <div className={styles.chartTitle}>{title || ''}</div>
               <Chart height={400} data={data || []} scale={cols} forceFit>
                 <Axis name={xAxis}/>
-                <Axis name={yAxis}/>
+                <Axis name={yAxis} />
                 <Tooltip
                   crosshairs={{
                     type: 'y',
@@ -40,10 +44,11 @@ class BasicLineChart extends React.Component {
                     stroke: '#fff',
                     lineWidth: 1,
                   }}
+
                 />
               </Chart>
             </div>
-          ): <NoData height={400} />
+          ) : <NoData height={400}/>
         }
       </Spin>
     );
