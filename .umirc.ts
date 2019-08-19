@@ -9,7 +9,7 @@ const config: IConfig =  {
       antd: true,
       dva: true,
       dynamicImport: false,
-      title: 'new-iViz',
+      title: 'iViz 2.0',
       dll: false,
 
       routes: {

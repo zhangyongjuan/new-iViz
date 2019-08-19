@@ -400,18 +400,6 @@ function OverviewSummary(value) {
       <Col span={6}>
         <Card>
           <Statistic
-            title="Final Pass"
-            value={value.overViewValue.finalPass*100}
-            precision={2}
-            valueStyle={{ color: '#3f8600' }}
-            // prefix={<Icon type="arrow-up" />}
-            suffix="%"
-          />
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card>
-          <Statistic
             title=" First Pass"
             value={value.overViewValue.firstPass*100}
             precision={2}
@@ -421,6 +409,19 @@ function OverviewSummary(value) {
           />
         </Card>
       </Col>
+      <Col span={6}>
+        <Card>
+          <Statistic
+            title="Final Pass"
+            value={value.overViewValue.finalPass*100}
+            precision={2}
+            valueStyle={{ color: '#3f8600' }}
+            // prefix={<Icon type="arrow-up" />}
+            suffix="%"
+          />
+        </Card>
+      </Col>
+
       {/*<Col span={6}>*/}
       {/*  <Card>*/}
       {/*    <Statistic*/}
