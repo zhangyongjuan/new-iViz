@@ -20,18 +20,19 @@ class BowingKinking extends React.Component {
   componentWillReceiveProps(nextProps, nextContext) {
     const { dateTime, topSelectItem } = this.props.global;
     if (!(_.isEqual(dateTime, nextProps.global.dateTime) && _.isEqual(topSelectItem, nextProps.global.topSelectItem))) {
-      this.getChartData();
+      this.getChartData(nextProps.global.dateTime, nextProps.global.topSelectItem);
     }
   }
 
   componentDidMount() {
-    this.getChartData();
+    const { global } = this.props;
+    const { topSelectItem, dateTime } = global;
+    this.getChartData(dateTime,topSelectItem);
   }
 
-  getChartData = () => {
-    const { dispatch, global } = this.props;
-    const { topSelectItem } = global;
-    const { startTime, endTime } = global && global.dateTime;
+  getChartData = (dateTime,topSelectItem) => {
+    const { dispatch } = this.props;
+    const { startTime, endTime } = dateTime;
     dispatch({
       type: 'BowKing/getChartData',
       payload: {
