@@ -355,6 +355,7 @@ class Comparative extends Component{
     boxplotchart.setOption(boxplotOption);
   }
   render(){
+    const stationL = this.state.station.length;
     return(
       <div style={{paddingBottom:'20px'}}>
         {/* select station and spc */}
@@ -363,10 +364,11 @@ class Comparative extends Component{
           <Select defaultValue="title" style={{ width: 300 }} onChange={this.stationChange}>
             <Option value='title' disabled>Please choose!</Option>
             {
+              stationL !== 0 ?
               this.state.station.map((station,i)=>(
                   <Option key={i} value={station}>{station}</Option>
                 )
-              )
+              ):''
             }
           </Select>
           <span style={{marginLeft:'50px'}}>SPC: </span>

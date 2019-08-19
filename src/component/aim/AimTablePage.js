@@ -272,6 +272,13 @@ class AimTablePage extends Component{
     const aimLineChart = echarts.init(document.getElementById('aimlinechart'));
     aimBarchart.setOption(barOption);
     aimLineChart.setOption(aimlineOption);
+    var autoHeight = barOption.yAxis.data.length * 50 + 100;
+    //获取 ECharts 实例容器的 dom 节点。
+    aimBarchart.getDom().style.height = autoHeight + "px";
+    aimBarchart.getDom().childNodes[0].style.height = autoHeight + "px";
+    aimBarchart.getDom().childNodes[0].childNodes[0].setAttribute("height", autoHeight);
+    aimBarchart.getDom().childNodes[0].childNodes[0].style.height = autoHeight + "px";
+    aimBarchart.resize();
     //防止多次点击事件
     if(aimLineChart._$handlers.click){
       aimLineChart._$handlers.click.length = 0;
@@ -386,7 +393,7 @@ class AimTablePage extends Component{
         {/* no click event */}
         <div id={styles.showBarChart} className={this.state.showBarChart}>
           <div style={{height:'400px',overflowY:'scroll'}}>
-            <div style={{minHeight:'1000px',margin:'0 auto'}} id='barchart' />
+            <div style={{margin:'0 auto'}} id='barchart' />
           </div>
           <div style={{marginTop:'10px'}}>
             <Table size="small" columns={this.state.spcTitle} dataSource={this.state.spcDataSource} scroll={{y:370}} pagination={false} />
