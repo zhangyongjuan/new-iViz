@@ -167,13 +167,11 @@ class AimFlyBar extends React.Component {
     return (
       <div className={styles.main}>
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Flybar Yield Contrast</p>
+          <p className={styles.headerTitle}>Flight Bar Yield Contrast</p>
           <div className={styles.lineChartGroup}>
             <BasicColumn
               params={{
                 data: singleBarData,
-                xAxis: 'time',
-                yAxis: 'value',
                 loading,
               }}
             />
@@ -181,7 +179,7 @@ class AimFlyBar extends React.Component {
         </div>
 
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Flybar Yield Trend Contrast</p>
+          <p className={styles.headerTitle}>Flight Bar Yield Trend Contrast</p>
           <div className={styles.lineChartGroup}>
             <SeriesLine
               params={{
@@ -195,7 +193,7 @@ class AimFlyBar extends React.Component {
         </div>
 
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Flybar_Hang Yield Contrast</p>
+          <p className={styles.headerTitle}>Flight Bar Hang Yield Contrast</p>
           <div className={styles.lineChartGroup}>
             <div className={styles.goup}>
               <div>
@@ -223,7 +221,7 @@ class AimFlyBar extends React.Component {
         </div>
 
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Flybar_Hang SPC Contrast</p>
+          <p className={styles.headerTitle}>Flight Bar Hang SPC Contrast</p>
           <div className={styles.lineChartGroup}>
             {
               spc && boxList ? (

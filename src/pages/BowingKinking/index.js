@@ -110,7 +110,7 @@ class BowingKinking extends React.Component {
                     xAxis: 'time',
                     yAxis: 'value',
                     loading,
-                    title:'Pre Inster Molding Input'
+                    title:'yield trend break down by IM date code'
                   }}
                 />
                 <BasicBarChart
@@ -136,7 +136,7 @@ class BowingKinking extends React.Component {
                     xAxis: 'time',
                     yAxis: 'value',
                     loading,
-                    title:'Pre Sandblasting Input'
+                    title:'yield trend break down by Sandblasting date code'
                   }}
                 />
 

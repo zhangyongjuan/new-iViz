@@ -54,6 +54,15 @@ export class SeriesLine extends React.Component {
   setPieOption = (timeList, data) => ({
     tooltip: {
       trigger: 'axis',
+      formatter: (params) => {
+        console.log(params);
+        let content = '';
+        _.forEach(params, (k) => {
+          if (k.value !== 0 && !k.value) return;
+          content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.seriesName}：${k.value*100}%</span></div>`;
+        });
+        return `<div>Flybar：${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
+      },
     },
     legend: {
       data: this.getLegend(data),
@@ -72,6 +81,7 @@ export class SeriesLine extends React.Component {
       data: timeList,
     },
     yAxis: {
+      name:'Yield/%',
       type: 'value',
       scale: true,
       axisLabel: {
@@ -104,7 +114,7 @@ export class SeriesLine extends React.Component {
         if (_.find(h.data, ko => ko.time === k)) {
           itemData[h.name].push((_.find(h.data, (o) => o.time === k)).value);
         } else {
-          itemData[h.name].push(0);
+          itemData[h.name].push('');
         }
       });
     });
@@ -114,6 +124,7 @@ export class SeriesLine extends React.Component {
         name: k.name,
         type: 'line',
         data: itemData[k.name],
+        connectNulls: true,
       });
     });
     return newSeries;
