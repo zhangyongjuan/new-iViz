@@ -135,16 +135,15 @@ export default class GroupBar extends React.Component {
       },
       trigger: 'axis',
       tooltip: {
-        formatter: function(param) {
-          console.log(param);
-          return [
-            // 'name：' + param.name,
-            // 'upper: ' + param.data[5],
-            // 'Q3: ' + param.data[4],
-            // 'median: ' + param.data[3],
-            // 'Q1: ' + param.data[2],
-            // 'lower: ' + param.data[1],
-          ].join('<br/>');
+        formatter: (params) => {
+          console.log(params);
+          let content = '';
+          _.forEach(params, (k) => {
+            if (k.value !== 0 && !k.value) return;
+            content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.seriesName}：${k.value[1]}</span></div>`;
+          });
+          // return `<div>Count：${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
+          return 'sd'
         },
       },
     },
@@ -154,8 +153,8 @@ export default class GroupBar extends React.Component {
     dataZoom: {
       type: 'slider',
       show: true,
-      start: 1,
-      end: 35,
+      // start: 1,
+      // end: 35,
     },
     xAxis: [
       {
@@ -164,6 +163,7 @@ export default class GroupBar extends React.Component {
         axisTick: { show: false },
         axisLabel: {
           rotate: 90,
+
         },
         splitArea: { show: false },
         data: data.xAxis,
@@ -173,10 +173,14 @@ export default class GroupBar extends React.Component {
     yAxis: [
       {
         type: 'value',
-        name: '水量',
+        name: 'Yield/%',
         axisLabel: {
-          formatter: '{value}',
+          formatter: function(v) {
+            return `${v * 100}%`;
+          },
         },
+        scale: true,
+        max:1
       },
     ],
     series: data.series,
