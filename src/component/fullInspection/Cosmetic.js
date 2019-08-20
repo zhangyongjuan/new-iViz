@@ -67,6 +67,9 @@ class Commetic extends Component{
         data.defectLines.sort((a,b)=>{
           return a.sumYield - b.sumYield
         })
+        if(data.defectLines.length >15){      //不良类型长度过长时，只保留top15
+          data.defectLines = data.defectLines.splice(data.defectLines.length-15);
+        }
         data.defectLines.map((item,i)=>{
           defectYield.push(item.sumYield);
           return defectName.push(item.defectName);
