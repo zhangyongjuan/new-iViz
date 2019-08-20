@@ -58,10 +58,10 @@
 // export default BasicLineChart;
 
 import React from 'react';
-
+import { Spin } from 'antd';
 // 导入echarts
 import echarts from 'echarts/lib/echarts';
-import { prepareBoxplotData } from 'echarts/extension/dataTool';
+// import { prepareBoxplotData } from 'echarts/extension/dataTool';
 import _ from 'lodash';
 
 require('echarts/lib/chart/bar');
@@ -140,7 +140,7 @@ export default class BasicLineChart extends React.Component {
       containLabel: true,
     },
     legend: {
-      data:['Good Products','Defective Products','Defect Yield']
+      data: ['Good Products', 'Defective Products', 'Defect Yield'],
     },
     xAxis: [
       {
@@ -173,9 +173,9 @@ export default class BasicLineChart extends React.Component {
         type: 'bar',
         stack: 'defect',
         data: data.good,
-        itemStyle:{
-          color:'#3aa1ff'
-        }
+        itemStyle: {
+          color: '#3aa1ff',
+        },
       },
       {
         name: 'Defective Products',
@@ -183,22 +183,27 @@ export default class BasicLineChart extends React.Component {
         stack: 'defect',
         data: data.bad,
         itemStyle: {
-          color:'#c1c23b'
-        }
+          color: '#c1c23b',
+        },
       },
       {
         name: 'Defect Yield',
         type: 'line',
         yAxisIndex: 1,
         data: data.defect,
-        itemStyle:{
-          color:'#C23531'
-        }
+        itemStyle: {
+          color: '#C23531',
+        },
       },
     ],
   });
 
   render() {
-    return <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>;
+    const { loading } = this.props.params;
+    return (
+      <Spin spinning={loading}>
+        <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>
+      </Spin>
+    );
   }
 }
