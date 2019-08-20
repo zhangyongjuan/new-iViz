@@ -30,19 +30,22 @@ const columns = [
     title: 'Actual Mean',
     dataIndex: 'actualMean',
     key: 'actualMean',
-    align:'center'
+    align:'center',
+    render:text=>text===0?0:text.toFixed(2)
   },
   {
-    title: 'Yield',
+    title: 'Defect Yield',
     dataIndex: 'yield',
     key: 'yield',
-    align:'center'
+    align:'center',
+    render:(text)=>text===0?0:`${(Number(1-text)*100).toFixed(2)}%`
   },
   {
     title: 'Std',
     dataIndex: 'std',
     key: 'std',
-    align:'center'
+    align:'center',
+    render:text=>text===0?0:text.toFixed(2)
   },
 ];
 
@@ -54,7 +57,7 @@ class BasicTable extends React.Component {
         <Table
           rowKey={r=>r[rowKey]}
           bordered
-          scroll={{ x: 900,y: 400 }}
+          // scroll={{ y: 400 }}
           loading={loading}
           dataSource={data}
           columns={columns}
