@@ -369,8 +369,12 @@ class Commetic extends Component{
           // ** 整理数据
           data.machineTable.yields.map((item,n)=>{
             item.sort((a,b)=>{
-              return a.mc-b.mc;
+              return b.mc-a.mc;
             })
+          })
+          //mc 数据排序
+          data.machineTable.mcs.sort((a,b)=>{
+            return b-a
           })
           const chartData=[];
           data.machineTable.yields.map((item,n)=> {
