@@ -100,7 +100,7 @@ class BowingKinking extends React.Component {
     return (
       <div className={styles.main}>
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Yield Trend</p>
+          <p className={styles.headerTitle}>Defect Yield Trend</p>
           <div className={styles.lineChartGroup}>
             <Row gutter={48} type="flex">
               <Col xl={12} lg={24} md={24} sm={24} xs={24}>
