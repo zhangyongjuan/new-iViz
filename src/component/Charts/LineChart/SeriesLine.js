@@ -32,7 +32,7 @@ export class SeriesLine extends React.Component {
     const myChart = echarts.init(this.PieRef.current);
 
     // 我们要定义一个setPieOption函数将data传入option里面
-    const options = this.setPieOption(timeList, data);
+    const options = this.setPieOption(this.transSeries(data));
     // 设置options
     myChart.setOption(options);
 
@@ -51,86 +51,138 @@ export class SeriesLine extends React.Component {
 
 
   // 一个基本的echarts图表配置函数
-  setPieOption = (timeList, data) => ({
+  setPieOption = (data) => ({
     tooltip: {
       trigger: 'axis',
-      formatter: (params) => {
-        console.log(params);
-        let content = '';
-        _.forEach(params, (k) => {
-          if (k.value !== 0 && !k.value) return;
-          content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.seriesName}：${k.value*100}%</span></div>`;
-        });
-        return `<div>${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
+      formatter: function(param, index) {
+        return [
+          param[0].axisValue,
+          'Pass: ' + param[0].value,
+          'Fail: ' + param[1].value,
+          param[2].value === 0 ? `Failure Rate：0` : `Failure Rate：${(Number(param[2].value) * 100).toFixed(2)}%`,
+        ].join('<br/>');
       },
     },
     legend: {
-      data: this.getLegend(data),
-      type: 'scroll',
+      data: ['Pass', 'Fail', 'Failure Rate'],
     },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true,
-    },
+    // grid: {
+    //   left: '3%',
+    //   right: '4%',
+    //   bottom: '3%',
+    //   containLabel: true,
+    // },
     toolbox: {},
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: timeList,
-    },
-    yAxis: {
-      name:'Yield/%',
-      type: 'value',
-      scale: true,
-      axisLabel: {
-        formatter: function(v) {
-          return `${v * 100}%`;
+    dataZoom: [{
+      type: 'inside',
+      start: 0,
+      end: 100,
+      // zoomLock: true,
+    }, {
+      type: 'slider',
+      show: true,
+      xAxisIndex: 0,
+      start: 0,
+      end: 16,
+      // zoomLock: true,
+    }],
+    xAxis: [
+      {
+        type: 'category',
+        data: data.xAxis,
+      },
+    ],
+    yAxis: [
+      {
+        name: 'Input',
+        type: 'value',
+        // scale: true,
+        min: data.yInput.min,
+        max: data.yInput.max,
+        interval: (data.yInput.max - data.yInput.min) / 6,
+        splitNumber: 6,
+        axisLabel: {
+          formatter(spl) {
+            return spl.toFixed(0);
+          },
         },
       },
-      max: 1,
-    },
-// {
-//   name: '邮件营销',
-//   type: 'line',
-//   data: [120, 132, 101, 134, 90, 230, 210],
-// },
+      {
+        type: 'value',
+        scale: true,
+        name: 'Failure Rate/%',
+        // boundaryGap: [0.2, 0.2],
+        min: data.yRate.min,
+        max: data.yRate.max,
+        interval: (data.yRate.max - data.yRate.min) / 6,
+        splitNumber: 6,
+        axisLabel: {
+          formatter(value, index) {
+            return value === 0 ? 0 : `${(Number(value) * 100).toFixed(1)}%`;
+          },
+        },
+      },
+    ],
     // eslint-disable-next-line array-callback-return
-    series: this.transSeries(data, timeList),
+    series: [
+      {
+        name: 'Pass',
+        type: 'bar',
+        stack: 'defect',
+        data: data.good,
+        itemStyle: {
+          color: '#009966',
+        },
+      },
+      {
+        name: 'Fail',
+        type: 'bar',
+        stack: 'defect',
+        data: data.bad,
+        itemStyle: {
+          color: '#C23531',
+        },
+      },
+      {
+        name: 'Failure Rate',
+        type: 'line',
+        yAxisIndex: 1,
+        data: data.defect,
+        itemStyle: {
+          color: '#C23531',
+        },
+      },
+    ],
   });
 
-  transSeries = (data, timeList) => {
-    const newSeries = [];
-    const itemData = {};
-    _.forEach(timeList, (k, i) => {
-      _.forEach(data, (h, j) => {
-        itemData[h.name] = [];
-      });
-    });
-
-    _.forEach(timeList, (k, i) => {
-      _.forEach(data, (h, j) => {
-        if (_.find(h.data, ko => ko.time === k)) {
-          const value = (_.find(h.data, (o) => o.time === k)).value;
-          if(value!==0){
-            itemData[h.name].push(value);
-          }
-        } else {
-          itemData[h.name].push('');
-        }
-      });
-    });
-
+  transSeries = (data) => {
+    const newData = {
+      xAxis: [],
+      defect: [],
+      good: [],
+      bad: [],
+      all: [],
+      yInput: {
+        min: 0,
+        max: 1,
+      },
+      yRate: {
+        min: 0,
+        max: 1,
+      },
+    };
     _.forEach(data, (k) => {
-      newSeries.push({
-        name: k.name,
-        type: 'line',
-        data: itemData[k.name],
-        connectNulls: true,
-      });
+      newData.xAxis.push(k.time);
+      newData.defect.push(k.defect);
+      newData.good.push(k.ok);
+      newData.bad.push(k.ng);
+      newData.all.push(k.all);
     });
-    return newSeries;
+    newData.yInput.min = _.min([_.min(newData.good), _.min(newData.defect)]);
+    newData.yInput.max = _.max(newData.all);
+    newData.yRate.min = _.min(newData.defect);
+    newData.yRate.max = _.max(newData.defect);
+    return newData;
   };
 
   render() {
