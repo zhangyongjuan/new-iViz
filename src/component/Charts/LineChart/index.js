@@ -63,6 +63,7 @@ import { Spin } from 'antd';
 import echarts from 'echarts/lib/echarts';
 // import { prepareBoxplotData } from 'echarts/extension/dataTool';
 import _ from 'lodash';
+import styles from './index.less';
 
 require('echarts/lib/chart/bar');
 require('echarts/lib/chart/line');
@@ -74,7 +75,7 @@ import('echarts/lib/component/legend');
 export default class BasicLineChart extends React.Component {
   constructor(props) {
     super(props);
-    this.PieRef = React.createRef();
+    // this.PieRef = React.createRef();
   }
 
   componentDidMount() {
@@ -89,7 +90,7 @@ export default class BasicLineChart extends React.Component {
     // 外部传入的data数据
     const { data } = this.props.params;
     // 初始化echarts
-    const myChart = echarts.init(this.PieRef.current);
+    const myChart = echarts.init(this.PieRef);
 
     // 我们要定义一个setPieOption函数将data传入option里面
     const options = this.setPieOption(this.transformData(data));
@@ -127,9 +128,9 @@ export default class BasicLineChart extends React.Component {
       formatter: function(param, index) {
         return [
           param[0].axisValue,
-          'Good Products: ' + param[0].value,
-          'Defective Products: ' + param[1].value,
-          param[2].value === 0 ? `Defect Yield：0` : `Defect Yield：${(Number(param[2].value) * 100).toFixed(2)}%`,
+          'Pass: ' + param[0].value,
+          'Fail: ' + param[1].value,
+          param[2].value === 0 ? `Failure Rate：0` : `Failure Rate：${(Number(param[2].value) * 100).toFixed(2)}%`,
         ].join('<br/>');
       },
     },
@@ -140,7 +141,7 @@ export default class BasicLineChart extends React.Component {
       containLabel: true,
     },
     legend: {
-      data: ['Good Products', 'Defective Products', 'Defect Yield'],
+      data: ['Pass', 'Fail', 'Failure Rate'],
     },
     xAxis: [
       {
@@ -152,12 +153,12 @@ export default class BasicLineChart extends React.Component {
       {
         name: 'Count',
         type: 'value',
-        scale: true,
+        // scale: true,
       },
       {
         type: 'value',
         scale: true,
-        name: 'Defect Yield/%',
+        name: 'Failure Rate/%',
         boundaryGap: [0.2, 0.2],
         min: 0,
         axisLabel: {
@@ -169,7 +170,7 @@ export default class BasicLineChart extends React.Component {
     ],
     series: [
       {
-        name: 'Good Products',
+        name: 'Pass',
         type: 'bar',
         stack: 'defect',
         data: data.good,
@@ -178,7 +179,7 @@ export default class BasicLineChart extends React.Component {
         },
       },
       {
-        name: 'Defective Products',
+        name: 'Fail',
         type: 'bar',
         stack: 'defect',
         data: data.bad,
@@ -187,7 +188,7 @@ export default class BasicLineChart extends React.Component {
         },
       },
       {
-        name: 'Defect Yield',
+        name: 'Failure Rate',
         type: 'line',
         yAxisIndex: 1,
         data: data.defect,
@@ -199,10 +200,16 @@ export default class BasicLineChart extends React.Component {
   });
 
   render() {
-    const { loading } = this.props.params;
+    const { loading, title } = this.props.params;
     return (
       <Spin spinning={loading}>
-        <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>
+        <div className={styles.main}>
+          <div className={styles.chartTitle}>{title || ''}</div>
+          <div ref={(input) => {
+            this.PieRef = input;
+          }} style={{ width: '100%', height: '500px' }}/>
+        </div>
+
       </Spin>
     );
   }

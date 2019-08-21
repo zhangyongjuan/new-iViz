@@ -66,7 +66,7 @@ class BasicBarChart extends React.Component {
               />
               <Axis name={yAxis}/>
               <Tooltip
-                itemTpl= '<li data-index={index}><span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>Defect Yield: {value}</li>'
+                itemTpl= '<li data-index={index}><span style="background-color:{color};width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px;"></span>Failure Rate: {value}</li>'
               />
               <Geom
                 color="#F5BD27" type="interval" position={`${xAxis}*${yAxis}`}>

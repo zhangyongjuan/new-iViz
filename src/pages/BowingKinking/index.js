@@ -94,13 +94,10 @@ class BowingKinking extends React.Component {
     const { spcValues: spcValuesSB = [], spcYields: spcYieldsSB = [] } = BowKing && BowKing.kinking || [];
     const { IMBox = '', SBBox = '' } = BowKing;
 
-    console.log('***********');
-    console.log(global);
-    console.log('***********');
     return (
       <div className={styles.main}>
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Defect Yield Trend</p>
+          <p className={styles.headerTitle}>Failure Rate Trend</p>
           <div className={styles.lineChartGroup}>
             <Row gutter={48} type="flex">
               <Col xl={12} lg={24} md={24} sm={24} xs={24}>
@@ -110,7 +107,7 @@ class BowingKinking extends React.Component {
                     xAxis: 'time',
                     yAxis: 'value',
                     loading,
-                    title:'Yield Trend Break Down By IM Date Code'
+                    title:'Failure Rate Trend Break Down By IM Date Code'
                   }}
                 />
                 <BasicBarChart
@@ -136,7 +133,7 @@ class BowingKinking extends React.Component {
                     xAxis: 'time',
                     yAxis: 'value',
                     loading,
-                    title:'Yield Trend Break Down By Sandblasting Date Code'
+                    title:'Failure Rate Trend Break Down By Sandblasting Date Code'
                   }}
                 />
 

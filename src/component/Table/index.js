@@ -34,7 +34,7 @@ const columns = [
     render:text=>text===0?0:text.toFixed(2)
   },
   {
-    title: 'Defect Yield',
+    title: 'Failure Rate',
     dataIndex: 'yield',
     key: 'yield',
     align:'center',
