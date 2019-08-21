@@ -30,7 +30,7 @@ class BasicBarChart extends React.Component {
     const { data: Data = [], xAxis, yAxis, clickBar, loading } = params;
     const data = this.transData(Data);
     const ds = new DataSet();
-    const dv = ds.createView().source(data);
+    const dv = ds.createView().source(_.reverse(data));
     dv.source(data).transform({
       type: 'sort',
 

@@ -71,7 +71,7 @@ import('echarts/lib/component/legend');
 export class SeriesLine extends React.Component {
   constructor(props) {
     super(props);
-    this.PieRef = React.createRef();
+    // this.PieRef = React.createRef();
   }
 
   componentDidMount() {
@@ -86,7 +86,7 @@ export class SeriesLine extends React.Component {
     // 外部传入的data数据
     const { data } = this.props.params;
     // 初始化echarts
-    const myChart = echarts.init(this.PieRef.current);
+    const myChart = echarts.init(this.PieRef);
 
     // 我们要定义一个setPieOption函数将data传入option里面
     const options = this.setPieOption(this.transSeries(data));
@@ -117,12 +117,23 @@ export class SeriesLine extends React.Component {
         return content;
       },
     },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true,
-    },
+    dataZoom: [{
+      type:'inside',
+      start: 1,
+      end: 16
+    },{
+      type: 'slider',
+      show: true,
+      xAxisIndex: 0,
+      start: 1,
+      end: 16
+    }],
+    // grid: {
+    //   left: '3%',
+    //   right: '4%',
+    //   bottom: '3%',
+    //   containLabel: true,
+    // },
     xAxis: [
       {
         type: 'category',
@@ -178,7 +189,7 @@ export class SeriesLine extends React.Component {
     const { loading } = this.props.params;
     return (
       <Spin spinning={loading}>
-        <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>
+        <div ref={ips=>this.PieRef=ips} style={{ width: '100%', height: '500px' }}/>
       </Spin>
     );
   }

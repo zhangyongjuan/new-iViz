@@ -151,7 +151,7 @@ export default class BasicLineChart extends React.Component {
     ],
     yAxis: [
       {
-        name: 'Count',
+        name: 'Input',
         type: 'value',
         // scale: true,
       },
@@ -159,8 +159,10 @@ export default class BasicLineChart extends React.Component {
         type: 'value',
         scale: true,
         name: 'Failure Rate/%',
-        boundaryGap: [0.2, 0.2],
-        min: 0,
+        // boundaryGap: [0.2, 0.2],
+        // min: _.min(data.defect),
+        // max: _.max(data.defect),
+        // interval: (_.max(data.defect) - _.min(data.defect)) / 6,
         axisLabel: {
           formatter(value, index) {
             return value === 0 ? 0 : `${(Number(value) * 100).toFixed(1)}%`;
@@ -175,7 +177,7 @@ export default class BasicLineChart extends React.Component {
         stack: 'defect',
         data: data.good,
         itemStyle: {
-          color: '#3aa1ff',
+          color: '#009966',
         },
       },
       {
@@ -184,7 +186,7 @@ export default class BasicLineChart extends React.Component {
         stack: 'defect',
         data: data.bad,
         itemStyle: {
-          color: '#c1c23b',
+          color: '#C23531',
         },
       },
       {

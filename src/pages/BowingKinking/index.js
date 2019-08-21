@@ -158,7 +158,7 @@ class BowingKinking extends React.Component {
           </div>
         </div>
         <div className={styles.boxChart}>
-          <p className={styles.headerTitle}>Test Point Analysis</p>
+          <p className={styles.headerTitle}>Distribution Comparison By Measurement Point</p>
           <Row gutter={48} type="flex">
             <Col xl={12} lg={24} md={24} sm={24} xs={24}>
               {
