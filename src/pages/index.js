@@ -215,7 +215,7 @@ class SummaryPage extends Component{
           icon:'circle',
           data:dimensionalLegend,
           selected:dimensionalSelect,
-          // selectedMode:'multiple'
+          // selectedMode:'single'
         },
         {
           // type: 'scroll',
@@ -313,19 +313,41 @@ class SummaryPage extends Component{
     });
     //是否是第一次点击legend标志
     let onOff = true;
+    const triggerAction = function(action,selected){
+      const legend = [];
+      for ( let name in selected) {
+        if (selected.hasOwnProperty(name)) {
+          legend.push({name: selected[name]});
+        }
+      }
+      staPie.dispatchAction({
+        type:action,
+        batch:legend
+      })
+    }
     staPie.on('legendselectchanged',(e)=>{
+      // console.log(e);
         if(e.name === 'dimensional'){
-          console.log(e);
-          e.selected.dimensional === false ? Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = false}) :
+          if(e.selected.dimensional === false) {
+            Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = false});
+            triggerAction('legendUnSelect',dimensionalLegend);
+          }else{
             Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = true});
-          staPie.setOption(staPieOption);
+            triggerAction('legendSelect',dimensionalLegend)
+          }
+          // staPie.setOption(staPieOption);
         }
         else if(e.name === 'cosmetic'){
-          e.selected.cosmetic === false ? Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = false}) :
+          if(e.selected.cosmetic === false) {
+            Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = false});
+            triggerAction('legendUnSelect',cosmeticLegend)
+          }else{
             Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = true});
-          staPie.setOption(staPieOption);
+            triggerAction('legendSelect',cosmeticLegend)
+          }
+          // staPie.setOption(staPieOption);
         }
-        else{
+        else{              //点击子legend时，需要判断父legend是否是选择选中状态，若不是，则不能点击显示子图例
           if(e.selected != undefined){
             console.log('点的其他的legend--',e);
             if(cosmeticLegend.indexOf(e.name) !== -1){
@@ -333,11 +355,12 @@ class SummaryPage extends Component{
                 cosmeticSelect[e.name] = false;
                 staPie.setOption(staPieOption);
               }else{
-                staPie.dispatchAction({
-                  type: 'legendToggleSelect',
-                  // 图例名称
-                  batch: e.name
-                })
+                // staPie.dispatchAction({
+                //   type: 'legendToggleSelect',
+                //   // 图例名称
+                //   batch: e.name
+                // })
+                triggerAction('legendToggleSelect',e.name)
               }
           }
             else if((dimensionalLegend.indexOf(e.name) !== -1)){
@@ -345,11 +368,12 @@ class SummaryPage extends Component{
               dimensionalSelect[e.name] = false;
               staPie.setOption(staPieOption);
             }else{
-              staPie.dispatchAction({
-                type: 'legendToggleSelect',
-                // 图例名称
-                batch: e.name
-              })
+              // staPie.dispatchAction({
+              //   type: 'legendToggleSelect',
+              //   // 图例名称
+              //   batch: e.name
+              // })
+              triggerAction('legendToggleSelect',e.name)
             }
           }
           }

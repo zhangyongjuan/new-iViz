@@ -104,6 +104,7 @@ class Statistical extends Component{
   drawChart=()=>{
     //boxPlot
     const boxplotD= this.state.boxplot;
+    console.log('统计分析盒须图数据==',boxplotD)
     const boxPlotOption = {
       color:['#0096ff'],
       tooltip: {

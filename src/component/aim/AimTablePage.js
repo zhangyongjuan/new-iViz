@@ -211,7 +211,7 @@ class AimTablePage extends Component{
       },
       xAxis: {
         type: 'value',
-        name: 'defect yield / %',
+        name: 'Failure rate / %',
         axisLine:{
           show:false
         },
