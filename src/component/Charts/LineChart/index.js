@@ -109,6 +109,14 @@ export default class BasicLineChart extends React.Component {
       good: [],
       bad: [],
       all: [],
+      yInput: {
+        min: 0,
+        max: 1,
+      },
+      yRate: {
+        min: 0,
+        max: 1,
+      },
     };
     _.forEach(data, (k) => {
       newData.xAxis.push(k.time);
@@ -117,6 +125,10 @@ export default class BasicLineChart extends React.Component {
       newData.bad.push(k.ng);
       newData.all.push(k.all);
     });
+    newData.yInput.min = _.min([_.min(newData.good), _.min(newData.defect)]);
+    newData.yInput.max = _.max(newData.all);
+    newData.yRate.min = _.min(newData.defect);
+    newData.yRate.max = _.max(newData.defect);
     return newData;
   };
 
@@ -156,9 +168,9 @@ export default class BasicLineChart extends React.Component {
         name: 'Input',
         type: 'value',
         // scale: true,
-        min: _.min([_.min(data.good),_.min(data.defect)]),
-        max: _.max(data.all),
-        interval: (_.max(data.all) - _.min([_.min(data.good),_.min(data.defect)])) / 6,
+        min: data.yInput.min,
+        max: data.yInput.max,
+        interval: (data.yInput.max - data.yInput.min) / 6,
         splitNumber: 6,
         axisLabel: {
           formatter(spl) {
@@ -171,9 +183,9 @@ export default class BasicLineChart extends React.Component {
         scale: true,
         name: 'Failure Rate/%',
         // boundaryGap: [0.2, 0.2],
-        min: _.min(data.defect),
-        max: _.max(data.defect),
-        interval: (_.max(data.defect) - _.min(data.defect)) / 6,
+        min: data.yRate.min,
+        max: data.yRate.max,
+        interval: (data.yRate.max - data.yRate.min) / 6,
         splitNumber: 6,
         axisLabel: {
           formatter(value, index) {
