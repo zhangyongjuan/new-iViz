@@ -111,14 +111,14 @@ class AimTablePage extends Component{
           columnTitle2.key=2;
           columnTitle3.type='NG';
           columnTitle3.key=3;
-          columnTitle4.type='Yield';
+          columnTitle4.type='Failure Rate';
           columnTitle4.key=4;
           data.stationYield.map((v,i)=>{
             stationHead.push(v.name);
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=((v.yield*100).toFixed(3))+'%';
+            columnTitle4[v.name]=(((1-v.yield)*100).toFixed(3))+'%';
             return ;
           })
           stationDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
@@ -166,7 +166,7 @@ class AimTablePage extends Component{
         if(data.timeYields !== null && data.timeYields.length !== 0){     //线图数据
           let linedata=[]
           data.timeYields.series[0].data.map((v,i)=>{
-            linedata.push((v*100).toFixed(3));
+            linedata.push(((1-v)*100).toFixed(3));
           })
           const linetime = data.timeYields.xAxis.data;
           this.setState({lineTime:linetime,lineData:linedata},this.drawBarAndLineChart)
@@ -250,7 +250,7 @@ class AimTablePage extends Component{
       },
       yAxis: {
         type: 'value',
-        name: 'yield / %',
+        name: 'Failure Rate / %',
         axisLine:{
           show:false
         },

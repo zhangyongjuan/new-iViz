@@ -587,7 +587,7 @@ function CapabilityData(data) {
         <li>Cpm = {Data.cpm.toFixed(3)}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Exp &lt; LSL {(Data.expLtLsl * 100).toFixed(2)+'%'}</li>
+        <li>Exp &lt; LSL {(Data.expLtLsl * 100).toFixed(3)+'%'}</li>
         <li>Exp &gt; USL {Data.expGtUsl.toFixed(3)}</li>
         <li>Obs &lt; LSL {Data.obsLtLsl.toFixed(3)}</li>
         <li>Obs &gt; USL {Data.obsGtUsl.toFixed(3)}</li>
