@@ -68,7 +68,7 @@ import('echarts/lib/component/title');
 import('echarts/lib/component/tooltip');
 import('echarts/lib/component/legend');
 
-export class SeriesLine extends React.Component {
+export class BasicColumn extends React.Component {
   constructor(props) {
     super(props);
     // this.PieRef = React.createRef();
@@ -108,25 +108,27 @@ export class SeriesLine extends React.Component {
       axisPointer: {            // 坐标轴指示器，坐标轴触发有效
         type: 'shadow',        // 默认为直线，可选为：'line' | 'shadow'
       },
-      formatter: (params) => {
-        console.log(params);
-        let content = '';
-        _.forEach(params, (k) => {
-          content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.name}：${(k.value*100).toFixed(2)}%</span></div>`;
-        });
-        return content;
+      formatter: function(param, index) {
+        return [
+          param[0].axisValue,
+          'Pass: ' + param[0].value,
+          'Fail: ' + param[1].value,
+          param[2].value === 0 ? `Failure Rate：0` : `Failure Rate：${(Number(param[2].value) * 100).toFixed(2)}%`,
+        ].join('<br/>');
       },
     },
     dataZoom: [{
-      type:'inside',
-      start: 1,
-      end: 16
-    },{
+      type: 'inside',
+      start: 0,
+      end: 16,
+      zoomLock: true,
+    }, {
       type: 'slider',
       show: true,
       xAxisIndex: 0,
-      start: 1,
-      end: 16
+      start: 0,
+      end: 16,
+      zoomLock: true,
     }],
     // grid: {
     //   left: '3%',
@@ -134,65 +136,130 @@ export class SeriesLine extends React.Component {
     //   bottom: '3%',
     //   containLabel: true,
     // },
+    legend: {
+      data: ['Pass', 'Fail', 'Failure Rate'],
+    },
     xAxis: [
       {
         type: 'category',
         data: data.xAxis,
-        axisTick: {
-          alignWithLabel: true,
-        },
       },
     ],
     yAxis: [
       {
+        name: 'Input',
         type: 'value',
-        name:'Yield/%',
+        // scale: true,
+        min: data.yInput.min,
+        max: data.yInput.max,
+        interval: (data.yInput.max - data.yInput.min) / 6,
+        splitNumber: 6,
         axisLabel: {
-          formatter: function(v) {
-            return `${v * 100}%`;
+          formatter(spl) {
+            return spl.toFixed(0);
           },
         },
+      },
+      {
+        type: 'value',
         scale: true,
-        max:1
+        name: 'Failure Rate/%',
+        // boundaryGap: [0.2, 0.2],
+        min: data.yRate.min,
+        max: data.yRate.max,
+        interval: (data.yRate.max - data.yRate.min) / 6,
+        splitNumber: 6,
+        axisLabel: {
+          formatter(value, index) {
+            return value === 0 ? 0 : `${(Number(value) * 100).toFixed(1)}%`;
+          },
+        },
       },
     ],
     series: [
       {
+        name: 'Pass',
         type: 'bar',
-        barWidth: '60%',
-        data: data.seriesData,
-        label: {
-          normal: {
-            show: true,
-            position: 'top',
-            color:'#000',
-            formatter:(x)=>`${(Number(x.value)*100).toFixed(2)}%`
-          }
+        stack: 'defect',
+        data: data.good,
+        itemStyle: {
+          color: '#006666',
+        },
+      },
+      {
+        name: 'Fail',
+        type: 'bar',
+        stack: 'defect',
+        data: data.bad,
+        itemStyle: {
+          color: '#C23531',
+        },
+      },
+      {
+        name: 'Failure Rate',
+        type: 'line',
+        yAxisIndex: 1,
+        data: data.defect,
+        itemStyle: {
+          color: '#FF0033',
         },
       },
     ],
+    // series: [
+    //   {
+    //     type: 'bar',
+    //     barWidth: '60%',
+    //     data: data.seriesData,
+    //     label: {
+    //       normal: {
+    //         show: true,
+    //         position: 'top',
+    //         color: '#000',
+    //         formatter: (x) => `${(Number(x.value) * 100).toFixed(2)}%`,
+    //       },
+    //     },
+    //   },
+    // ],
   });
 
   transSeries = (data) => {
-    const newSeries = {
+    const newData = {
       xAxis: [],
-      seriesData: [],
+      defect: [],
+      good: [],
+      bad: [],
+      all: [],
+      yInput: {
+        min: 0,
+        max: 1,
+      },
+      yRate: {
+        min: 0,
+        max: 1,
+      },
     };
     _.forEach(data, (k) => {
-      newSeries.xAxis.push(k.time);
-      newSeries.seriesData.push(k.value);
+      newData.xAxis.push(k.time);
+      newData.defect.push(k.defect);
+      newData.good.push(k.ok);
+      newData.bad.push(k.ng);
+      newData.all.push(k.all);
     });
-    return newSeries;
+    newData.yInput.min = _.min([_.min(newData.good), _.min(newData.defect)]);
+    newData.yInput.max = _.max(newData.all);
+    newData.yRate.min = _.min(newData.defect);
+    newData.yRate.max = _.max(newData.defect);
+    return newData;
   };
 
   render() {
     const { loading } = this.props.params;
     return (
       <Spin spinning={loading}>
-        <div ref={ips=>this.PieRef=ips} style={{ width: '100%', height: '500px' }}/>
+        <div ref={ips => this.PieRef = ips} style={{ width: '100%', height: '500px' }}/>
       </Spin>
     );
   }
 }
 
-export default SeriesLine;
+export default BasicColumn;
