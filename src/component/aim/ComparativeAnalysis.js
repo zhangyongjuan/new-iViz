@@ -40,7 +40,7 @@ const dataSource = [
 ];
 const columns = [
   {
-    title: 'test point',
+    title: 'SPC',
     dataIndex: 'test_point',
     key: 'testPoint',
   },
@@ -288,7 +288,8 @@ class Comparative extends Component{
         },
         splitLine: {
           show:false
-        }
+        },
+        scale:true
       },
       series: [
         {

@@ -80,13 +80,16 @@ class TimeRange extends Component {
 
       //  更新下拉框,selectOption为所有选择项
         if(data.colors.length !== 0){
-          data.colors.unshift('all');
+          data.colors.unshift('All');
+        }
+        if(data.builds.length !== 0){
+          data.builds.unshift('All');
         }
         if(data.wifis.length !== 0){
-          data.wifis.unshift('all');
+          data.wifis.unshift('All');
         }
         if(data.special_builds.length !== 0){
-          data.special_builds.unshift('all');
+          data.special_builds.unshift('All');
         }
         const selectOption = Object.assign({},data);
         delete selectOption.timeStart;
@@ -97,13 +100,13 @@ class TimeRange extends Component {
           selectItem.site= data.sites[0];
           selectItem.product= data.products[0];
           selectItem.color= data.colors;
-          selectItem.build= data.builds[0];
+          selectItem.build= data.builds;
           selectItem.special_build=data.special_builds;
           selectItem.wifi= data.wifis;
         nowValue.sites= [data.sites[0]];
         nowValue.products= [data.products[0]];
         nowValue.colors= data.colors;
-        nowValue.builds= [data.builds[0]];
+        nowValue.builds= data.builds;
         nowValue.special_builds=data.special_builds;
         nowValue.wifis= data.wifis;
         this.setState({SelectItem:selectItem,selectNowValue:nowValue});
@@ -136,20 +139,22 @@ class TimeRange extends Component {
         nowValue.products = [value];
         break;
       case 'colors':
-        value === 'all' ? selectItem.color = this.state.selectOption.colors : selectItem.color = [value];
-        value === 'all' ? nowValue.colors = this.state.selectOption.colors : nowValue.colors = [value];
+        value === 'All' ? selectItem.color = this.state.selectOption.colors : selectItem.color = [value];
+        value === 'All' ? nowValue.colors = this.state.selectOption.colors : nowValue.colors = [value];
         break;
       case 'builds':
-        selectItem.build = value;
-        nowValue.builds = [value];
+        // selectItem.build = value;
+        // nowValue.builds = [value];
+        value === 'All' ? selectItem.build = this.state.selectOption.builds : selectItem.build = [value];
+        value === 'All' ? nowValue.builds = this.state.selectOption.builds : nowValue.builds = [value];
         break;
       case 'special_builds':
-        value === 'all' ? selectItem.special_build = this.state.selectOption.special_builds : selectItem.special_build = [value];
-        value === 'all' ? nowValue.special_builds = this.state.selectOption.special_builds : nowValue.special_builds = [value];
+        value === 'All' ? selectItem.special_build = this.state.selectOption.special_builds : selectItem.special_build = [value];
+        value === 'All' ? nowValue.special_builds = this.state.selectOption.special_builds : nowValue.special_builds = [value];
         break;
       case 'wifis':
-        value === 'all' ? selectItem.wifi = this.state.selectOption.wifis : selectItem.wifi = [value];
-        value === 'all' ? nowValue.wifis = this.state.selectOption.wifis : nowValue.wifis = [value];
+        value === 'All' ? selectItem.wifi = this.state.selectOption.wifis : selectItem.wifi = [value];
+        value === 'All' ? nowValue.wifis = this.state.selectOption.wifis : nowValue.wifis = [value];
         break;
       default:
         break;

@@ -30,12 +30,12 @@ const spcHead = [
     width:100,
   },{
     key:'yield',
-    title:'Yield',
+    title:'Failure Rate',
     dataIndex:'yield',
     width:100,
   },{
     key:'std',
-    title:'std',
+    title:'Std',
     dataIndex:'std',
     width:100,
   }
@@ -151,7 +151,7 @@ class AimTablePage extends Component{
               if(key === 'name'){
                 return;
               }else if(key === 'yield'){
-                return value[key] = (value[key]*100).toFixed(3) +'%'
+                return value[key] = ((1-value[key])*100).toFixed(3) +'%'
               }else{
                 return value[key] = value[key].toFixed(3)
               }
@@ -235,7 +235,8 @@ class AimTablePage extends Component{
           normal: {
             show: true,
               position: 'right',
-              color:'#000'
+              color:'#000',
+              formatter:(data)=> `${data.value}%`
           }
         },
       }]

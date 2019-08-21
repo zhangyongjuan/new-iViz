@@ -85,14 +85,14 @@ class Statistical extends Component{
       data:requestCon
     })
       .then(data=>{
-        // console.log('统计分析的所有chart数据--',data);
+        console.log('统计分析的所有chart数据--',data);
         if(data === null){
           this.setState({showChart:'none'})
         }else{
           //分布图
           data.gaussChart.series.map((item,i)=>{
             item.data = item.data.map((value,j)=>{
-              return (value*100).toFixed(2)
+              return (value*100).toFixed(3)
             })
           });
           this.setState({loading:false,showChart:'block',boxplot:data.boxChart,capabilityChart:data.gaussChart,IChart:data.iChart,MRChart:data.mrChart,lastLineChart:data.lastChart},this.drawChart)
@@ -308,14 +308,15 @@ class Statistical extends Component{
       },
       xAxis: {
         type: 'category',
-        data: this.state.IChart.xAxis.data
+        data: this.state.IChart.xAxis.data,
       },
       yAxis: {
         type: 'value',
         name:'value',
         splitLine:{
           show:false
-        }
+        },
+        scale:true,
       },
       series:[{
         data:this.state.IChart.series[0].data,
@@ -387,7 +388,8 @@ class Statistical extends Component{
         name:'value',
         splitLine:{
           show:false
-        }
+        },
+        scale:true,
       },
       series: [{
         data:this.state.MRChart.series[0].data,
@@ -562,49 +564,55 @@ class Statistical extends Component{
 }
 //分布图的解释字段
 function CapabilityData(data) {
+  const Data = data.value;
+  if(Data.length === 0)
+    return '';
   return(
     <Col span={11}>
       <ul className={styles.capabilityUl}>
-        <li>Sample N = {data.value.numberOfObs}</li>
-        <li>Mean = {data.value.mean}</li>
-        <li>StdDev = {data.value.stdDev}</li>
+        <li>Sample N = {Data.numberOfObs}</li>
+        <li>Mean = {Data.mean.toFixed(3)}</li>
+        <li>StdDev = {Data.stdDev.toFixed(3)}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Target = {data.value.target}</li>
-        <li>LSL = {data.value.lsl}</li>
-        <li>USL = {data.value.usl}</li>
+        <li>Target = {Data.target.toFixed(3)}</li>
+        <li>LSL = {Data.lsl.toFixed(3)}</li>
+        <li>USL = {Data.usl.toFixed(3)}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Cp = {data.value.cp}</li>
-        <li>Cp_l = {data.value.cpl}</li>
-        <li>Cp_u = {data.value.cpu}</li>
-        <li>Cp_k = {data.value.cpk}</li>
-        <li>Cpm = {data.value.cpm}</li>
+        <li>Cp = {Data.cp.toFixed(3)}</li>
+        <li>Cp_l = {Data.cpl.toFixed(3)}</li>
+        <li>Cp_u = {Data.cpu.toFixed(3)}</li>
+        <li>Cp_k = {Data.cpk.toFixed(3)}</li>
+        <li>Cpm = {Data.cpm.toFixed(3)}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Exp &lt; LSL {(data.value.expLtLsl * 100).toFixed(2)+'%'}</li>
-        <li>Exp &gt; USL {data.value.expGtUsl}</li>
-        <li>Obs &lt; LSL {data.value.obsLtLsl}</li>
-        <li>Obs &gt; USL {data.value.obsGtUsl}</li>
+        <li>Exp &lt; LSL {(Data.expLtLsl * 100).toFixed(2)+'%'}</li>
+        <li>Exp &gt; USL {Data.expGtUsl.toFixed(3)}</li>
+        <li>Obs &lt; LSL {Data.obsLtLsl.toFixed(3)}</li>
+        <li>Obs &gt; USL {Data.obsGtUsl.toFixed(3)}</li>
       </ul>
     </Col>
   )
 }
 // IChart的解释字段
 function IchartData(data) {
+  const Data = data.value;
+  if(Data.length === 0)
+    return '';
   return(
     <Col span={20}>
       <ul className={styles.capabilityUl}>
-        <li>Sample N = {data.value.numberOfObs}</li>
-        <li>Mean = {data.value.mean}</li>
-        <li>StdDev = {data.value.stdDev}</li>
+        <li>Sample N = {Data.numberOfObs}</li>
+        <li>Mean = {Data.mean.toFixed(3)}</li>
+        <li>StdDev = {Data.stdDev.toFixed(3)}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>LCL = {data.value.lcl}</li>
-        <li>UCL = {data.value.ucl}</li>
+        <li>LCL = {Data.lcl.toFixed(3)}</li>
+        <li>UCL = {Data.ucl.toFixed(3)}</li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Number beyond limits = {data.value.numberBeyondLimits}</li>
+        <li>Number beyond limits = {Data.numberBeyondLimits}</li>
       </ul>
     </Col>
   )

@@ -77,7 +77,7 @@ class SummaryPage extends Component{
       data: requestCon
     })
       .then(data => {
-        console.log('总结页的数据====', data);
+        // console.log('总结页的数据====', data);
         //整理表格数据，并按照station的固定顺序显示，鸡肋的功能
         const newStation = [];
         data.stationYileds.map((item, i) => {

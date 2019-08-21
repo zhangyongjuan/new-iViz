@@ -16,7 +16,7 @@ export default {
       site: "",
       product: "",
       color: [],      //有全选和单选之分，全选时需要列出全部选择项
-      build: "",
+      build: [],
       special_build:[],
       wifi: []
     },
