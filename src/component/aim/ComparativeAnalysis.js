@@ -53,51 +53,61 @@ const columns = [
     title: 'Min',
     dataIndex: 'min',
     key: 'min',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Max',
     dataIndex: 'max',
     key: 'max',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Mean',
     dataIndex: 'mean',
     key: 'mean',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Median',
     dataIndex: 'median',
     key: 'median',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Std',
     dataIndex: 'std',
     key: 'std',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Cp',
     dataIndex: 'cp',
     key: 'cp',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Cpu',
     dataIndex: 'cpu',
     key: 'cpu',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Cpl',
     dataIndex: 'cpl',
     key: 'cpl',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'Cpk',
     dataIndex: 'cpk',
     key: 'cpk',
+    render:(v)=>v.toFixed(3)
   },
   {
     title: 'PPM',
     dataIndex: 'ppm',
     key: 'ppm',
+    render:(v)=>v.toFixed(3)
   },
 ];
 

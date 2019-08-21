@@ -4,6 +4,7 @@ import echarts from 'echarts';
 import reqwest from 'reqwest';
 import styles from './AimTablePage.less'
 import {connect} from "react-redux";
+import _ from "lodash";
 
 //Aim station 表格头部信息
 const spcHead = [
@@ -205,13 +206,27 @@ class AimTablePage extends Component{
     //画条形图和线图
     const barOption = {
       color:['#f5bd27'],
-      tooltip:{},
+      tooltip:{
+        axisPointer: {
+          type: 'shadow',
+        },
+        trigger: 'axis',
+        formatter: (params) => {
+          // console.log(params);
+          let content = '';
+          _.forEach(params, (k) => {
+            if (k.value !== 0 && !k.value) return;
+            content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">Failure Rate：${k.value}%</span></div>`;
+          });
+          return `<div>${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
+        },
+      },
       grid:{
         top:15
       },
       xAxis: {
         type: 'value',
-        name: 'Failure rate / %',
+        // name: 'Failure rate / %',
         axisLine:{
           show:false
         },
@@ -219,13 +234,19 @@ class AimTablePage extends Component{
           show:false
         },
         scale:true,
+        axisLabel: {
+          formatter: function(v) {
+            return `${v}%`;
+          },
+        },
       },
       yAxis: {
         data: this.state.spcname,
         type: 'category',
         axisTick:{
           interval:0
-        }
+        },
+
       },
       series: [{
         data: this.state.spcYield,
