@@ -108,12 +108,14 @@ export default class BasicLineChart extends React.Component {
       defect: [],
       good: [],
       bad: [],
+      all: [],
     };
     _.forEach(data, (k) => {
       newData.xAxis.push(k.time);
       newData.defect.push(k.defect);
       newData.good.push(k.ok);
       newData.bad.push(k.ng);
+      newData.all.push(k.all);
     });
     return newData;
   };
@@ -154,15 +156,25 @@ export default class BasicLineChart extends React.Component {
         name: 'Input',
         type: 'value',
         // scale: true,
+        min: _.min([_.min(data.good),_.min(data.defect)]),
+        max: _.max(data.all),
+        interval: (_.max(data.all) - _.min([_.min(data.good),_.min(data.defect)])) / 6,
+        splitNumber: 6,
+        axisLabel: {
+          formatter(spl) {
+            return spl.toFixed(0);
+          },
+        },
       },
       {
         type: 'value',
         scale: true,
         name: 'Failure Rate/%',
         // boundaryGap: [0.2, 0.2],
-        // min: _.min(data.defect),
-        // max: _.max(data.defect),
-        // interval: (_.max(data.defect) - _.min(data.defect)) / 6,
+        min: _.min(data.defect),
+        max: _.max(data.defect),
+        interval: (_.max(data.defect) - _.min(data.defect)) / 6,
+        splitNumber: 6,
         axisLabel: {
           formatter(value, index) {
             return value === 0 ? 0 : `${(Number(value) * 100).toFixed(1)}%`;
