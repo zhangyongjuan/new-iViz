@@ -167,6 +167,7 @@ class SummaryPage extends Component{
         outerValue.push(d);
         return cosmeticLegend.push(d.name);
       }else if(j < 9){
+        costop9Sum = costop9Sum + cositem.count;
         d.name=cositem.name;
         d.value=cositem.count;
         outerValue.push(d);
