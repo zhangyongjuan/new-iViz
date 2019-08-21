@@ -54,6 +54,9 @@ export class SeriesLine extends React.Component {
   setPieOption = (data) => ({
     tooltip: {
       trigger: 'axis',
+      axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+        type: 'shadow',        // 默认为直线，可选为：'line' | 'shadow'
+      },
       formatter: function(param, index) {
         return [
           param[0].axisValue,
@@ -76,15 +79,15 @@ export class SeriesLine extends React.Component {
     dataZoom: [{
       type: 'inside',
       start: 0,
-      end: 100,
-      // zoomLock: true,
+      end: data.all.length <= 15 ? 100 : (15 / data.all.length) * 100,
+      zoomLock: true,
     }, {
       type: 'slider',
       show: true,
       xAxisIndex: 0,
       start: 0,
-      end: 16,
-      // zoomLock: true,
+      end: data.all.length <= 15 ? 100 : (15 / data.all.length) * 100,
+      zoomLock: true,
     }],
     xAxis: [
       {
@@ -128,6 +131,7 @@ export class SeriesLine extends React.Component {
       {
         name: 'Pass',
         type: 'bar',
+        barWidth: 50,
         stack: 'defect',
         data: data.good,
         itemStyle: {
@@ -183,6 +187,7 @@ export class SeriesLine extends React.Component {
     newData.yRate.min = _.min(newData.defect);
     newData.yRate.max = _.max(newData.defect);
     return newData;
+
   };
 
   render() {

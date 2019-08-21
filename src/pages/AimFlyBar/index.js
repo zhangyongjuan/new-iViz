@@ -167,7 +167,7 @@ class AimFlyBar extends React.Component {
     return (
       <div className={styles.main}>
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Yield Comparison By Flight Bar</p>
+          <p className={styles.headerTitle}>Failure Rate Comparison By Flight Bar</p>
           <div className={styles.lineChartGroup}>
             <BasicColumn
               params={{
@@ -179,7 +179,7 @@ class AimFlyBar extends React.Component {
         </div>
 
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Flight Bar Yield Trend Comparison</p>
+          <p className={styles.headerTitle}>Failure Rate Trend Comparison By Day</p>
           <div className={styles.lineChartGroup}>
             <SeriesLine
               params={{
@@ -193,7 +193,7 @@ class AimFlyBar extends React.Component {
         </div>
 
         <div className={styles.firstRow}>
-          <p className={styles.headerTitle}>Yield Comparision By Rack</p>
+          <p className={styles.headerTitle}>Failure Rate Comparision By Rack</p>
           <div className={styles.lineChartGroup}>
             <div className={styles.goup}>
               <div>

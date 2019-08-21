@@ -120,14 +120,14 @@ export class BasicColumn extends React.Component {
     dataZoom: [{
       type: 'inside',
       start: 0,
-      end: 16,
+      end: data.all.length <= 15 ? 100 : (15/data.all.length)*100,
       zoomLock: true,
     }, {
       type: 'slider',
       show: true,
       xAxisIndex: 0,
       start: 0,
-      end: 16,
+      end: data.all.length <= 15 ? 100 : (15/data.all.length)*100,
       zoomLock: true,
     }],
     // grid: {
@@ -180,10 +180,11 @@ export class BasicColumn extends React.Component {
       {
         name: 'Pass',
         type: 'bar',
+        barWidth: 50,
         stack: 'defect',
         data: data.good,
         itemStyle: {
-          color: '#006666',
+          color: '#009966',
         },
       },
       {
