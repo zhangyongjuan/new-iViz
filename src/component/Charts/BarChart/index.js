@@ -55,7 +55,7 @@ class BasicBarChart extends React.Component {
       <Spin spinning={loading}>
         {data && data.length !== 0 || loading ? (
           <div className={styles.main}>
-            <Chart padding={['auto', 'auto', 'auto', 'auto']} scale={cols} style={{ minHeight: 400 }} height={400}
+            <Chart padding={['auto', '80', 'auto', 'auto']} scale={cols} style={{ minHeight: 400 }} height={400}
                    data={dv} forceFit onPlotClick={clickBar}>
               <Coord transpose/>
               <Axis
