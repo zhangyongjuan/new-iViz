@@ -468,7 +468,17 @@ class Statistical extends Component{
             borderColor:'white',  //拐点边框颜色
             borderWidth:2
           }
-        }
+        },
+        label: {
+          normal: {
+            show: true,
+            position: 'top',
+            color:'#000',
+            formatter:function (data) {
+              return Number(data.value)
+            }
+          }
+        },
       }]
     };
     const lastLine = echarts.init(document.getElementById('lastLineChart'));

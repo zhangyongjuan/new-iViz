@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 
 const reactiveTableColumn = [
   {
-    title:'Name',
+    title:'Process',
     key:'name',
     dataIndex:'name',
     width:250
@@ -77,7 +77,7 @@ class SummaryPage extends Component{
       data: requestCon
     })
       .then(data => {
-        // console.log('总结页的数据====', data);
+        console.log('总结页的数据====', data);
         //整理表格数据，并按照station的固定顺序显示，鸡肋的功能
         const newStation = [];
         data.stationYileds.map((item, i) => {
@@ -135,8 +135,8 @@ class SummaryPage extends Component{
     const pieVale = this.state.pieYield;
     //内圈类型和数据
     const discribeType=['cosmetic','dimensional'];
-    const cosmeticCount = pieVale['cosmetic'];
-    const dimensionalCount = pieVale['dimensional'];
+    var cosmeticCount = pieVale['cosmetic'];
+    let dimensionalCount = pieVale['dimensional'];
     const cosmeticLegend=[{icon:'roundRect',name:'cosmetic'}];
     const dimensionalLegend=[{icon:'roundRect',name:'dimensional'}];
     //首先把cosmetic和dimensional的数据分开，以便每个类型用于取top10
@@ -203,7 +203,12 @@ class SummaryPage extends Component{
       // color:['#2f4554','#c23531','#6e7074','#61a0a8','#d48265','#B03A5B'],
       tooltip: {
         trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
+        // formatter:function(v){
+        //   // console.log(v);
+        //   const FailureRate = ((1-v.data.yield)*100).toFixed(2);
+        //   return `${v.name}: ${v.value}<br/>Failure Rate:${ FailureRate }%`
+        // }
+        formatter: `{a} <br/>{b}: {c} ({d}%)`
       },
       legend: [
         {
@@ -248,8 +253,8 @@ class SummaryPage extends Component{
           },
           data:[
             // 内圈数据
-            {value:dimensionalCount, name:'dimensional'},
-            {value:cosmeticCount, name:'cosmetic'},
+            {value:dimensionalCount, name:'dimensional',yield:'0.11'},
+            {value:cosmeticCount, name:'cosmetic',yield:'0.05745'},
           ],
         },
         {
@@ -329,6 +334,7 @@ class SummaryPage extends Component{
     staPie.on('legendselectchanged',(e)=>{
       // console.log(e);
         if(e.name === 'dimensional'){
+          staPieOption.series[0].data[0].value = dimensionalCount;
           if(e.selected.dimensional === false) {
             Object.keys(dimensionalSelect).map((v,i)=>{dimensionalSelect[v] = false});
             triggerAction('legendUnSelect',dimensionalLegend);
@@ -339,6 +345,7 @@ class SummaryPage extends Component{
           // staPie.setOption(staPieOption);
         }
         else if(e.name === 'cosmetic'){
+          staPieOption.series[0].data[1].value = cosmeticCount;
           if(e.selected.cosmetic === false) {
             Object.keys(cosmeticSelect).map((v,i)=>{cosmeticSelect[v] = false});
             triggerAction('legendUnSelect',cosmeticLegend)
@@ -350,36 +357,58 @@ class SummaryPage extends Component{
         }
         else{              //点击子legend时，需要判断父legend是否是选择选中状态，若不是，则不能点击显示子图例
           if(e.selected != undefined){
-            console.log('点的其他的legend--',e);
+            // console.log('点的其他的legend--',e);
+            let changeValue = 0;
+            outerValue.map((v,i)=>{
+              if(v.name === e.name){
+                return changeValue = v.value
+              }
+            });
             if(cosmeticLegend.indexOf(e.name) !== -1){
               if(e.selected['cosmetic'] === false){
                 cosmeticSelect[e.name] = false;
-                staPie.setOption(staPieOption);
+                // staPie.setOption(staPieOption);
               }else{
                 // staPie.dispatchAction({
                 //   type: 'legendToggleSelect',
                 //   // 图例名称
                 //   batch: e.name
                 // })
-                triggerAction('legendToggleSelect',e.name)
+                if(e.selected[e.name] === false){         //外圈数据被点击更改状态时，内部圈数据随着变化
+                  staPieOption.series[0].data[1].value = staPieOption.series[0].data[1].value-changeValue;
+                  cosmeticSelect[e.name] = false;
+                }else{
+                  staPieOption.series[0].data[1].value = staPieOption.series[0].data[1].value+changeValue;
+                  cosmeticSelect[e.name] = true;
+                }
+                // staPie.setOption(staPieOption);
+                // triggerAction('legendToggleSelect',e.name);
               }
           }
             else if((dimensionalLegend.indexOf(e.name) !== -1)){
             if(e.selected['dimensional'] === false){
               dimensionalSelect[e.name] = false;
-              staPie.setOption(staPieOption);
+              // staPie.setOption(staPieOption);
             }else{
               // staPie.dispatchAction({
               //   type: 'legendToggleSelect',
               //   // 图例名称
               //   batch: e.name
               // })
-              triggerAction('legendToggleSelect',e.name)
+              if(e.selected[e.name] === false){         //外圈数据被点击更改状态时，内部圈数据随着变化
+                staPieOption.series[0].data[0].value = staPieOption.series[0].data[0].value-changeValue;
+                dimensionalSelect[e.name] = false;
+              }else{
+                staPieOption.series[0].data[0].value = staPieOption.series[0].data[0].value+changeValue;
+                dimensionalSelect[e.name] = true;
+              }
+              // triggerAction('legendToggleSelect',e.name)
             }
           }
           }
         onOff = false;
       }
+        staPie.setOption(staPieOption);
     })
   }
   render(){

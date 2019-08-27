@@ -8,6 +8,7 @@ import 'moment/locale/zh-cn';
 import reqwest from "reqwest";
 import '../../global';
 import {connect} from "react-redux";
+import _ from "lodash";
 moment.locale('zh-cn');
 
 @connect(({global}) => ({
@@ -53,14 +54,25 @@ class DrawChart extends Component{
             text: this.state.lineChart.title.text
           }],
           tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            formatter: (params) => {
+              let content = '';
+              _.forEach(params, (k) => {
+                if (k.value !== 0 && !k.value) return;
+                content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">${k.name}：${k.value}%</span></div>`;
+              });
+              return content;
+            },
           },
           xAxis: this.state.lineChart.xAxis,
           yAxis: [{
             type: 'value',
-            name: 'yield / %',
+            name: 'yield',
             splitLine: {show: true},
-            scale: true
+            scale: true,
+            axisLabel: {
+              formatter:`{value}%`
+            }
           }],
           // toolbox: {
           //   show: true,
@@ -375,7 +387,7 @@ class DrawChart extends Component{
         if(data.lineChart !== null && data.lineChart !== undefined){
           data.lineChart.series.map((item,i)=>{
             item.data = item.data.map((d,j)=>{
-              return (parseFloat(d)*100).toFixed(3);
+              return (parseFloat(d)*100).toFixed(2);
                // console.log(item)
             })
           })

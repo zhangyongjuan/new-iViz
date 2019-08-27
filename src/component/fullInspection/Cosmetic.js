@@ -252,7 +252,7 @@ class Commetic extends Component{
         ]
       },
       series: [{
-        name: 'Punch Card',
+        // name: 'Punch Card',
         type: 'heatmap',
         data: this.state.overallData,
         label: {
@@ -576,7 +576,7 @@ class Commetic extends Component{
         ]
       },
       series: [{
-        name: 'Punch Card',
+        // name: 'Punch Card',
         type: 'heatmap',
         data: this.state.particularData,
         label: {
@@ -623,20 +623,25 @@ class Commetic extends Component{
   drawLineChart = ()=>{
     //  Particular Line chart
     const lineD =this.state.lineChartData;
-    // lineD.series[0].data = lineD.series[0].data.map((v,i)=>{
-    //   return (Number(v)*100).toFixed(2)
-    // })
+    lineD.series[0].data = lineD.series[0].data.map((v,i)=>{
+      return (Number(v)*100).toPrecision(2)
+    })
     const particularLine = echarts.init(document.getElementById('paiticularLine'));
     const particularLineOption = {
       color:['#188fff'],
-      tooltip:{},
+      tooltip:{
+        position:'top',
+        formatter:function (data) {
+          return `${data.name} : ${data.value}%`
+        }
+      },
       xAxis: {
         type: 'category',
         data:  lineD.xAxis.data
       },
       yAxis: {
         type: 'value',
-        name: 'yield / %',
+        name: 'Failure Rate',
         axisLine:{
           show:false
         },
@@ -644,6 +649,11 @@ class Commetic extends Component{
           show:false
         },
         scale:true,
+        axisLabel: {
+          formatter:function (value) {
+            return `${value}%`
+          }
+        }
       },
       series: [{
         data: lineD.series[0].data,
@@ -655,7 +665,17 @@ class Commetic extends Component{
             borderColor:'white',  //拐点边框颜色
             borderWidth:2
           }
-        }
+        },
+        label: {
+          normal: {
+            show: true,
+            position: 'top',
+            color:'#000',
+            formatter:function (data) {
+              return Number(data.value)+`%`
+            }
+          }
+        },
       }]
     };
     particularLine.setOption(particularLineOption);
@@ -701,7 +721,7 @@ class Commetic extends Component{
             {/* line chart  Trend analysis of paiticular defect and machine*/}
             <div id={styles.particularLineCon} className={this.state.showParticularLine}>
               <p className={styles.title} >
-                Yield trend
+                Failure Rate trend
               </p>
               <div id='paiticularLine' className={styles.particularLine} />
             </div>

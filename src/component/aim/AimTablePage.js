@@ -264,14 +264,18 @@ class AimTablePage extends Component{
     };
     const aimlineOption = {
       color:['#188fff'],
-      tooltip:{},
+      tooltip:{
+        formatter:function (data) {
+          return `${data.name} :  ${Number(data.value).toFixed(2)}%`
+        }
+      },
       xAxis: {
         type: 'category',
         data: this.state.lineTime
       },
       yAxis: {
         type: 'value',
-        name: 'Failure Rate / %',
+        name: 'Failure Rate',
         axisLine:{
           show:false
         },
@@ -279,6 +283,9 @@ class AimTablePage extends Component{
           show:false
         },
         scale:true,
+        axisLabel: {
+          formatter:`{value}%`
+        }
       },
       series: [{
         data: this.state.lineData,
@@ -288,9 +295,19 @@ class AimTablePage extends Component{
         itemStyle:{
           normal:{
             borderColor:'white',  //拐点边框颜色
-            borderWidth:2
+            borderWidth:2,
           }
-        }
+        },
+        label: {
+          normal: {
+            show: true,
+            position: 'top',
+            color:'#000',
+            formatter:function (data) {
+              return Number(data.value).toFixed(2)+`%`
+            }
+          }
+        },
       }]
     };
     const aimBarchart = echarts.init(document.getElementById('barchart'));

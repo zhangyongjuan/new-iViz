@@ -254,7 +254,7 @@ class Dimensional extends Component{
         ]
       },
       series: [{
-        name: 'Punch Card',
+        // name: 'Punch Card',
         type: 'heatmap',
         data: this.state.overallData,
         label: {
@@ -567,7 +567,7 @@ class Dimensional extends Component{
         ]
       },
       series: [{
-        name: 'Punch Card',
+        // name: 'Punch Card',
         type: 'heatmap',
         data: this.state.particularData,
         label: {
@@ -614,20 +614,25 @@ class Dimensional extends Component{
   drawLineChart = ()=>{
     //  Particular Line chart
     const lineD =this.state.lineChartData;
-    // lineD.series[0].data = lineD.series[0].data.map((v,i)=>{
-    //   return (Number(v)*100).toFixed(2)
-    // })
+    lineD.series[0].data = lineD.series[0].data.map((v,i)=>{
+      return (Number(v)*100).toPrecision(2)
+    })
     const particularLine = echarts.init(document.getElementById('DimPaiticularLine'));
     const particularLineOption = {
       color:['#188fff'],
-      tooltip:{},
+      tooltip:{
+        position:'top',
+        formatter:function (data) {
+          return `${data.name} : ${data.value}%`
+        }
+      },
       xAxis: {
         type: 'category',
         data:  lineD.xAxis.data
       },
       yAxis: {
         type: 'value',
-        name: 'yield / %',
+        name: 'Failure Rate',
         axisLine:{
           show:false
         },
@@ -635,6 +640,11 @@ class Dimensional extends Component{
           show:false
         },
         scale:true,
+        axisLabel: {
+          formatter:function (value) {
+            return `${value}%`
+          }
+        }
       },
       series: [{
         data: lineD.series[0].data,
@@ -646,7 +656,17 @@ class Dimensional extends Component{
             borderColor:'white',  //拐点边框颜色
             borderWidth:2
           }
-        }
+        },
+        label: {
+          normal: {
+            show: true,
+            position: 'top',
+            color:'#000',
+            formatter:function (data) {
+              return Number(data.value)+`%`
+            }
+          }
+        },
       }]
     };
     particularLine.setOption(particularLineOption);
