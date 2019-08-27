@@ -576,7 +576,7 @@ class Commetic extends Component{
         ]
       },
       series: [{
-        // name: 'Punch Card',
+        name: 'Punch Card',
         type: 'heatmap',
         data: this.state.particularData,
         label: {
