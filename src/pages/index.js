@@ -1,10 +1,12 @@
 import React ,{ Component }from 'react';
-import { Table,Card ,Statistic, Row, Col,Spin}from 'antd';
+import { Table,Card ,Statistic, Row, Col,Spin,Popover}from 'antd';
 import echarts from 'echarts';
 import reqwest from 'reqwest';
 import TimeRange from '../layouts/TimeRange'
 import styles from './summaryChart.less';
 import {connect} from "react-redux";
+import ToolTips from '../component/Tooltips/tooltip'
+
 
 const reactiveTableColumn = [
   {
@@ -13,19 +15,19 @@ const reactiveTableColumn = [
     dataIndex:'name',
     width:250
   },{
-    title:'First Pass Yield',
+    title:<Popover content={ToolTips('summaryPage','table','th2')} ><span>First Pass Yield</span></Popover>,
     key:'firstPass',
     dataIndex:'firstPass'
   },{
-    title:'Final Pass Yield',
+    title:<Popover content={ToolTips('summaryPage','table','th3')}><span>Final Pass Yield</span></Popover>,
     key:'finalPass',
     dataIndex:'finalPass'
   },{
-    title:'Input',
+    title:<Popover content={ToolTips('summaryPage','table','th4')}><span>Input</span></Popover>,
     key:'input',
     dataIndex:'input'
   },{
-    title:'Ouput',
+    title:<Popover content={ToolTips('summaryPage','table','th5')} placement="topRight" arrowPointAtCenter><span>Ouput</span></Popover>,
     key:'output',
     dataIndex:'output'
   }
@@ -77,7 +79,7 @@ class SummaryPage extends Component{
       data: requestCon
     })
       .then(data => {
-        console.log('总结页的数据====', data);
+        // console.log('总结页的数据====', data);
         //整理表格数据，并按照station的固定顺序显示，鸡肋的功能
         const newStation = [];
         data.stationYileds.map((item, i) => {
@@ -214,7 +216,7 @@ class SummaryPage extends Component{
         {
           // type: 'scroll',
           name:'dimensionalLegend',
-          right:150,
+          right:'0%',
           height:300,
           orient: 'vertical',
           // x: 'left',
@@ -226,7 +228,7 @@ class SummaryPage extends Component{
         {
           // type: 'scroll',
           name:'cosmeticLegend',
-          left:250,
+          left:'15%',
           height:300,
           orient: 'vertical',
           x: 'left',
@@ -449,22 +451,27 @@ class SummaryPage extends Component{
   }
 }
 function OverviewSummary(value) {
+  const firstContent = ToolTips('summaryPage','overView','firstPass');
+  const finalContent = ToolTips('summaryPage','overView','finalPass');
   return(
     <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
       <Col span={6}>
-        <Card>
-          <Statistic
-            title=" First Pass"
-            value={value.overViewValue.firstPass*100}
-            precision={2}
-            valueStyle={{ color: '#cf1322' }}
-            // prefix={<Icon type="arrow-down" />}
-            suffix="%"
-          />
+        <Popover content={firstContent}>
+        <Card className={styles.overview}>
+            <Statistic
+              title=" First Pass"
+              value={value.overViewValue.firstPass*100}
+              precision={2}
+              valueStyle={{ color: '#cf1322' }}
+              // prefix={<Icon type="arrow-down" />}
+              suffix="%"
+            />
         </Card>
+        </Popover>
       </Col>
       <Col span={6}>
-        <Card>
+        <Popover content={finalContent}>
+        <Card className={styles.overview}>
           <Statistic
             title="Final Pass"
             value={value.overViewValue.finalPass*100}
@@ -474,6 +481,7 @@ function OverviewSummary(value) {
             suffix="%"
           />
         </Card>
+        </Popover>
       </Col>
 
       {/*<Col span={6}>*/}

@@ -35,7 +35,9 @@ class Dimensional extends Component{
     machineName:'CNC-7',
     //  点击particularChart的值
     clickParticularX:'',
-    clickParticularY:''
+    clickParticularY:'',
+    //  cnc是否完全显示
+    showAllCnc:true
   }
   componentDidMount() {
     this.fetch(this.props);
@@ -80,13 +82,17 @@ class Dimensional extends Component{
           data.defectLines.map((item,n)=>{
             item.defectYields.map((v,i)=>{
               if(v.station === s){
+                const oneNumber = {};
                 const defectyield = (v.yield*100).toFixed(2);
-                return chartData.push([j,n,defectyield])
+                oneNumber.tooltipContent=`${v.count} / ${v.stationCount}`;   //toolTip显示的内容
+                oneNumber.value = [j,n,defectyield]
+                return chartData.push(oneNumber);
               }
             })
           })
         })
         // console.log('热力图表格数据---',chartData);
+        this.setState({lineChartData:data.lineChart,showParticularLine:'particularLine'},this.drawLineChart);
         this.setState({overallChart:data.defectLines,overallStation:dimStation,heatmapYield:defectYield,overallDefectName:defectName,overallData:chartData,loading:false},this.drawOverallHeatmap)
       })
   }
@@ -102,7 +108,16 @@ class Dimensional extends Component{
     const sumYield = this.state.heatmapYield;
     const overallOption = {
       tooltip: {
-        position: 'bottom'
+        position: 'bottom',
+        backgroundColor:'#fff',
+        textStyle:{
+          color:'#000',
+          fontSize:'12px'
+        },
+        formatter:function (params) {
+          // console.log(params);
+          return params.data.tooltipContent
+        }
       },
       animation: false,
       grid: {
@@ -260,8 +275,9 @@ class Dimensional extends Component{
         label: {
           normal: {
             show: true,
-            color:'#000'
-          }
+            color:'#000',
+            formatter:v=>`${v.value[2]}%`
+          },
         },
         itemStyle: {
           emphasis: {
@@ -277,9 +293,11 @@ class Dimensional extends Component{
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
           //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
-          if(e.value == 'cnc8-wcnc4-qc' || e.value == 'cnc10-wcnc5-qc' || e.value == 'laser-qc'){
-            this.setState({machineName:'CNC7 Machine#'})
-          }else{
+          if(e.value == 'cnc10-wcnc5-qc' || e.value == 'laser-qc'){
+            this.setState({machineName:'CNC7 Machine#',showAllCnc:true})
+          }else if(e.value == 'cnc8-wcnc4-qc'){
+            this.setState({machineName:'CNC7 Machine#',showAllCnc:false})
+          } else{
             return;
           }
           for (var i = 0; i < overallXHighlightData.length; i++) {
@@ -297,9 +315,11 @@ class Dimensional extends Component{
           this.setState({clickStationName:e.value,clickDefectName:''});
         }
         else{              //点击的值
-          if(e.name == 'cnc8-wcnc4-qc' || e.name == 'cnc10-wcnc5-qc' || e.name == 'laser-qc'){
-            this.setState({machineName:'CNC7 Machine#'})
-          }else{
+          if(e.name == 'cnc10-wcnc5-qc' || e.name == 'laser-qc'){
+            this.setState({machineName:'CNC7 Machine#',showAllCnc:true})
+          }else if(e.name == 'cnc8-wcnc4-qc'){
+            this.setState({machineName:'CNC7 Machine#',showAllCnc:false})
+          } else{
             return;
           }
           let clickY = '';
@@ -374,8 +394,13 @@ class Dimensional extends Component{
               data.machineTable.cells.map((cell, i) => {
                 data.machineTable.mcs.map((mcs, j) => {
                   if (v.cell === cell && v.mc === mcs) {
-                    const defectyield = (v.yield * 100).toFixed(2);
-                    return chartData.push([i, j, defectyield])
+                    // const defectyield = (v.yield * 100).toFixed(2);
+                    // return chartData.push([i, j, defectyield])
+                    const oneNumber = {};
+                    const defectyield = (v.yield*100).toFixed(2);
+                    oneNumber.tooltipContent=`${v.count} / ${v.machineCount}`;   //toolTip显示的内容
+                    oneNumber.value = [i,j,defectyield]
+                    return chartData.push(oneNumber);
                   }
                 })
               })
@@ -434,7 +459,16 @@ class Dimensional extends Component{
     const particularHeatmap = echarts.init(document.getElementById('DimParticularHeatmap'));
     const particularOption = {
       tooltip: {
-        position: 'top'
+        position: 'bottom',
+        backgroundColor:'#fff',
+        textStyle:{
+          color:'#000',
+          fontSize:'12px'
+        },
+        formatter:function (params) {
+          // console.log(params);
+          return params.data.tooltipContent
+        }
       },
       animation: false,
       grid: {
@@ -464,7 +498,7 @@ class Dimensional extends Component{
       xAxis: [
         {
           type: 'category',
-          name:'value/%',
+          // name:'value/%',
           data: this.state.particularXData,
           axisTick:{
             interval:0
@@ -573,7 +607,8 @@ class Dimensional extends Component{
         label: {
           normal: {
             show: true,
-            color:'#000'
+            color:'#000',
+            formatter:v=>`${v.value[2]}%`
           }
         },
         itemStyle: {
@@ -700,19 +735,29 @@ class Dimensional extends Component{
           <p className={styles.title} >
             Heatmap by CNC
           </p>
-          <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
-            <Option value='title' disabled>Please choose one</Option>
-            <Option value="CNC7 Machine#">CNC-7</Option>
-            <Option value="CNC8 Machine#">CNC-8</Option>
-            <Option value="CNC9 Machine#">CNC-9</Option>
-            <Option value="CNC10 Machine#">CNC-10</Option>
-          </Select>
+          {
+            this.state.showAllCnc === true ? (
+              <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
+                <Option value='title' disabled>Please choose one</Option>
+                <Option value="CNC7 Machine#">CNC-7</Option>
+                <Option value="CNC8 Machine#">CNC-8</Option>
+                <Option value="CNC9 Machine#">CNC-9</Option>
+                <Option value="CNC10 Machine#">CNC-10</Option>
+              </Select>
+            ):(
+              <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
+                <Option value='title' disabled>Please choose one</Option>
+                <Option value="CNC7 Machine#">CNC-7</Option>
+                <Option value="CNC8 Machine#">CNC-8</Option>
+              </Select>
+            )
+          }
           <div id='DimParticularHeatmap' style={{width:'95%',margin:'0 auto',top:'-30px'}} className={styles.particularHeatmap} />
         </div>
         {/* line chart  Trend analysis of paiticular defect and machine*/}
         <div id={styles.particularLineCon} className={this.state.showParticularLine}>
           <p className={styles.title} >
-            Yield trend
+            Failure Rate trend
           </p>
           <div id='DimPaiticularLine' className={styles.particularLine} />
         </div>

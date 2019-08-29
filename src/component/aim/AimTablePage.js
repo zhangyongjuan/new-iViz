@@ -74,6 +74,8 @@ class AimTablePage extends Component{
     lineData:[],
   //  是否是通过点击线图更改时间
     clickLinePoint:false,
+  //  spc柱子被点击名称
+    clickbarname:''
   }
   componentDidMount() {
     this.fetch();
@@ -93,7 +95,7 @@ class AimTablePage extends Component{
   fetch=()=>{
     const initcondition = {};
     initcondition.data = {};
-    initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp}));
+    initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp,spc:this.state.clickbarname}));
     console.log('取数据的条件',initcondition);
     reqwest({
       url:`${global.constants.ip}/condition/getBackYield`,
@@ -102,7 +104,7 @@ class AimTablePage extends Component{
       data:initcondition
     })
       .then(data=>{
-        console.log("初始条件获得数据",data);
+        console.log("aim dashboard获得数据",data);
         if(data.stationYield !== null){
           const stationHead = [],stationDataSource=[];
           const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};
@@ -160,19 +162,19 @@ class AimTablePage extends Component{
             return value.key=j;
           })
 
-          this.setState({spcTitle:spcHead,spcDataSource:data.spcYields,spcYield:spcYield,spcname:spcname},this.drawBarAndLineChart)
+          this.setState({spcTitle:spcHead,spcDataSource:data.spcYields,spcYield:spcYield,spcname:spcname},this.drawBarChart)
         }else {
-          this.setState({showBarChart:'none',spcTitle:[],spcDataSource:[],spcYield:[],spcname:[]},this.drawBarAndLineChart)
+          this.setState({showBarChart:'none',spcTitle:[],spcDataSource:[],spcYield:[],spcname:[]},this.drawBarChart)
         }
         if(data.timeYields !== null && data.timeYields.length !== 0){     //线图数据
           let linedata=[]
           data.timeYields.series[0].data.map((v,i)=>{
-            linedata.push(((1-v)*100).toFixed(3));
+            linedata.push((1-v)*100);
           })
           const linetime = data.timeYields.xAxis.data;
-          this.setState({lineTime:linetime,lineData:linedata},this.drawBarAndLineChart)
+          this.setState({lineTime:linetime,lineData:linedata},this.drawLineChart)
         }else {
-          this.setState({showLineChart:'none',lineTime:[],lineData:[]},this.drawBarAndLineChart)
+          this.setState({showLineChart:'none',lineTime:[],lineData:[]},this.drawLineChart)
         }
         if(data.aimYield && data.aimYield !== null){       //下级数据
           const plusHead = [],plusDataSource=[];
@@ -183,14 +185,14 @@ class AimTablePage extends Component{
           columnTitle2.key=2;
           columnTitle3.type='NG';
           columnTitle3.key=3;
-          columnTitle4.type='Yield';
+          columnTitle4.type='Failure Rate';
           columnTitle4.key=4;
           data.aimYield.map((v,i)=>{
             plusHead.push(v.name);
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=(v.yield*100).toFixed(3)+'%';
+            columnTitle4[v.name]=((1-v.yield)*100).toPrecision(2)+'%';
             return ;
           })
           plusDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
@@ -200,10 +202,10 @@ class AimTablePage extends Component{
   }
   clickStationName = e =>{
     // console.log('clickStationName====',e.target.innerText);
-    this.setState({showAimPlus:'none',showBarChart:'showBarChart',showLineChart:'showLineChart',station:e.target.innerText,aimIp:''},this.fetch);
+    this.setState({showAimPlus:'none',showBarChart:'showBarChart',showLineChart:'showLineChart',station:e.target.innerText,aimIp:'',clickbarname:''},this.fetch);
   }
-  drawBarAndLineChart(){
-    //画条形图和线图
+  drawBarChart(){
+    //画条形图
     const barOption = {
       color:['#f5bd27'],
       tooltip:{
@@ -262,6 +264,44 @@ class AimTablePage extends Component{
         },
       }]
     };
+    const aimBarchart = echarts.init(document.getElementById('barchart'));
+    aimBarchart.setOption(barOption);
+    var autoHeight = barOption.yAxis.data.length * 50 + 100;
+    //获取 ECharts 实例容器的 dom 节点。
+    aimBarchart.getDom().style.height = autoHeight + "px";
+    aimBarchart.getDom().childNodes[0].style.height = autoHeight + "px";
+    aimBarchart.getDom().childNodes[0].childNodes[0].setAttribute("height", autoHeight);
+    aimBarchart.getDom().childNodes[0].childNodes[0].style.height = autoHeight + "px";
+    aimBarchart.resize();
+    //防止多次点击事件
+    if(aimBarchart._$handlers.click){
+      aimBarchart._$handlers.click.length = 0;
+    }
+  //  新添加的需求，柱子点击，线图改变
+    aimBarchart.on('click','series',(params)=>{
+      this.setState({clickbarname:params.name});
+      const initcondition = {};
+      initcondition.data = {};
+      initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp,spc:params.name}));
+      reqwest({
+        url:`${global.constants.ip}/condition/getOneSpcLine`,
+        method:'post',
+        type:'json',
+        data:initcondition
+      })
+        .then(data=>{
+          // console.log('barchart 被点击了，获得的线图--',data);
+          const linetime = data.xAxis.data;
+          const chartD = [];
+          data.series[0].data.map((value,i)=>{
+            return chartD.push((1-Number(value))*100);
+          })
+          this.setState({lineTime:linetime,lineData:chartD},this.drawLineChart)
+        })
+    })
+  }
+  drawLineChart(){
+    //画线图
     const aimlineOption = {
       color:['#188fff'],
       tooltip:{
@@ -310,17 +350,8 @@ class AimTablePage extends Component{
         },
       }]
     };
-    const aimBarchart = echarts.init(document.getElementById('barchart'));
     const aimLineChart = echarts.init(document.getElementById('aimlinechart'));
-    aimBarchart.setOption(barOption);
     aimLineChart.setOption(aimlineOption);
-    var autoHeight = barOption.yAxis.data.length * 50 + 100;
-    //获取 ECharts 实例容器的 dom 节点。
-    aimBarchart.getDom().style.height = autoHeight + "px";
-    aimBarchart.getDom().childNodes[0].style.height = autoHeight + "px";
-    aimBarchart.getDom().childNodes[0].childNodes[0].setAttribute("height", autoHeight);
-    aimBarchart.getDom().childNodes[0].childNodes[0].style.height = autoHeight + "px";
-    aimBarchart.resize();
     //防止多次点击事件
     if(aimLineChart._$handlers.click){
       aimLineChart._$handlers.click.length = 0;
@@ -348,7 +379,7 @@ class AimTablePage extends Component{
   }
   clickStationPlus = e =>{
     // console.log('clickStationPlus====',e.currentTarget.previousElementSibling.innerText);
-    this.setState({showAimPlus:'showAimPlus',station:e.currentTarget.previousElementSibling.innerText,aimIp:''},this.fetch)
+    this.setState({showAimPlus:'showAimPlus',station:e.currentTarget.previousElementSibling.innerText,aimIp:'',clickbarname:''},this.fetch)
   }
   clickPlusName = e =>{
     // console.log('clickplusName====',e.target.innerText);
@@ -441,7 +472,7 @@ class AimTablePage extends Component{
             <Table size="small" columns={this.state.spcTitle} dataSource={this.state.spcDataSource} scroll={{y:370}} pagination={false} />
           </div>
         </div>
-        <p className={styles.tableName} >Yield trend</p>
+        <p className={styles.tableName} >Failure Rate trend</p>
         <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart' />
       </div>
     )

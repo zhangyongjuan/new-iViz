@@ -17,7 +17,7 @@ class HeaderView extends Component{
     this.props.dispatch({
       type:'global/saveCurrentPageKey',
       payload:{
-        currentPage:'0'
+        currentPage:'/'
       }
     })
   }

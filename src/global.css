@@ -16,7 +16,7 @@ body {
 }
 .showAimPlus{
   transition: all 1s;
-  height:300px !important;
+  height:320px !important;
   transform: translateY(250px);
   z-index: 1 !important;
 }

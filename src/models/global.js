@@ -6,7 +6,7 @@ export default {
 
   state: {
     list: [],
-    currentPage:localStorage.getItem('current'),
+    currentPage:'',
     dateTime: {
       startTime:1557763200000,
       endTime:1557935999000,

@@ -13,24 +13,32 @@ const { SubMenu } = Menu;
 class LeftSider extends Component{
   state = {
     collapsed: false,
-    current:'0',
+    current:'/',
   };
   componentDidMount() {
-    if(localStorage.getItem('current')){
-      const current = localStorage.getItem('current');
-      this.setState({current:current})
-    }
+    // if(localStorage.getItem('current')){
+    //   const current = localStorage.getItem('current');
+    //   this.setState({current:current})
+    // }
+    const pathname = window.location.pathname;
+    this.setState({current:pathname});
+    // console.log('侧边栏重新加载了！',pathname)
   }
+  componentWillReceiveProps(nextProps, nextContext) {
+    const pathname = window.location.pathname;
+    this.setState({current:pathname});
+  }
+
   handleClick=(e)=>{
-    // this.setState({current:e.key});
-    localStorage.setItem('current',e.key);
+    this.setState({current:e.key});
+    // localStorage.setItem('current',e.key);
     // e.domEvent.currentTarget.style.background='yellow';
-    this.props.dispatch({
-      type:'global/saveCurrentPageKey',
-      payload:{
-        currentPage:e.key
-      }
-    })
+    // this.props.dispatch({
+    //   type:'global/saveCurrentPageKey',
+    //   payload:{
+    //     currentPage:e.key
+    //   }
+    // })
   }
   toggle = () => {
     this.setState({
@@ -46,26 +54,26 @@ class LeftSider extends Component{
           onClick={this.toggle}
           style={{color:'white',fontSize:'16px',position:'relative',margin:'20px'}}
         />
-        <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.props.global.currentPage]}>
-          <Menu.Item key="4" >
+        <Menu  theme="dark" mode="inline" onClick={this.handleClick} selectedKeys={[this.state.current]}>
+          <Menu.Item key="/aim" >
             <Link to='/aim'>
               <Icon type="bar-chart" />
               <span>AIM</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="1">
+          <Menu.Item key="/fullInspection" test='/fullInspection'>
             <Link to='/fullInspection'>
               <Icon type="line-chart" />
               <span>Full Inspection</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="2">
+          <Menu.Item key="3">
             <Link to='/'>
               <Icon type="sliders" />
               <span>IPQC</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="3">
+          <Menu.Item key="4">
             <Link to='/'>
               <Icon type="cluster" />
               <span>ORT</span>
