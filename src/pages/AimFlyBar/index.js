@@ -5,7 +5,6 @@ import _ from 'lodash';
 import styles from './index.less';
 import BasicColumn from '../../component/Charts/BarChart/BasicColumn';
 import GroupedColumn from '../../component/Charts/BarChart/GroupedColumn';
-import GroupBar from '../../component/Charts/BarChart/GroupBar';
 import SeriesLine from '../../component/Charts/LineChart/SeriesLine';
 import BoxPlot from '../../component/Charts/BoxChart/BoxPlot';
 import { connect } from 'dva';
@@ -131,10 +130,12 @@ class AimFlyBar extends React.Component {
     const { topSelectItem } = global;
     const { startTime, endTime } = global && global.dateTime;
     const { spc } = this.state;
+    const { data } = param;
+    const { _origin = '' } = data || [];
     // seriesName
     // name
-    if (param.componentType === 'series' && param.componentSubType === 'bar') {
-      if (spc) {
+    if (spc) {
+    if (param.shape.name === 'interval'&&_origin) {
         dispatch({
           type: 'FlyBar/getHangData',
           payload: {
@@ -142,8 +143,8 @@ class AimFlyBar extends React.Component {
               startTime,
               endTime,
               mapping: { ...topSelectItem },
-              flyBar: param.name,
-              hang: param.seriesName,
+              flyBar: _origin.type,
+              hang: _origin.company,
               spc,
             }),
           },
@@ -206,14 +207,17 @@ class AimFlyBar extends React.Component {
               </div>
               <div className={styles.groupedColumn}>
                 {/*<GroupedColumn/>*/}
-                <GroupBar
-                  params={{
-                    data: series,
-                    clickBar: this.handleClickBar,
-                    loading,
-                  }}
-
-                />
+                {
+                  series.length !== 0 ? (
+                    <GroupedColumn
+                      params={{
+                        data: series,
+                        clickBar: this.handleClickBar,
+                        loading,
+                      }}/>
+                  ) : null
+                }
+                {/*<ZoomBar />*/}
               </div>
             </div>
 

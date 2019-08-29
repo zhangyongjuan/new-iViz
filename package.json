@@ -20,7 +20,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "reqwest": "^2.0.5",
-    "umi-request": "^1.0.8"
+    "umi-request": "^1.0.8",
+    "viser-react": "^2.4.6"
   },
   "devDependencies": {
     "@types/jest": "^23.3.12",
