@@ -100,6 +100,7 @@ export default class BoxPlot extends React.Component {
       splitArea: {
         show: true,
       },
+      scale: true,
     },
     series: [
       {

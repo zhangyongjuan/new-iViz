@@ -66,7 +66,7 @@ const scale = [{
   // alias: '占比（%）',
   // max: 75,
   min: 0,
-  tickCount: 4,
+  // tickCount: 4,
 }];
 
 const label = {
@@ -116,7 +116,7 @@ class GroupedColumn extends React.Component {
         {
           dataKey: 'type',
           type: 'cat',
-          tickCount: 4,
+          // tickCount: 4,
           nice: false,
         },
         {
@@ -234,7 +234,7 @@ class GroupedColumn extends React.Component {
                 scales={{
                   time: {
                     type: 'cat',
-                    tickCount: 10,
+                    // tickCount: 10,
                   },
                 }}
                 data={datas}
