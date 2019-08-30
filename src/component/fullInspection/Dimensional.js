@@ -290,16 +290,10 @@ class Dimensional extends Component{
     overallHeatmap.setOption(overallOption);
     //Axis添加点击事件
     overallHeatmap.on('click',(e)=>{
+      echarts.init(document.getElementById('particularHeatmap')).clear();
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
-          //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
-          if(e.value == 'cnc10-wcnc5-qc' || e.value == 'laser-qc'){
-            this.setState({machineName:'CNC7 Machine#',showAllCnc:true})
-          }else if(e.value == 'cnc8-wcnc4-qc'){
-            this.setState({machineName:'CNC7 Machine#',showAllCnc:false})
-          } else{
-            return;
-          }
+          //1.改变背景颜色
           for (var i = 0; i < overallXHighlightData.length; i++) {
             if (e.value === this.state.overallStation[i]) {
               overallXHighlightData[i] = e.value;
@@ -313,6 +307,18 @@ class Dimensional extends Component{
             overallYHighlightData[k] = '';
           }
           this.setState({clickStationName:e.value,clickDefectName:''});
+          // 2.区分点击的station类别，不同station有不同展示效果
+          //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
+          if(e.value == 'cnc10-wcnc5-qc' || e.value == 'laser-qc'){
+            this.setState({machineName:'CNC7 Machine#',showAllCnc:true})
+          }else if(e.value == 'cnc8-wcnc4-qc'){
+            this.setState({machineName:'CNC7 Machine#',showAllCnc:false})
+          } else{    //后面添加，点击其他的站名也可以出现线图，所以和点击不良类型的接口相同
+            this.setState({showParticularHeatmap:'none'});
+            this.clickChartRequest('clickOverallHeatmapY');
+            overallHeatmap.setOption(overallOption, true);
+            return;
+          }
         }
         else{              //点击的值
           if(e.name == 'cnc10-wcnc5-qc' || e.name == 'laser-qc'){
@@ -342,7 +348,7 @@ class Dimensional extends Component{
           }
           this.setState({clickDefectName:clickY,clickStationName:e.name});
         }
-        this.clickChartRequest('clickOverallHeatmapX');
+        this.clickChartRequest('clickOverallHeatmapXspecial');
       }
       else if(e.componentType === 'yAxis'){
         for (var j = 0; j < overallYHighlightData.length; j++) {
@@ -357,7 +363,7 @@ class Dimensional extends Component{
         for (var k = 0; k < overallXHighlightData.length; k++) {
           overallXHighlightData[k] = '';
         }
-        this.setState({clickStationName:'',clickDefectName:e.value});
+        this.setState({clickStationName:'',clickDefectName:e.value,showParticularHeatmap:'none'});
         this.clickChartRequest('clickOverallHeatmapY')
       }
       overallHeatmap.setOption(overallOption, true);
@@ -365,7 +371,7 @@ class Dimensional extends Component{
   }
   clickChartRequest = (type,machineName)=>{
     this.setState({loading:true});
-    if(type === 'clickOverallHeatmapX'){
+    if(type === 'clickOverallHeatmapXspecial'){
       let machine = this.state.machineName;
       if(machineName !== undefined){
         machine = machineName
@@ -413,7 +419,8 @@ class Dimensional extends Component{
     }
     else if(type === 'clickOverallHeatmapY'){
       const requestCon = {};
-      const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem},{defectName:this.state.clickDefectName});
+      const param = Object.assign({}, this.props.global.dateTime, {mapping: this.props.global.topSelectItem},
+        {defectName:this.state.clickDefectName,station:this.state.clickStationName});
       requestCon.data = JSON.stringify(param);
       // console.log('requestCon---', requestCon);
       reqwest({
@@ -716,12 +723,12 @@ class Dimensional extends Component{
   handleChange=(value)=> {
     console.log(`selected ${value}`);
     this.setState({machineName:value});
-    this.clickChartRequest('clickOverallHeatmapX',value);
+    this.clickChartRequest('clickOverallHeatmapXspecial',value);
   }
   render(){
     return (
       <div>
-        <Spin spinning={this.state.loading}>
+        <Spin spinning={this.state.loading} spinning={this.state.loading} delay={500}>
         <div>
           <p className={styles.title} >
             Overall heatmap

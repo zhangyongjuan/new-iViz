@@ -444,12 +444,15 @@ class SummaryPage extends Component{
           <div className={styles.container}>
             <p className={styles.tableName}>Major issue summary</p>
             <div id='topCosmeticIssues' className={styles.summaryChart} />
+            {/*  可能会做成柱状图  */}
+            {/*<MajorIssueBarChart />*/}
           </div>
         </Spin>
       </div>
     )
   }
 }
+
 function OverviewSummary(value) {
   const firstContent = ToolTips('summaryPage','overView','firstPass');
   const finalContent = ToolTips('summaryPage','overView','finalPass');
@@ -506,6 +509,52 @@ function OverviewSummary(value) {
       {/*</Col>*/}
     </Row>
   )
+}
+class MajorIssueBarChart extends Component{
+  state={
+
+  }
+  componentDidMount() {
+    const barOption = {
+      tooltip:{},
+      color:['#3a9fff'],
+      xAxis: {
+        type: 'value',
+        axisLine:{
+          show:false
+        },
+        splitLine:{
+          show:false
+        }
+      },
+      yAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      },
+      series: [{
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: 'bar'
+      }]
+    };
+    const cosBarChart = echarts.init(document.getElementById('cosBarChart'));
+    const dimBarChart = echarts.init(document.getElementById('dimBarChart'));
+    cosBarChart.setOption(barOption);
+    dimBarChart.setOption(barOption);
+  }
+  render() {
+    return(
+      <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+        <Col span={11}>
+          <div>Top Cosmetic issues</div>
+          <div id='cosBarChart' style={{width:'100%',height:'400px'}} />
+        </Col>
+        <Col span={11}>
+          <div>Top Dimensional issues</div>
+          <div id='dimBarChart' style={{width:'100%',height:'400px'}}/>
+        </Col>
+      </Row>
+    )
+  }
 }
 
 export default SummaryPage;

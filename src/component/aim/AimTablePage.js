@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
-import { Table,Icon } from 'antd';
+import { Table,Icon,Popover } from 'antd';
 import echarts from 'echarts';
 import reqwest from 'reqwest';
 import styles from './AimTablePage.less'
 import {connect} from "react-redux";
 import _ from "lodash";
+import ToolTips from '../Tooltips/tooltip'
 
 //Aim station 表格头部信息
 const spcHead = [
@@ -16,7 +17,7 @@ const spcHead = [
     render:(text)=><span style={{fontWeight:'bold',color:'rgba(0, 0, 0, 0.85)'}}>{text}</span>
   },{
     key:'lsl',
-    title:'LSL',
+    title:<Popover content={ToolTips('AimDashboard','table','lsl')} ><span>LSL</span></Popover>,
     dataIndex:'lsl',
     width:100,
   },{
@@ -26,17 +27,17 @@ const spcHead = [
     width:100,
   },{
     key:'usl',
-    title:'USL',
+    title:<Popover content={ToolTips('AimDashboard','table','usl')} ><span>USL</span></Popover>,
     dataIndex:'usl',
     width:100,
   },{
     key:'yield',
-    title:'Failure Rate',
+    title:<Popover content={ToolTips('AimDashboard','table','failureRate')} ><span>Failure Rate</span></Popover>,
     dataIndex:'yield',
     width:100,
   },{
     key:'std',
-    title:'Std',
+    title:<Popover content={ToolTips('AimDashboard','table','std')} ><span>Std</span></Popover>,
     dataIndex:'std',
     width:100,
   }
@@ -75,7 +76,9 @@ class AimTablePage extends Component{
   //  是否是通过点击线图更改时间
     clickLinePoint:false,
   //  spc柱子被点击名称
-    clickbarname:''
+    clickbarname:'',
+  //  bar chart 鼠标悬浮在yAxis时，显示解释信息
+    showbarYAxisName:''
   }
   componentDidMount() {
     this.fetch();
@@ -121,7 +124,7 @@ class AimTablePage extends Component{
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=(((1-v.yield)*100).toFixed(3))+'%';
+            columnTitle4[v.name]=(((1-v.yield)*100).toPrecision(2))+'%';
             return ;
           })
           stationDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
@@ -146,7 +149,7 @@ class AimTablePage extends Component{
           data.spcYields.map((value,j)=>{
             spcname.push(value.name);
             //条形图不良率计算
-            spcYield.push(((1-value.yield)*100).toFixed(3));
+            spcYield.push(((1-value.yield)*100).toPrecision(2));
             //限制小数位数
             Object.keys(value).map((key,i)=>{
               if(value[key] === null)
@@ -154,7 +157,7 @@ class AimTablePage extends Component{
               if(key === 'name'){
                 return;
               }else if(key === 'yield'){
-                return value[key] = ((1-value[key])*100).toFixed(3) +'%'
+                return value[key] = ((1-value[key])*100).toPrecision(2) +'%'
               }else{
                 return value[key] = value[key].toFixed(3)
               }
@@ -178,24 +181,30 @@ class AimTablePage extends Component{
         }
         if(data.aimYield && data.aimYield !== null){       //下级数据
           const plusHead = [],plusDataSource=[];
-          const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};
-          columnTitle1.type='Input';
+          const columnTitle0 = {},columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={},columnTitle5={};
+          columnTitle0.type='line';
+          columnTitle0.key=0;
+          columnTitle1.type='process';
           columnTitle1.key=1;
-          columnTitle2.type='OK';
+          columnTitle2.type='Input';
           columnTitle2.key=2;
-          columnTitle3.type='NG';
+          columnTitle3.type='OK';
           columnTitle3.key=3;
-          columnTitle4.type='Failure Rate';
+          columnTitle4.type='NG';
           columnTitle4.key=4;
+          columnTitle5.type='Failure Rate';
+          columnTitle5.key=5;
           data.aimYield.map((v,i)=>{
             plusHead.push(v.name);
-            columnTitle1[v.name]=v.input;
-            columnTitle2[v.name]=v.ok;
-            columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=((1-v.yield)*100).toPrecision(2)+'%';
+            columnTitle0[v.name]=v.line;
+            columnTitle1[v.name]=v.process;
+            columnTitle2[v.name]=v.input;
+            columnTitle3[v.name]=v.ok;
+            columnTitle4[v.name]=v.ng;
+            columnTitle5[v.name]=((1-v.yield)*100).toPrecision(2)+'%';
             return ;
           })
-          plusDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
+          plusDataSource.push(columnTitle0,columnTitle1,columnTitle2,columnTitle3,columnTitle4,columnTitle5);
           this.setState({plusTitle:plusHead,plusDataSource:plusDataSource})
         }
       })
@@ -248,7 +257,7 @@ class AimTablePage extends Component{
         axisTick:{
           interval:0
         },
-
+        triggerEvent:true,
       },
       series: [{
         data: this.state.spcYield,
@@ -266,7 +275,7 @@ class AimTablePage extends Component{
     };
     const aimBarchart = echarts.init(document.getElementById('barchart'));
     aimBarchart.setOption(barOption);
-    var autoHeight = barOption.yAxis.data.length * 50 + 100;
+    var autoHeight = barOption.yAxis.data.length * 50 +100;
     //获取 ECharts 实例容器的 dom 节点。
     aimBarchart.getDom().style.height = autoHeight + "px";
     aimBarchart.getDom().childNodes[0].style.height = autoHeight + "px";
@@ -298,6 +307,13 @@ class AimTablePage extends Component{
           })
           this.setState({lineTime:linetime,lineData:chartD},this.drawLineChart)
         })
+    })
+  //  显示bar chart 解释信息
+    aimBarchart.on('mouseover','yAxis',(e)=>{
+      this.setState({showbarYAxisName:'Bar chart shows the failure rate of each SPCsorted from high to low'})
+    })
+    aimBarchart.on('mouseout','yAxis',(e)=>{
+      this.setState({showbarYAxisName:''})
     })
   }
   drawLineChart(){
@@ -390,7 +406,7 @@ class AimTablePage extends Component{
     const stationColums =[],plusTableColumns = [];
     this.state.stationTitle.map((v,i)=>{
       const column = {};
-      column.title=<div><span onClick={this.clickStationName}>{v}</span>&nbsp;&nbsp;&nbsp;<Icon onClick={this.clickStationPlus} type='plus-circle' /></div>;
+      column.title=<div style={{cursor:'pointer'}}><span onClick={this.clickStationName}>{v}</span>&nbsp;&nbsp;&nbsp;<Icon onClick={this.clickStationPlus} type='plus-circle' /></div>;
       column.key=v;
       column.dataIndex = v;
       column.onHeaderCell = function (column) {
@@ -416,7 +432,7 @@ class AimTablePage extends Component{
     });
     this.state.plusTitle.map((title,k)=>{
       const column = {};
-      column.title=<div><span onClick={this.clickPlusName}>{title}</span></div>;
+      column.title=<div style={{cursor:'pointer'}}><span onClick={this.clickPlusName}>{title}</span></div>;
       column.key=title;
       column.dataIndex = title;
       column.onHeaderCell = function (column) {
@@ -465,6 +481,7 @@ class AimTablePage extends Component{
         <p className={styles.tableName} >Major issue list</p>
         {/* no click event */}
         <div id={styles.showBarChart} className={this.state.showBarChart}>
+          <p className={styles.barYAxisName}>{this.state.showbarYAxisName}</p>
           <div style={{height:'400px',overflowY:'scroll'}}>
             <div style={{margin:'0 auto'}} id='barchart' />
           </div>
