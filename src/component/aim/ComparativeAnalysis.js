@@ -86,13 +86,13 @@ const columns = [
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Cpu',
+    title: 'CPU',
     dataIndex: 'cpu',
     key: 'cpu',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Cpl',
+    title: 'CPL',
     dataIndex: 'cpl',
     key: 'cpl',
     render:(v)=>v.toFixed(3)

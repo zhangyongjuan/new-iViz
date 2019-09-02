@@ -1,9 +1,10 @@
 import React,{Component} from 'react';
 import echarts from 'echarts';
-import {Select, Button, Col, Card, Statistic, Row, Spin} from 'antd';
+import {Select, Button, Col, Card, Statistic, Row, Spin,Popover} from 'antd';
 import reqwest from 'reqwest';
 import {connect} from "react-redux";
 import styles from './AimTablePage.less'
+import ToolTips from "../Tooltips/tooltip";
 
 const { Option } = Select;
 
@@ -580,27 +581,27 @@ function CapabilityData(data) {
   return(
     <Col span={11}>
       <ul className={styles.capabilityUl}>
-        <li>Sample N = {Data.numberOfObs}</li>
-        <li>Mean = {Data.mean.toFixed(3)}</li>
-        <li>StdDev = {Data.stdDev.toFixed(3)}</li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','sampleNum')}><span>Sample N = {Data.numberOfObs}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','mean')}><span>Mean = {Data.mean.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','std')}><span>StdDev = {Data.stdDev.toFixed(3)}</span></Popover></li>
       </ul>
       <ul className={styles.capabilityUl}>
         <li>Target = {Data.target.toFixed(3)}</li>
-        <li>LSL = {Data.lsl.toFixed(3)}</li>
-        <li>USL = {Data.usl.toFixed(3)}</li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','lsl')}><span>LSL = {Data.lsl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','usl')}><span>USL = {Data.usl.toFixed(3)}</span></Popover></li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Cp = {Data.cp.toFixed(3)}</li>
-        <li>Cp_l = {Data.cpl.toFixed(3)}</li>
-        <li>Cp_u = {Data.cpu.toFixed(3)}</li>
-        <li>Cp_k = {Data.cpk.toFixed(3)}</li>
-        <li>Cpm = {Data.cpm.toFixed(3)}</li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','cp')}><span>Cp = {Data.cp.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','cpl')}><span>CPL = {Data.cpl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','cpu')}><span>CPU = {Data.cpu.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','cpk')}><span>Cpk = {Data.cpk.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','cpm')}><span>Cpm = {Data.cpm.toFixed(3)}</span></Popover></li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Exp &lt; LSL {(Data.expLtLsl * 100).toFixed(3)+'%'}</li>
-        <li>Exp &gt; USL {Data.expGtUsl.toFixed(3)}</li>
-        <li>Obs &lt; LSL {Data.obsLtLsl}</li>
-        <li>Obs &gt; USL {Data.obsGtUsl}</li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','exp<lsl')}><span>Exp &lt; LSL {(Data.expLtLsl * 100).toFixed(3)+'%'}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','exp>usl')}><span>Exp &gt; USL {Data.expGtUsl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','obs<lsl')}><span>Obs &lt; LSL {Data.obsLtLsl}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','obs>usl')}><span>Obs &gt; USL {Data.obsGtUsl}</span></Popover></li>
       </ul>
     </Col>
   )
@@ -613,16 +614,16 @@ function IchartData(data) {
   return(
     <Col span={20}>
       <ul className={styles.capabilityUl}>
-        <li>Sample N = {Data.numberOfObs}</li>
-        <li>Mean = {Data.mean.toFixed(3)}</li>
-        <li>StdDev = {Data.stdDev.toFixed(3)}</li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','sampleNum')}><span>Sample N = {Data.numberOfObs}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','mean')}><span>Mean = {Data.mean.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('formulaShows','showInfo','std')}><span>StdDev = {Data.stdDev.toFixed(3)}</span></Popover></li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>LCL = {Data.lcl.toFixed(3)}</li>
-        <li>UCL = {Data.ucl.toFixed(3)}</li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','IChart','lcl')}><span>LCL = {Data.lcl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','IChart','ucl')}><span>UCL = {Data.ucl.toFixed(3)}</span></Popover></li>
       </ul>
       <ul className={styles.capabilityUl}>
-        <li>Number beyond limits = {Data.numberBeyondLimits}</li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','IChart','numberBeyondLimits')}><span>Number beyond limits = {Data.numberBeyondLimits}</span></Popover></li>
       </ul>
     </Col>
   )

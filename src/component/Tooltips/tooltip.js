@@ -19,6 +19,12 @@ const Content = {
     },
   },
   AimDashboard:{
+    dashboard:{
+      Input:'# of total parts at the given AIM station.',
+      OK:'# of parts with a passed event at the given AIM station.',
+      NG:'# of parts with a faild event at the given AIM station.',
+      'Failure Rate':'Failure Rate is the % of parts that failed at the AIM station.',
+    },
     barChart:{
       yAxisLabel:'Bar chart shows the failure rate of each SPCsorted from high to low'
     },
@@ -27,14 +33,36 @@ const Content = {
       norminal:'',
       usl:'UpperSpecification Limit',
       failureRate:'Failure Rate is the % of parts that failed at the AIM station.\n NG / (OK+ NG).',
-      std:'Standard Deviation \n Xi:each test point value'
+      // std:'Standard Deviation \n Xi:each test point value'
+    }
+  },
+  spcStatisticalAnalysis:{
+    Capability:{
+      sampleNum:'number of observations.',
+      mean:'Average value at all Test Point.',
+      target:'',
+      lsl:'Lower Specification Limit.',
+      usl:'Upper Specification Limit.',
+      'exp<lsl':'a  value giving the expected fraction, based on a normal approximation, of the observations less than LSL.',
+      'exp>usl':'a  value giving the expected fraction, based on a normal approximation, of the observations greater than USL.',
+      'obs<lsl':'a value giving the fraction of observations less than LSL .',
+      'obs>usl':'a value giving the fraction of observations greater than USL.'
+    },
+    IChart:{
+      lcl:'Lower Control Limit',
+      ucl:'Upper Control Limit',
+      numberBeyondLimits:'number of observations less than LCL and greater than UCL.'
     }
   },
 //  公式展示汇总
   formulaShows:{
-    test:{
-      one:`Std = sqrt ( 1/(N-1)sum_(i=1)^n(X_i-Mean)^2 )`,  //
-      two:` `
+    showInfo:{
+      std:`Standard Deviation : Std = sqrt ( 1/(N-1)sum_(i=1)^n(X_i-Mean)^2 )`,
+      cp:`Cp = (USL-LSL)/(6*Std)`,
+      cpl:`CPL = (Mean-LSL)/(3*Std)`,
+      cpu:`CPU = (USL-Mean)/(3*Std)`,
+      cpk:`Cpk = min{CPL,CPU}`,
+      cpm:`Cp m = (USL-LSL)/(6sqrt (Std^2 + (Mean -Targ et)^2))`,
     },
   }
 }
@@ -43,13 +71,8 @@ const ToolTips =(page,title,name)=>{
   const returnContent = (
     page === 'formulaShows' ? (
       <div>
-        <MathJax.Context>
-          <div>
-            <MathJax.Node>{contet}</MathJax.Node>
-          </div>
-        </MathJax.Context>
 
-        <MathJax.Context input='tex'>
+        <MathJax.Context>
           <div>
             <MathJax.Node>{contet}</MathJax.Node>
           </div>

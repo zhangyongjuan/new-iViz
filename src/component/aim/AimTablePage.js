@@ -37,7 +37,7 @@ const spcHead = [
     width:100,
   },{
     key:'std',
-    title:<Popover content={ToolTips('AimDashboard','table','std')} ><span>Std</span></Popover>,
+    title:<Popover content={ToolTips('formulaShows','showInfo','std')} ><span>Std</span></Popover>,
     dataIndex:'std',
     width:100,
   }
@@ -458,6 +458,7 @@ class AimTablePage extends Component{
     firstColumn.title ='';
     firstColumn.key='type';
     firstColumn.dataIndex ='type';
+    firstColumn.render = (text)=><Popover content={ToolTips('AimDashboard','dashboard',`${text}`)} ><span>{text}</span></Popover>
     firstColumn.fixed='left';
     firstColumn.width=10;
     stationColums.unshift(firstColumn);
