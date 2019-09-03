@@ -38,20 +38,20 @@ const Content = {
   },
   spcStatisticalAnalysis:{
     Capability:{
-      sampleNum:'number of observations.',
+      sampleNum:'Number of observations.',
       mean:'Average value at all Test Point.',
       target:'',
       lsl:'Lower Specification Limit.',
       usl:'Upper Specification Limit.',
-      'exp<lsl':'a  value giving the expected fraction, based on a normal approximation, of the observations less than LSL.',
-      'exp>usl':'a  value giving the expected fraction, based on a normal approximation, of the observations greater than USL.',
-      'obs<lsl':'a value giving the fraction of observations less than LSL .',
-      'obs>usl':'a value giving the fraction of observations greater than USL.'
+      'exp<lsl':'A value giving the expected fraction, based on a normal approximation, of the observations less than LSL.',
+      'exp>usl':'A value giving the expected fraction, based on a normal approximation, of the observations greater than USL.',
+      'obs<lsl':'A value giving the fraction of observations less than LSL .',
+      'obs>usl':'A value giving the fraction of observations greater than USL.'
     },
     IChart:{
       lcl:'Lower Control Limit',
       ucl:'Upper Control Limit',
-      numberBeyondLimits:'number of observations less than LCL and greater than UCL.'
+      numberBeyondLimits:'Number of observations less than LCL and greater than UCL.'
     }
   },
 //  公式展示汇总
