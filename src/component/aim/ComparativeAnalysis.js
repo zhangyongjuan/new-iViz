@@ -303,13 +303,13 @@ class Comparative extends Component{
       },
       series: [
         {
-          name: 'boxplot',
+          // name: 'boxplot',
           type: 'boxplot',
           data: boxplotData.series[0].data,
           tooltip: {
             formatter: function (param) {
               return [
-                 param.name + ': ',
+                 // param.name + ': ',
                 'upper: ' + param.data[5].toFixed(3),
                 'Q3: ' + param.data[4].toFixed(3),
                 'median: ' + param.data[3].toFixed(3),
@@ -354,6 +354,11 @@ class Comparative extends Component{
               type:'dashed',
               width:2,
               color:'#333',
+            },
+            tooltip: {
+              formatter:function (d) {
+                return `${d.name} : ${d.value}`
+              }
             }
           }
         },

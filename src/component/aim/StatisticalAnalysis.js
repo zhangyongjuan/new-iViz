@@ -105,7 +105,7 @@ class Statistical extends Component{
   drawChart=()=>{
     //boxPlot
     const boxplotD= this.state.boxplot;
-    console.log('统计分析盒须图数据==',boxplotD)
+    // console.log('统计分析盒须图数据==',boxplotD);
     const boxPlotOption = {
       color:['#0096ff'],
       tooltip: {
@@ -157,13 +157,13 @@ class Statistical extends Component{
       },
       series: [
         {
-          name: 'boxplot',
+          name: '',
           type: 'boxplot',
           data: boxplotD.series[0].data,
           tooltip: {
             formatter: function (param) {
               return [
-                param.name + ': ',
+                // param.name + ': ',
                 'upper: ' + param.data[5].toFixed(3),
                 'Q3: ' + param.data[4].toFixed(3),
                 'median: ' + param.data[3].toFixed(3),
@@ -208,6 +208,11 @@ class Statistical extends Component{
               type:'dashed',
               width:2,
               color:'#333',
+            },
+            tooltip: {
+              formatter:function (d) {
+                return `${d.name} : ${d.value}`
+              }
             }
           }
         },
@@ -221,15 +226,45 @@ class Statistical extends Component{
     const statisticalBoxplot = echarts.init(document.getElementById('statisticalBoxplot'));
     statisticalBoxplot.setOption(boxPlotOption);
     //分布图
+    const xAxisLength = this.state.capabilityChart.xAxis.data.length;
+    const XminValue = Number(this.state.capabilityChart.xAxis.data[0]);
+    const XmaxValue = Number(this.state.capabilityChart.xAxis.data[xAxisLength-1]);
     const statisticalCapabilityOption = {
       color:['#0096ff'],
       tooltip:{},
-      xAxis: {
+      grid: [{
+        bottom: '10%'
+      }, {
+        top: '60%'
+      }],
+      xAxis: [
+        {
         type: 'category',
-        data: this.state.capabilityChart.xAxis.data
-      },
-      yAxis: {
+        data: this.state.capabilityChart.xAxis.data,
+        gridIndex:0
+      },{
+          type: 'value',
+          min:XminValue,
+          max:XmaxValue,
+          splitLine:{
+            show:false
+          },
+          axisLine:{
+            show:false
+          },
+          axisTick:{
+            show:false,
+          },
+          axisLabel:{
+            show:false,
+          }
+        }
+      ],
+      yAxis: [
+        {
         type: 'value',
+        gridIndex:0,
+        show:false,
         // interval: 0.1,
         // max: 100,
         // min: 0,
@@ -245,50 +280,54 @@ class Statistical extends Component{
           show:false
         },
       },
+        {
+          show:false,
+          gridIndex:1
+        }
+      ],
       series: [
         {
           type:'bar',
           data:this.state.capabilityChart.series[0].data,
+          xAxisIndex:0,
+          yAxisIndex:0
+        },{
+          type:'line',
+          data:this.state.capabilityChart.series[1].data,
+          smooth:true,
+          xAxisIndex:0,
+          yAxisIndex:0,
+        },{
+          type:'line',
+          xAxisIndex:1,
           markLine : {
             data:[
               {
                 name: 'LSL',
-                xAxis: this.state.capabilityChart.lsl.toString(),
-                lineStyle:{
-                  type:'dashed',
-                  width:1,
-                  color:'#666',
-                }
+                xAxis: (this.state.capabilityChart.lsl).toFixed(3),
+                // label: this.state.capabilityChart.lsl
               },
               {
                 name: 'USL',
-                xAxis: this.state.capabilityChart.usl.toString(),
-                lineStyle:{
-                  type:'dashed',
-                  width:1,
-                  color:'#666',
-                }
+                xAxis: (this.state.capabilityChart.usl).toFixed(3),
               },
               {
                 name: 'Target',
-                xAxis: this.state.capabilityChart.target.toString(),
-                lineStyle:{
-                  type:'dashed',
-                  width:1,
-                  color:'#666',
-                }
+                xAxis: (this.state.capabilityChart.target).toFixed(3),
               },
             ],
             lineStyle:{
               type:'dashed',
-              width:2,
-              color:'#333',
+              width:1,
+              color:'#666',
+            },
+            tooltip: {
+              formatter:function (d) {
+                console.log(d)
+                return `${d.name} : ${d.data.xAxis}`
+              }
             }
           }
-        },{
-          type:'line',
-          data:this.state.capabilityChart.series[1].data,
-          smooth:true
         }
       ]
     };
@@ -361,6 +400,11 @@ class Statistical extends Component{
             type:'dashed',
             width:2,
             color:'#333',
+          },
+          tooltip: {
+            formatter:function (d) {
+              return `${d.name} : ${d.value}`
+            }
           }
         }
       }]
@@ -382,7 +426,7 @@ class Statistical extends Component{
       },
       xAxis: {
         type: 'category',
-        data: this.state.MRChart.xAxis.data
+        data: this.state.MRChart.xAxis.data,
       },
       yAxis: {
         type: 'value',
@@ -434,6 +478,11 @@ class Statistical extends Component{
             type:'dashed',
             width:2,
             color:'#333',
+          },
+          tooltip: {
+            formatter:function (d) {
+              return `${d.name} : ${d.value}`
+            }
           }
         }
       }]
@@ -599,7 +648,7 @@ function CapabilityData(data) {
       </ul>
       <ul className={styles.capabilityUl}>
         <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','exp<lsl')}><span>Exp &lt; LSL {(Data.expLtLsl * 100).toFixed(3)+'%'}</span></Popover></li>
-        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','exp>usl')}><span>Exp &gt; USL {Data.expGtUsl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','exp>usl')}><span>Exp &gt; USL {(Data.expGtUsl* 100).toFixed(3)+'%'}</span></Popover></li>
         <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','obs<lsl')}><span>Obs &lt; LSL {Data.obsLtLsl}</span></Popover></li>
         <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','obs>usl')}><span>Obs &gt; USL {Data.obsGtUsl}</span></Popover></li>
       </ul>
