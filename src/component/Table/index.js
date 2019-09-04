@@ -1,15 +1,16 @@
 import React from 'react';
-import { Table } from 'antd';
+import {Popover, Table} from 'antd';
+import ToolTips from "../Tooltips/tooltip";
 
 const columns = [
   {
-    title: 'Name',
+    title: 'SPC',
     dataIndex: 'name',
     key: 'name',
     align:'center'
   },
   {
-    title: 'LSL',
+    title:<Popover content={ToolTips('AimDashboard','table','lsl')} ><span>LSL</span></Popover>,
     dataIndex: 'lsl',
     key: 'lsl',
     align:'center'
@@ -21,27 +22,27 @@ const columns = [
     align:'center'
   },
   {
-    title: 'USL',
+    title:<Popover content={ToolTips('AimDashboard','table','usl')} ><span>USL</span></Popover>,
     dataIndex: 'usl',
     key: 'usl',
     align:'center'
   },
   {
-    title: 'Actual Mean',
+    title:<Popover content={ToolTips('comparisonAnalysis','table','mean')} ><span>Mean</span></Popover>,
     dataIndex: 'actualMean',
     key: 'actualMean',
     align:'center',
     render:text=>text===0?0:text.toFixed(2)
   },
   {
-    title: 'Failure Rate',
+    title:<Popover content={ToolTips('AimDashboard','dashboard','Failure Rate')} ><span>Failure Rate</span></Popover>,
     dataIndex: 'yield',
     key: 'yield',
     align:'center',
     render:(text)=>text===0?0:`${(Number(1-text)*100).toFixed(2)}%`
   },
   {
-    title: 'Std',
+    title:<Popover content={ToolTips('formulaShows','showInfo','std')} ><span>Std</span></Popover>,
     dataIndex: 'std',
     key: 'std',
     align:'center',

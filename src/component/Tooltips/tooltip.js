@@ -20,6 +20,8 @@ const Content = {
   },
   AimDashboard:{
     dashboard:{
+      Line:'The line of equipment.',
+      Process:'The process of equipment.',
       Input:'# of total parts at the given AIM station.',
       OK:'# of parts with a passed event at the given AIM station.',
       NG:'# of parts with a faild event at the given AIM station.',
@@ -31,18 +33,19 @@ const Content = {
     table:{
       lsl:'Lower Specification Limit',
       norminal:'',
-      usl:'UpperSpecification Limit',
+      usl:'Upper Specification Limit',
       failureRate:'Failure Rate is the % of parts that failed at the AIM station.\n NG / (OK+ NG).',
       // std:'Standard Deviation \n Xi:each test point value'
     }
   },
+  //统计分析
   spcStatisticalAnalysis:{
     Capability:{
       sampleNum:'Number of observations.',
       mean:'Average value at all Test Point.',
       target:'',
-      lsl:'Lower Specification Limit.',
-      usl:'Upper Specification Limit.',
+      // lsl:'Lower Specification Limit.',
+      // usl:'Upper Specification Limit.',
       'exp<lsl':'A value giving the expected fraction, based on a normal approximation, of the observations less than LSL.',
       'exp>usl':'A value giving the expected fraction, based on a normal approximation, of the observations greater than USL.',
       'obs<lsl':'A value giving the fraction of observations less than LSL .',
@@ -54,15 +57,25 @@ const Content = {
       numberBeyondLimits:'Number of observations less than LCL and greater than UCL.'
     }
   },
+//  对比分析
+  comparisonAnalysis:{
+    table:{
+      min:'Minimum in all observations.',
+      max:'Maximum in all observations.',
+      mean:'Average value at all observations.',
+      median:'The value separating the higher half from the lower half of a data sample.',
+    }
+  },
 //  公式展示汇总
   formulaShows:{
     showInfo:{
-      std:`Standard Deviation : Std = sqrt ( 1/(N-1)sum_(i=1)^n(X_i-Mean)^2 )`,
-      cp:`Cp = (USL-LSL)/(6*Std)`,
-      cpl:`CPL = (Mean-LSL)/(3*Std)`,
-      cpu:`CPU = (USL-Mean)/(3*Std)`,
+      std:`Standard \quad  Deviation : Std = sqrt ( 1/(N-1)sum_(i=1)^n(X_i-Mean)^2 )`,
+      cp:`Cp = (USL-LSL)/(6 ast Std)`,
+      cpl:`CPL = (Mean-LSL)/(3 ast Std)`,
+      cpu:`CPU = (USL-Mean)/(3 ast Std)`,
       cpk:`Cpk = min{CPL,CPU}`,
       cpm:`Cp m = (USL-LSL)/(6sqrt (Std^2 + (Mean -Targ et)^2))`,
+      ppm:`pp m = [P(X<LSL)+P(X>USL)]ast10^6`
     },
   }
 }
@@ -71,7 +84,6 @@ const ToolTips =(page,title,name)=>{
   const returnContent = (
     page === 'formulaShows' ? (
       <div>
-
         <MathJax.Context>
           <div>
             <MathJax.Node>{contet}</MathJax.Node>

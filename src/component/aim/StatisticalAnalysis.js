@@ -636,8 +636,8 @@ function CapabilityData(data) {
       </ul>
       <ul className={styles.capabilityUl}>
         <li>Target = {Data.target.toFixed(3)}</li>
-        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','lsl')}><span>LSL = {Data.lsl.toFixed(3)}</span></Popover></li>
-        <li><Popover content={ToolTips('spcStatisticalAnalysis','Capability','usl')}><span>USL = {Data.usl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('AimDashboard','table','lsl')}><span>LSL = {Data.lsl.toFixed(3)}</span></Popover></li>
+        <li><Popover content={ToolTips('AimDashboard','table','usl')}><span>USL = {Data.usl.toFixed(3)}</span></Popover></li>
       </ul>
       <ul className={styles.capabilityUl}>
         <li><Popover content={ToolTips('formulaShows','showInfo','cp')}><span>Cp = {Data.cp.toFixed(3)}</span></Popover></li>

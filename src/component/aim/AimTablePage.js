@@ -19,7 +19,7 @@ const spcHead = [
     key:'lsl',
     title:<Popover content={ToolTips('AimDashboard','table','lsl')} ><span>LSL</span></Popover>,
     dataIndex:'lsl',
-    width:100,
+    width:120,
   },{
     key:'norminal',
     title:'Norminal',
@@ -29,7 +29,7 @@ const spcHead = [
     key:'usl',
     title:<Popover content={ToolTips('AimDashboard','table','usl')} ><span>USL</span></Popover>,
     dataIndex:'usl',
-    width:100,
+    width:120,
   },{
     key:'yield',
     title:<Popover content={ToolTips('AimDashboard','table','failureRate')} ><span>Failure Rate</span></Popover>,
@@ -182,9 +182,9 @@ class AimTablePage extends Component{
         if(data.aimYield && data.aimYield !== null){       //下级数据
           const plusHead = [],plusDataSource=[];
           const columnTitle0 = {},columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={},columnTitle5={};
-          columnTitle0.type='line';
+          columnTitle0.type='Line';
           columnTitle0.key=0;
-          columnTitle1.type='process';
+          columnTitle1.type='Process';
           columnTitle1.key=1;
           columnTitle2.type='Input';
           columnTitle2.key=2;

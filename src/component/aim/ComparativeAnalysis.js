@@ -1,9 +1,10 @@
 import React,{Component} from 'react';
 import echarts from 'echarts';
-import {Select, Button, Col, Table, Row,Spin} from 'antd';
+import {Select, Button, Col, Table, Row, Spin, Popover} from 'antd';
 import reqwest from 'reqwest';
 import {connect} from "react-redux";
 import styles from './AimTablePage.less'
+import ToolTips from "../Tooltips/tooltip";
 
 const { Option } = Select;
 const dataSource = [
@@ -45,66 +46,66 @@ const columns = [
     key: 'testPoint',
   },
   {
-    title: 'Sample N',
+    title:<Popover content={ToolTips('spcStatisticalAnalysis','Capability','sampleNum')} ><span>Sample N</span></Popover>,
     dataIndex: 'number',
     key: 'n',
   },
   {
-    title: 'Min',
+    title:<Popover content={ToolTips('comparisonAnalysis','table','min')} ><span>Min</span></Popover>,
     dataIndex: 'min',
     key: 'min',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Max',
+    title:<Popover content={ToolTips('comparisonAnalysis','table','max')} ><span>Max</span></Popover>,
     dataIndex: 'max',
     key: 'max',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Mean',
+    title:<Popover content={ToolTips('comparisonAnalysis','table','mean')} ><span>Mean</span></Popover>,
     dataIndex: 'mean',
     key: 'mean',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Median',
+    title:<Popover content={ToolTips('comparisonAnalysis','table','median')} ><span>Median</span></Popover>,
     dataIndex: 'median',
     key: 'median',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Std',
+    title:<Popover content={ToolTips('formulaShows','showInfo','std')} ><span>Std</span></Popover>,
     dataIndex: 'std',
     key: 'std',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Cp',
+    title:<Popover content={ToolTips('formulaShows','showInfo','cp')} ><span>Cp</span></Popover>,
     dataIndex: 'cp',
     key: 'cp',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'CPU',
+    title:<Popover content={ToolTips('formulaShows','showInfo','cpu')} ><span>CPU</span></Popover>,
     dataIndex: 'cpu',
     key: 'cpu',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'CPL',
+    title:<Popover content={ToolTips('formulaShows','showInfo','cpl')} ><span>CPL</span></Popover>,
     dataIndex: 'cpl',
     key: 'cpl',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'Cpk',
+    title:<Popover content={ToolTips('formulaShows','showInfo','cpk')} ><span>Cpk</span></Popover>,
     dataIndex: 'cpk',
     key: 'cpk',
     render:(v)=>v.toFixed(3)
   },
   {
-    title: 'PPM',
+    title:<Popover content={ToolTips('formulaShows','showInfo','ppm')} ><span>PPM</span></Popover>,
     dataIndex: 'ppm',
     key: 'ppm',
     render:(v)=>v.toFixed(3)
