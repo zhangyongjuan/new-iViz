@@ -404,17 +404,17 @@ class Comparative extends Component{
         {/* 箱线图 */}
         <Spin spinning={this.state.loading}>
           <div style={{display:this.state.showChart}}>
-              <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
-                <Col span={20}>
-                  <div id='comparativeBoxplot' style={{width:'100%',height:'400px'}} />
-                </Col>
-              </Row>
-              <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
-                <Col span={20}>
-                  <Table size="small"  columns={columns} dataSource={this.state.tableData} pagination={false} />
-                </Col>
-              </Row>
-          </div>
+          <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+            <Col span={22}>
+              <div id='comparativeBoxplot' style={{width:'100%',height:'400px'}} />
+            </Col>
+          </Row>
+          <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+            <Col span={22}>
+              <Table size="small"  columns={columns} dataSource={this.state.tableData} pagination={false} />
+            </Col>
+          </Row>
+        </div>
         </Spin>
 
       </div>

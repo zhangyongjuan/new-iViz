@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import { Button,Icon,Drawer } from 'antd';
+import {Button, Icon, Drawer, Popover, Table, Row, Col, Spin} from 'antd';
 import echarts from 'echarts';
 import NewHeader from './Condition';
 import styles from '../index.css';
@@ -9,27 +9,72 @@ import reqwest from "reqwest";
 import '../../global';
 import {connect} from "react-redux";
 import _ from "lodash";
+import ToolTips from "../Tooltips/tooltip";
 moment.locale('zh-cn');
+const boxPlotHead = [
+  {
+    key:'name',
+    title:'Name',
+    dataIndex:'name',
+    width:100,
+    render:(text)=><span style={{fontWeight:'bold',color:'rgba(0, 0, 0, 0.85)'}}>{text}</span>
+  },{
+    key:'lsl',
+    title:<Popover content={ToolTips('AimDashboard','table','lsl')} ><span>LSL</span></Popover>,
+    dataIndex:'lsl',
+    width:120,
+  },{
+    key:'norminal',
+    title:'Norminal',
+    dataIndex:'norminal',
+    width:100,
+  },{
+    key:'usl',
+    title:<Popover content={ToolTips('AimDashboard','table','usl')} ><span>USL</span></Popover>,
+    dataIndex:'usl',
+    width:120,
+  },{
+    key:'yield',
+    title:<Popover content={ToolTips('AimDashboard','table','failureRate')} ><span>Failure Rate</span></Popover>,
+    dataIndex:'yield',
+    width:100,
+  },{
+    key:'std',
+    title:<Popover content={ToolTips('formulaShows','showInfo','std')} ><span>Std</span></Popover>,
+    dataIndex:'std',
+    width:100,
+  }
+];
 
 @connect(({global}) => ({
   global
 }))
 class DrawChart extends Component{
   state = {
+    showRect:'none',
+    showBoxPlot:'none',
     select:[],
     submitFlag:false,
     selectD:{},
     drawchartRequest:{},
     lineChart:{},
+    //柱状图及对应表格
     reactChart:{},
+    rectTableTitle:[],
+    rectTableDataSource:[],
+    //盒须图以及对应表格
     hexuChart:{},
+    boxPlotTableSource:[],
     hexuLimitmin:'',
     hexuLimitmax:'',
     type:'',
     themcolor:[ '#c377a9', '#90006d','#9ad1ba','#ddd900', '#ebd5ef', '#fef88a', '#ab88b9', '#ef7d6b', '#c377a9', '#f6b498', '#ddd900', '#9e9b00', '#c37dac', '#00804c', '#5ebf79', '#9ed2bc', '#67c080', '#ffefb2', '#fec78a', '#f9ffa2'],
     timeRange:{},
+  //  loading status
+    loading:false
   }
   newChart =()=>{
+    this.setState({loading:false});
     document.getElementById('rectchart').style.height='400px';
     document.getElementById('linechart').style.height='400px';
     document.getElementById('hexuchart').style.height='400px';
@@ -46,7 +91,8 @@ class DrawChart extends Component{
         const lineoption = {
           legend:{
             bottom: 'bottom',
-            data:this.state.lineChart.legend.data
+            data:this.state.lineChart.legend.data,
+            type:'scroll'
           },
           color:this.state.themcolor,
           title: [{
@@ -176,7 +222,7 @@ class DrawChart extends Component{
         hexudata.count.push(['0','100'])
         let limit_min = hexudata.low_limit;
         let limit_max = hexudata.up_limit;
-        console.log('hexudata.series[0].data',hexudata.series[0].data)
+        // console.log('hexudata.series[0].data',hexudata.series[0].data)
         const hexuoption = {
           title: [
             {
@@ -350,6 +396,7 @@ class DrawChart extends Component{
     }
   }
   submit=()=>{
+    this.setState({loading:true})
     // console.log('可以提交选项信息了！',this.state.drawchartRequest);            //拿到数据啦，可以和后台交互啦，赶紧去获取chart数据吧
     // console.log('时间及6个条件',this.props.global.topSelectItem,this.props.global.dateTime);
     let now = {};
@@ -368,6 +415,42 @@ class DrawChart extends Component{
         // console.log('图表数据---',data);
         // react data
         if(data.blockChart !== null && data.blockChart !== undefined){
+          //整理柱状图表格的数据
+          const rectTableTitle=[],rectTableHead = [],rectTableDataSource=[];
+          const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};
+          columnTitle1.type='Input';
+          columnTitle1.key=1;
+          columnTitle2.type='OK';
+          columnTitle2.key=2;
+          columnTitle3.type='NG';
+          columnTitle3.key=3;
+          columnTitle4.type='Failure Rate';
+          columnTitle4.key=4;
+          rectTableTitle.push('type');
+          data.blockChart.spcYieldList.map((v,i)=>{
+            rectTableTitle.push(v.name);
+            columnTitle1[v.name]=v.input;
+            columnTitle2[v.name]=v.ok;
+            columnTitle3[v.name]=v.ng;
+            columnTitle4[v.name]=(((1-v.yield)*100).toPrecision(2))+'%';
+            return ;
+          })
+          rectTableTitle.map((title,j)=>{
+            const column = {};
+            if(title === 'type'){
+              column.title='';
+              column.render = (text)=><Popover content={ToolTips('AimDashboard','dashboard',`${text}`)} ><span>{text}</span></Popover>
+            }else{
+              column.title=`${title}`;
+              column.render = (text)=><span>{text}</span>
+            }
+            column.key=title;
+            column.dataIndex = title;
+            rectTableHead.push(column)
+          })
+          rectTableDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);
+          this.setState({rectTableTitle:rectTableHead,rectTableDataSource:rectTableDataSource,boxPlotTableSource:[],showRect:'block',showBoxPlot:'none'});
+
           data.blockChart.series[0].data = data.blockChart.series[0].data.map((num,i)=>{
             return (parseFloat(num)*100).toFixed(3);
           })
@@ -396,7 +479,13 @@ class DrawChart extends Component{
           this.setState({lineChart:{}})
         }
         if(data.boxChart !== null && data.boxChart !== undefined){
-          this.setState({hexuChart:data.boxChart,hexuLimitmin:data.boxChart.low_limit,hexuLimitmax:data.boxChart.up_limit})
+          //盒须图的不良率变成百分比形式
+          data.boxChart.spcYieldList.map((item,i)=>{
+            item.key=i;
+            return item.yield = (((item.yield)*100).toFixed(2))+'%';
+          })
+          this.setState({hexuChart:data.boxChart,hexuLimitmin:data.boxChart.low_limit,hexuLimitmax:data.boxChart.up_limit,boxPlotTableSource:data.boxChart.spcYieldList,
+            rectTableDataSource:[],showRect:'none',showBoxPlot:'block'})
         }else{
           this.setState({hexuChart:{}})
         }
@@ -417,31 +506,52 @@ class DrawChart extends Component{
   }
 
   render(){
-    // console.log("父组件拿到的画图的参数---",this.state.drawchartRequest)
+    const showBoxPlot = this.state.showBoxPlot;
+    const showRect = this.state.showRect;
     return (
       <div className={styles.normal}>
         <div className='rightcontent' style={{width:'100%',float:'right'}}>
-          {/*目录栏*/}
-          <div className={styles.header}>
-            {/*<Header pfn = {(flag,selectData)=>this.fn(flag,selectData)} ></Header>*/}
-            <NewHeader fun={this.updateDrawChart.bind(this)} />
-            <Button style={{background:'#1890ff',color:'#fff',marginTop:'10px'}} disabled={this.state.submitFlag} onClick={this.submit}>OK</Button>
-          </div>
-          {/*  chart */}
-          <div className='drawChart'>
-            <div id='rectchart' style={{width:'100%',height:'100px',marginTop:'100px'}}></div>
-            <div id='linechart' style={{width:'100%',height:'100px'}}></div>
-            <div id='hexuchart' style={{width:'100%',height:'100px'}}></div>
-            {/*<div id='table2'>*/}
-            {/*  <table style={{width:'100%'}}>*/}
-            {/*    <thead>*/}
-            {/*    <tr>*/}
-            {/*      <th></th>*/}
-            {/*    </tr>*/}
-            {/*    </thead>*/}
-            {/*  </table>*/}
-            {/*</div>*/}
-          </div>
+            {/*目录栏*/}
+            <div className={styles.header}>
+              {/*<Header pfn = {(flag,selectData)=>this.fn(flag,selectData)} ></Header>*/}
+              <NewHeader fun={this.updateDrawChart.bind(this)} />
+              <Button style={{background:'#1890ff',color:'#fff',marginTop:'10px'}} disabled={this.state.submitFlag} onClick={this.submit}>OK</Button>
+            </div>
+            {/*  chart */}
+          <Spin spinning={this.state.loading} delay={500}>
+            <div className='drawChart'>
+              {/*<div id='rectchart' style={{width:'100%',height:'100px',marginTop:'100px'}}></div>*/}
+              {/*<div id='linechart' style={{width:'100%',height:'100px'}}></div>*/}
+              <div>
+                <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+                  <Col span={22}>
+                    <div id='rectchart' style={{width:'100%',height:'100px',marginTop:'100px'}} />
+                  </Col>
+                </Row>
+                <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto',display:`${showRect}`}}>
+                  <Col span={22}>
+                    <Table size="small"  columns={this.state.rectTableTitle} dataSource={this.state.rectTableDataSource} scroll={{x: 'max-content'}} pagination={false} />                </Col>
+                </Row>
+                <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+                  <Col span={22}>
+                    <div id='linechart' style={{width:'100%',height:'100px'}} />
+                  </Col>
+                </Row>
+              </div>
+              <div style={{display:`${showBoxPlot}`}}>
+                <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+                 <Col span={22}>
+                    <div id='hexuchart' style={{width:'100%',height:'100px'}} />
+                  </Col>
+                </Row>
+                <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto',display:`${showBoxPlot}`}} >
+                  <Col span={22}>
+                    <Table size="small"  columns={boxPlotHead} dataSource={this.state.boxPlotTableSource} scroll={{x: 'max-content'}} pagination={false} />                </Col>
+                </Row>
+              </div>
+
+            </div>
+          </Spin>
         </div>
         <DownLoadList />
       </div>

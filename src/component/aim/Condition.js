@@ -52,7 +52,7 @@ class NewHeader extends Component {
       title1:'Distribution/Yield',     //后面需求是条件一和二顺序调换，所以title序号反过来
       title2:'Station',
       title3:'SPC',
-      title3_4:'condition3_4',
+      title3_4:'Advanced_condition',
       title4:'condition4',
       category:'',
 
@@ -73,6 +73,11 @@ class NewHeader extends Component {
         special_build:"",
         wifi: []
       },
+    //  condition5,condition6,condition7是否显示
+      isHidecondition4:'none',
+      isHidecondition5:'none',
+      isHidecondition6:'none',
+      isHidecondition7:'none',
     };
     return State;
   }
@@ -158,17 +163,65 @@ class NewHeader extends Component {
     this.setState({select3:d3,spcId:clickId,title3:clickId},this.test)
     // console.log(this.state.select3)
   }
+  IsShowCondition =(advanced_condition_key)=>{
+    let title4='condition4',title5='condition5',title6='condition6',title7='condition7',isHidecondition4='inline-block',isHidecondition5='',isHidecondition6='',isHidecondition7='';
+    switch (advanced_condition_key) {
+      case 'CNC':
+        title4 = 'CNC#';
+        title5 = 'Cell#';
+        title6 = 'Machine#';
+        isHidecondition5 ='inline-block';
+        isHidecondition6 ='inline-block';
+        isHidecondition7 ='none';
+        break;
+      case 'SPM':
+        title4 = 'SPM#';
+        title5 = 'SPM-line#';
+        title6 = 'Machine#';
+        title7 = 'Cavity#';
+        isHidecondition5 ='inline-block';
+        isHidecondition6 ='inline-block';
+        isHidecondition7 ='inline-block';
+        break;
+      case 'Line':
+        title4 = 'Line#';
+        isHidecondition5 ='none';
+        isHidecondition6 ='none';
+        isHidecondition7 ='none';
+        break;
+      case 'AIM':
+        title4 = 'AIM#';
+        isHidecondition5 ='none';
+        isHidecondition6 ='none';
+        isHidecondition7 ='none';
+        break;
+      case 'Shift':
+        title4 = 'D/N#';
+        isHidecondition5 ='none';
+        isHidecondition6 ='none';
+        isHidecondition7 ='none';
+        break;
+      default:
+        title4 = 'condition4';
+        isHidecondition5 ='none';
+        isHidecondition6 ='none';
+        isHidecondition7 ='none';
+    }
+    this.setState({title4:title4,title5:title5,title6:title6,title7:title7,isHidecondition4,isHidecondition5 , isHidecondition6 , isHidecondition7 ,})
+  }
   handleMenuClick3_4 = e=>{
     // console.log(e);
     // console.log('select2======',this.state.select2);
     // console.log('select3======',this.state.select3);
+    this.IsShowCondition(e.key);
+
     const d3_4 = {},container = {},s3_4 = [];
     s3_4.push(e.key)
     d3_4.child = e.key;
     d3_4.aims = this.state.select2;
     d3_4.spcs = this.state.select3;
-    container.data = JSON.stringify(d3_4)
-    this.setState({title3_4:e.key,select3_4:s3_4,title4:'condition4',title5:'condition5'})
+    container.data = JSON.stringify(d3_4);
+    this.setState({title3_4:e.key,select3_4:s3_4})
     reqwest({
       url:`${global.constants.ip}/condition/getCondition4`,
       method:'get',
@@ -181,7 +234,11 @@ class NewHeader extends Component {
           this.setState({condition4D:data.aimIps,select4:data.aimIps})
         }else if(data.lines.length !== 0){
           this.setState({condition4D:data.lines,select4:data.lines})
-        }else{
+        }else if(data.shifts.length !== 0){
+          this.setState({condition4D:data.shifts,select4:data.shifts})
+        } else if(data.spms.length !== 0){
+          this.setState({condition4D:data.spms,select4:data.spms})
+        } else{
           this.setState({checkedList4:[],plainOptions4:[]})
         }
         this.setState({condition4:data});
@@ -391,15 +448,15 @@ class NewHeader extends Component {
       data:container
     })
       .then(data=>{
-        // console.log('newCondition6========',data);
+        console.log('newCondition6========',data);
         this.setState({condition6:data})
         this.state.condition6.machines && this.state.condition6.machines.length !== 0 ? this.setState({condition6D:this.state.condition6.machines}) :
           this.setState({condition6D:this.state.condition6.spms})
         // console.log('6D====',this.state.condition6D);
         let arr = this.state.condition6D;
-        if(data.title === 'Mc'){
-          this.setState({title6:data.title});
-        }
+        // if(data.title === 'Mc'){
+        //   this.setState({title6:data.title});
+        // }
         this.setState({plainOptions6:arr,checkedList6:arr,select6:this.state.condition6D},this.test)
       })
   }
@@ -468,6 +525,10 @@ class NewHeader extends Component {
     this.setState({select7:newList},this.test)
   }
   render() {
+    const isHidecondition4 = this.state.isHidecondition4;
+    const isHidecondition5 = this.state.isHidecondition5;
+    const isHidecondition6 = this.state.isHidecondition6;
+    const isHidecondition7 = this.state.isHidecondition7;
     const menu1 = (
       <Menu onClick={this.handleMenuClick1} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
@@ -604,9 +665,11 @@ class NewHeader extends Component {
     const menu3_4 = (
       <Menu onClick={this.handleMenuClick3_4} selectable  className={styles.menu3_4}>
         {
-          this.state.category === 'fqc' ? <Menu.Item key='Line'>Line</Menu.Item> : <Menu.Item key='Machine'>Machine</Menu.Item>
+          this.state.category === 'cnc' ? <Menu.Item key='CNC'>CNC</Menu.Item> : <Menu.Item key='SPM'>SPM</Menu.Item>
         }
-        <Menu.Item key='AIM Ip'>AIM Ip</Menu.Item>
+        <Menu.Item key='Line'>Line</Menu.Item>
+        <Menu.Item key='AIM'>AIM</Menu.Item>
+        <Menu.Item key='Shift'>Shift</Menu.Item>
       </Menu>
     );
     return (
@@ -635,7 +698,7 @@ class NewHeader extends Component {
         <Dropdown className={styles.item3_4}
           overlay={menu3_4}
         >
-          <li className="ant-dropdown-link">
+          <li className="ant-dropdown-link" >
             {this.state.title3_4} <Icon type="down" />
           </li>
         </Dropdown>
@@ -644,7 +707,7 @@ class NewHeader extends Component {
           onVisibleChange={this.handleVisibleChange4}
           visible={this.state.visible4}
         >
-          <li className="ant-dropdown-link">
+          <li className="ant-dropdown-link" style={{display:`${isHidecondition4}`}}>
             {this.state.title4} <Icon type="down" />
           </li>
         </Dropdown>
@@ -653,7 +716,7 @@ class NewHeader extends Component {
           onVisibleChange={this.handleVisibleChange5}
           visible={this.state.visible5}
         >
-          <li className="ant-dropdown-link"  href="#">
+          <li className="ant-dropdown-link"  href="#" style={{display:`${isHidecondition5}`}}>
             {this.state.title5} <Icon type="down" />
           </li>
         </Dropdown>
@@ -662,8 +725,8 @@ class NewHeader extends Component {
           onVisibleChange={this.handleVisibleChange6}
           visible={this.state.visible6}
         >
-          <li className="ant-dropdown-link"  href="#">
-            condition6 <Icon type="down" />
+          <li className="ant-dropdown-link"  href="#" style={{display:`${isHidecondition6}`}}>
+            {this.state.title6} <Icon type="down" />
           </li>
         </Dropdown>
         <Dropdown
@@ -671,8 +734,8 @@ class NewHeader extends Component {
           onVisibleChange={this.handleVisibleChange7}
           visible={this.state.visible7}
         >
-          <li className="ant-dropdown-link"  href="#">
-            condition7 <Icon type="down" />
+          <li className="ant-dropdown-link"  href="#" style={{display:`${isHidecondition7}`}}>
+            {this.state.title7} <Icon type="down" />
           </li>
         </Dropdown>
       </ul>

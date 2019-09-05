@@ -99,7 +99,7 @@ class AimTablePage extends Component{
     const initcondition = {};
     initcondition.data = {};
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp,spc:this.state.clickbarname}));
-    console.log('取数据的条件',initcondition);
+    // console.log('取数据的条件',initcondition);
     reqwest({
       url:`${global.constants.ip}/condition/getBackYield`,
       method:'post',
@@ -107,7 +107,7 @@ class AimTablePage extends Component{
       data:initcondition
     })
       .then(data=>{
-        console.log("aim dashboard获得数据",data);
+        // console.log("aim dashboard获得数据",data);
         if(data.stationYield !== null){
           const stationHead = [],stationDataSource=[];
           const columnTitle1 = {},columnTitle2={},columnTitle3 = {},columnTitle4={};

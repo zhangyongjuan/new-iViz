@@ -6,6 +6,7 @@ import TimeRange from '../layouts/TimeRange'
 import styles from './summaryChart.less';
 import {connect} from "react-redux";
 import ToolTips from '../component/Tooltips/tooltip'
+import _ from "lodash";
 
 
 const reactiveTableColumn = [
@@ -46,7 +47,10 @@ class SummaryPage extends Component{
     // table
     stationYileds:[],
     //  pie chart
-    pieYield:{}
+    pieYield:{},
+  //  cosYields and dimYields
+    cosYields:[],
+    dimYields:[]
   }
   componentWillReceiveProps(nextProps, nextContext) {
     if(nextProps.global.timeRangeComplete === true){
@@ -128,8 +132,10 @@ class SummaryPage extends Component{
           finalPass: data.finalPass,
           stationYileds: newStation,
           pieYield: data.pieYield,
+          cosYields:data.pieYield.cosYields,
+          dimYields:data.pieYield.dimYields,
           loading:false
-        }, this.drawPieChart)
+        })
       })
   }
   drawPieChart=()=>{
@@ -443,9 +449,25 @@ class SummaryPage extends Component{
           </div>
           <div className={styles.container}>
             <p className={styles.tableName}>Major issue summary</p>
-            <div id='topCosmeticIssues' className={styles.summaryChart} />
+            {/*<div id='topCosmeticIssues' className={styles.summaryChart} />*/}
             {/*  可能会做成柱状图  */}
-            {/*<MajorIssueBarChart />*/}
+            <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
+              <Col span={11}>
+                <div>Top Cosmetic issues</div>
+                <MajorIssueBarChart
+                  params = {{
+                    color:'#3a9fff',
+                    data:this.state.cosYields
+                  }} />
+              </Col>
+              <Col span={11}>
+                <div>Top Dimensional issues</div>
+                <MajorIssueBarChart params = {{
+                  color:'#f7bd26',
+                  data:this.state.dimYields
+                }} />
+              </Col>
+            </Row>
           </div>
         </Spin>
       </div>
@@ -511,13 +533,60 @@ function OverviewSummary(value) {
   )
 }
 class MajorIssueBarChart extends Component{
+  // constructor(props) {
+  //   super(props);
+  // }
   state={
-
+    color:[],
+  //  xAxis
+    yAxis: [],
+  //  data
+    data:[],
   }
   componentDidMount() {
+    this.dataIntegrated(this.props.params);
+  }
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.params !== this.props.params){
+      this.dataIntegrated(nextProps.params);
+    }
+  }
+  dataIntegrated  = (params)=>{
+    //截取top 15即可
+    const name = [],chartdata=[];
+    // console.log('bar数据',params);
+    (params.data).sort((itemA,itemB)=>{
+      return itemA.yield-itemB.yield
+    })
+    params.data.map((item,i)=>{
+      if(i > 14)
+        return;
+      chartdata.push(((item.yield)*100).toPrecision(2));
+      return name.push(item.name);
+    })
+    this.setState({color:params.color,yAxis:name,data:chartdata},this.drawChart)
+  }
+  drawChart = ()=>{
     const barOption = {
-      tooltip:{},
-      color:['#3a9fff'],
+      tooltip:{
+        axisPointer: {
+          type: 'shadow',
+        },
+        trigger: 'axis',
+        formatter: (params) => {
+          // console.log(params);
+          let content = '';
+          _.forEach(params, (k) => {
+            if (k.value !== 0 && !k.value) return;
+            content = content + `<div><span style="display:inline-block;border-radius:10px;width:10px;height:10px;background-color:${k.color};"></span><span style="margin-left: 5px;display: inline-block">Failure Rate：${k.value}%</span></div>`;
+          });
+          return `<div>${params && params.length !== 0 ? params[0].axisValue : ''}</div>` + content;
+        },
+      },
+      color:this.state.color,
+      grid:{
+        left:'35%'
+      },
       xAxis: {
         type: 'value',
         axisLine:{
@@ -525,34 +594,33 @@ class MajorIssueBarChart extends Component{
         },
         splitLine:{
           show:false
-        }
+        },
+        scale:true
       },
       yAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: this.state.yAxis
       },
       series: [{
-        data: [120, 200, 150, 80, 70, 110, 130],
-        type: 'bar'
+        data: this.state.data,
+        type: 'bar',
+        label: {
+          normal: {
+            show: true,
+            position: 'right',
+            color:'#000',
+            formatter:(data)=> `${data.value}%`
+          }
+        },
       }]
     };
-    const cosBarChart = echarts.init(document.getElementById('cosBarChart'));
-    const dimBarChart = echarts.init(document.getElementById('dimBarChart'));
-    cosBarChart.setOption(barOption);
-    dimBarChart.setOption(barOption);
+    const myChart = echarts.init(this.refs.mybarChart);
+    // const myChart = echarts.init(document.getElementById('cosBarChart'));
+    myChart.setOption(barOption);
   }
   render() {
     return(
-      <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
-        <Col span={11}>
-          <div>Top Cosmetic issues</div>
-          <div id='cosBarChart' style={{width:'100%',height:'400px'}} />
-        </Col>
-        <Col span={11}>
-          <div>Top Dimensional issues</div>
-          <div id='dimBarChart' style={{width:'100%',height:'400px'}}/>
-        </Col>
-      </Row>
+          <div ref="mybarChart" className='cosBarChart' style={{width:'100%',height:'600px'}} />
     )
   }
 }
