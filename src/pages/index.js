@@ -83,7 +83,7 @@ class SummaryPage extends Component{
       data: requestCon
     })
       .then(data => {
-        console.log('总结页的数据====', data);
+        // console.log('总结页的数据====', data);
         //整理表格数据，并按照station的固定顺序显示，鸡肋的功能
         const newStation = [];
         data.stationYileds.map((item, i) => {
@@ -452,7 +452,7 @@ class SummaryPage extends Component{
             {/*<div id='topCosmeticIssues' className={styles.summaryChart} />*/}
             {/*  可能会做成柱状图  */}
             <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
-              <Col span={11}>
+              <Col span={12}>
                 <div>Top Cosmetic issues</div>
                 <MajorIssueBarChart
                   params = {{
@@ -460,7 +460,7 @@ class SummaryPage extends Component{
                     data:this.state.cosYields
                   }} />
               </Col>
-              <Col span={11}>
+              <Col span={12}>
                 <div>Top Dimensional issues</div>
                 <MajorIssueBarChart params = {{
                   color:'#f7bd26',
@@ -559,11 +559,12 @@ class MajorIssueBarChart extends Component{
       return itemA.yield-itemB.yield
     })
     params.data.map((item,i)=>{
-      if(i > 14)
-        return;
-      chartdata.push(((item.yield)*100).toPrecision(2));
-      return name.push(item.name);
+      if(i > params.data.length-15){
+        chartdata.push(((item.yield)*100).toPrecision(2));
+        return name.push(item.name);
+      }
     })
+    // console.log(chartdata,name)
     this.setState({color:params.color,yAxis:name,data:chartdata},this.drawChart)
   }
   drawChart = ()=>{
@@ -585,7 +586,7 @@ class MajorIssueBarChart extends Component{
       },
       color:this.state.color,
       grid:{
-        left:'35%'
+        left:'30%',
       },
       xAxis: {
         type: 'value',
@@ -599,7 +600,19 @@ class MajorIssueBarChart extends Component{
       },
       yAxis: {
         type: 'category',
-        data: this.state.yAxis
+        data: this.state.yAxis,
+        axisLabel:{
+          width:'50%',
+          formatter:function (label) {
+            // console.log(label.length);
+            if(label.length > 25){
+              return `${label.substr(0,30)}...`
+            }else{
+              return `${label}`
+            }
+
+          },
+        },
       },
       series: [{
         data: this.state.data,
