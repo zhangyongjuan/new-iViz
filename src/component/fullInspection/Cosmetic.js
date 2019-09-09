@@ -32,7 +32,7 @@ class Commetic extends Component{
   //  点击的各个字段名
     clickDefectName:'',
     clickStationName:'',
-    machineName:'CNC7 Machine#',
+    machineName:'CNC7',
   //  点击particularChart的值
     clickParticularX:'',
     clickParticularY:'',
@@ -312,9 +312,9 @@ class Commetic extends Component{
           // 2.区分点击的station类别，不同station有不同展示效果
           //cnc8_wcnc4_qc站点可以有CNC-7，CNC-8;   cnc10_wcnc4_qc 和 laser_qc 站点可以有CNC-7，CNC-8,CNC-9，CNC-10
           if(e.value == 'cnc10-wcnc5-qc' || e.value == 'laser-qc'){
-            this.setState({machineName:'CNC7 Machine#',showAllCnc:true})
+            this.setState({machineName:'CNC7',showAllCnc:true})
           }else if(e.value == 'cnc8-wcnc4-qc'){
-            this.setState({machineName:'CNC7 Machine#',showAllCnc:false})
+            this.setState({machineName:'CNC7',showAllCnc:false})
           } else{        //后面添加，点击其他的站名也可以出现线图，所以和点击不良类型的接口相同
             this.setState({showParticularHeatmap:'none'});
             this.clickChartRequest('clickOverallHeatmapY');
@@ -324,9 +324,9 @@ class Commetic extends Component{
         }
         else{              //点击的值
           if(e.name == 'cnc10-wcnc5-qc' || e.name == 'laser-qc'){
-            this.setState({machineName:'CNC7 Machine#',showAllCnc:true})
+            this.setState({machineName:'CNC7',showAllCnc:true})
           }else if(e.name == 'cnc8-wcnc4-qc'){
-            this.setState({machineName:'CNC7 Machine#',showAllCnc:false})
+            this.setState({machineName:'CNC7',showAllCnc:false})
           } else{
             return;
           }
@@ -756,16 +756,16 @@ class Commetic extends Component{
                 this.state.showAllCnc === true ? (
                   <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
                     <Option value='title' disabled>Please choose one</Option>
-                    <Option value="CNC7 Machine#">CNC-7</Option>
-                    <Option value="CNC8 Machine#">CNC-8</Option>
-                    <Option value="CNC9 Machine#">CNC-9</Option>
-                    <Option value="CNC10 Machine#">CNC-10</Option>
+                    <Option value="CNC7">CNC-7</Option>
+                    <Option value="CNC8">CNC-8</Option>
+                    <Option value="CNC9">CNC-9</Option>
+                    <Option value="CNC10">CNC-10</Option>
                   </Select>
                 ):(
                   <Select defaultValue='title' value={this.state.machineName} style={{ width: 180,zIndex:1 }} onChange={this.handleChange}>
                     <Option value='title' disabled>Please choose one</Option>
-                    <Option value="CNC7 Machine#">CNC-7</Option>
-                    <Option value="CNC8 Machine#">CNC-8</Option>
+                    <Option value="CNC7">CNC-7</Option>
+                    <Option value="CNC8">CNC-8</Option>
                   </Select>
                 )
               }

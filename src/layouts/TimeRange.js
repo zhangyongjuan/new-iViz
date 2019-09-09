@@ -37,7 +37,7 @@ class TimeRange extends Component {
     // console.log('Selected Time: ', value);
     // console.log('Formatted Selected Time: ', dateString);
     const startT = new Date(dateString[0]).getTime();        //开始时间的毫秒
-    const endT = new Date(dateString[1]).getTime();          //截止时间的毫秒
+    const endT = new Date(dateString[1]).getTime()+24*60*60*1000;          //截止时间的毫秒,工厂要求截止日期为第二天早八点
     const timeR = {};
     timeR.startTime = startT;
     timeR.endTime = endT;

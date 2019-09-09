@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { Table,Icon,Popover } from 'antd';
+import { Table,Icon,Popover ,Spin} from 'antd';
 import echarts from 'echarts';
 import reqwest from 'reqwest';
 import styles from './AimTablePage.less'
@@ -47,6 +47,8 @@ const spcHead = [
 }))
 class AimTablePage extends Component{
   state ={
+    //加载中
+    loading:false,
     showAimPlus:'none',
     showBarChart:'none',
     showLineChart:'none',
@@ -96,6 +98,7 @@ class AimTablePage extends Component{
 
   }
   fetch=()=>{
+    this.setState({loading:true});
     const initcondition = {};
     initcondition.data = {};
     initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp,spc:this.state.clickbarname}));
@@ -207,6 +210,7 @@ class AimTablePage extends Component{
           plusDataSource.push(columnTitle0,columnTitle1,columnTitle2,columnTitle3,columnTitle4,columnTitle5);
           this.setState({plusTitle:plusHead,plusDataSource:plusDataSource})
         }
+        this.setState({loading:false})
       })
   }
   clickStationName = e =>{
@@ -460,10 +464,11 @@ class AimTablePage extends Component{
     firstColumn.dataIndex ='type';
     firstColumn.render = (text)=><Popover content={ToolTips('AimDashboard','dashboard',`${text}`)} ><span>{text}</span></Popover>
     firstColumn.fixed='left';
-    firstColumn.width=10;
+    firstColumn.width=100;
     stationColums.unshift(firstColumn);
     plusTableColumns.unshift(firstColumn);
     return(
+      <Spin spinning={this.state.loading} delay={500}>
       <div>
         <p className={styles.tableName} >AIM Dashboard</p>
         {/*
@@ -493,6 +498,7 @@ class AimTablePage extends Component{
         <p className={styles.tableName} >Failure Rate trend</p>
         <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart' />
       </div>
+      </Spin>
     )
   }
 }
