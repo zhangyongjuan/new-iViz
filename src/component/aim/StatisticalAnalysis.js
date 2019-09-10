@@ -29,8 +29,16 @@ class Statistical extends Component{
     lastLineChart:[]
   }
   componentDidMount() {
+    this.fetch(this.props);
+  }
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.global.timeRangeComplete === true){
+      this.fetch(nextProps);
+    }
+  }
+  fetch=(Props)=>{
     const requestCon = {};
-    const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem});
+    const param = Object.assign({},Props.global.dateTime,{mapping:Props.global.topSelectItem});
     requestCon.data = JSON.stringify(param);
     // const { dispatch } = this.props;
     // dispatch({
@@ -48,7 +56,6 @@ class Statistical extends Component{
         this.setState({station:data.stations})
       })
   }
-
   stationChange=(stationValue)=> {
     // console.log(`selected ${stationValue}`);
     const labelInput = stationValue;
@@ -128,6 +135,46 @@ class Statistical extends Component{
         right: '10%',
         bottom: '15%'
       },
+      dataZoom: [
+        {
+          show: true,
+          realtime: true,
+          left: '2%',
+          start: 0,
+          end: 100,
+          yAxisIndex:[0],
+          showDataShadow: false,
+          handleSize:20,
+          width:15,
+          handleStyle:{
+            color:'gray'
+          }
+
+        },
+        {
+          type: 'inside',
+          realtime: true,
+          yAxisIndex:[0],
+          start: 0,
+          end: 100,
+        },
+        // {
+        //   show: true,
+        //   type: 'slider',
+        //   realtime: true,
+        //   left: '6%',
+        //   start: 0,
+        //   end: 100,
+        //   // bottom:40,
+        //   yAxisIndex:[0],
+        //   showDataShadow: false,
+        //   width:15,
+        //   handleSize:20,
+        //   handleStyle:{
+        //     color:'gray'
+        //   }
+        // },
+      ],
       xAxis: {
         type: 'category',
         data: boxplotD.xAxis.data,
@@ -163,6 +210,7 @@ class Statistical extends Component{
           show:false
         },
         scale:true,
+
       },
       series: [
         {

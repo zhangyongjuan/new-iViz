@@ -134,8 +134,16 @@ class Comparative extends Component{
     tableData:[]
   }
   componentDidMount() {
+    this.fetch(this.props);
+  }
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.global.timeRangeComplete === true){
+      this.fetch(nextProps);
+    }
+  }
+  fetch=(Props)=>{
     const requestCon = {};
-    const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem});
+    const param = Object.assign({},Props.global.dateTime,{mapping:Props.global.topSelectItem});
     requestCon.data = JSON.stringify(param);
     // const { dispatch } = this.props;
     // dispatch({
@@ -153,7 +161,6 @@ class Comparative extends Component{
         this.setState({station:data.stations})
       })
   }
-
   stationChange=(stationValue)=> {
     // console.log(stationValue);
     const labelInput = stationValue;

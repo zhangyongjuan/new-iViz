@@ -292,7 +292,7 @@ class AimTablePage extends Component{
     }
   //  新添加的需求，柱子点击，线图改变
     aimBarchart.on('click','series',(params)=>{
-      this.setState({clickbarname:params.name});
+      this.setState({clickbarname:params.name,loading:true});
       const initcondition = {};
       initcondition.data = {};
       initcondition.data = JSON.stringify(Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem,station:this.state.station,aimIp:this.state.aimIp,spc:params.name}));
@@ -309,7 +309,7 @@ class AimTablePage extends Component{
           data.series[0].data.map((value,i)=>{
             return chartD.push((1-Number(value))*100);
           })
-          this.setState({lineTime:linetime,lineData:chartD},this.drawLineChart)
+          this.setState({lineTime:linetime,lineData:chartD,loading:false},this.drawLineChart)
         })
     })
   //  显示bar chart 解释信息

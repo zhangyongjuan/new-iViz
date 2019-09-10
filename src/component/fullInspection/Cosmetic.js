@@ -667,7 +667,7 @@ class Commetic extends Component{
     //  Particular Line chart
     const lineD =this.state.lineChartData;
     lineD.series[0].data = lineD.series[0].data.map((v,i)=>{
-      return (Number(v)*100).toPrecision(2)
+      return (Number(v)*100).toFixed(2)
     })
     const particularLine = echarts.init(document.getElementById('paiticularLine'));
     const particularLineOption = {

@@ -396,6 +396,11 @@ class DrawChart extends Component{
     }
   }
   submit=()=>{
+    // console.log('画图的条件===',this.state.drawchartRequest);
+    const condition1 = this.state.drawchartRequest.condition1;
+    if(condition1.length === 0)
+      return;
+
     this.setState({loading:true})
     // console.log('可以提交选项信息了！',this.state.drawchartRequest);            //拿到数据啦，可以和后台交互啦，赶紧去获取chart数据吧
     // console.log('时间及6个条件',this.props.global.topSelectItem,this.props.global.dateTime);
