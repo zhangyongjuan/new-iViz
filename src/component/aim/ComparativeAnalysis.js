@@ -121,6 +121,7 @@ class Comparative extends Component{
     loading:false,
     showChart:'none',
     selectStation:'',
+    process:'',
     selectSpc:'',
     // station 以及 spc 的所有选择项
     station:[],
@@ -148,20 +149,27 @@ class Comparative extends Component{
       data:requestCon
     })
       .then(data=>{
-        // console.log('终于拿到数据了--',data);
+        // console.log('对比分析数据--',data);
         this.setState({station:data.stations})
       })
   }
 
   stationChange=(stationValue)=> {
-    // console.log(`selected station-- ${stationValue}`);
-    this.setState({selectStation:stationValue,spcInfo:[]});
+    // console.log(stationValue);
+    const labelInput = stationValue;
+    const process = labelInput.label[0];
+    const selectStation = labelInput.key;
+    this.setState({process:process,selectStation:selectStation,spcInfo:[]});
     //  修改了station的选项，重新获取spc的可选项
     let requsetSpc = {};
-    const sta={};
+    const sta={},stations=[];
     requsetSpc.data={};
-    sta.stations=[stationValue];
-    requsetSpc.data = JSON.stringify(sta);
+    sta.process=process;
+    sta.station=selectStation;
+    stations.push(sta);
+    const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem});
+    param.stations=stations;
+    requsetSpc.data = JSON.stringify(param);
     reqwest({
       url:`${global.constants.ip}/spc/getSpcs`,
       method: 'post',
@@ -178,7 +186,8 @@ class Comparative extends Component{
     const spcs = [];
     spcValue.map((item,i)=>{
       const oneItem = {};
-      oneItem.station=spcValue[i].label[0];
+      oneItem.station=spcValue[i].label[2];
+      oneItem.process=spcValue[i].label[0];
       oneItem.spc=item.key;
       spcs.push(oneItem);
     })
@@ -380,12 +389,12 @@ class Comparative extends Component{
         {/* select station and spc */}
         <div style={{marginBottom:'10px'}}>
           <span style={{marginLeft:'50px'}}>Station: </span>
-          <Select defaultValue="title" style={{ width: 300 }} onChange={this.stationChange}>
-            <Option value='title' disabled>Please choose!</Option>
+          <Select labelInValue defaultValue="title" style={{ width: 350 }} onChange={this.stationChange}>
+            <Option value='title' key='disabled' disabled>Please choose!</Option>
             {
               stationL !== 0 ?
               this.state.station.map((station,i)=>(
-                  <Option key={i} value={station}>{station}</Option>
+                  <Option key={i} process={station.process} value={station.station}>{station.process}_{station.station}</Option>
                 )
               ):''
             }
@@ -394,7 +403,7 @@ class Comparative extends Component{
           <Select style={{ width: 800 }} mode="multiple" labelInValue={true} onChange={this.spcChange}>
             {
               this.state.spcInfo.map((spcItem,i)=>(
-                  <Option key={i} station={spcItem.station} value={spcItem.spcName}>{this.state.selectStation}_{spcItem.spcName}</Option>
+                  <Option key={i} station={spcItem.station} value={spcItem.spcName}>{this.state.process}_{spcItem.station}_{spcItem.spcName}</Option>
                 )
               )
             }

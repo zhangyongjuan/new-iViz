@@ -428,7 +428,7 @@ class SummaryPage extends Component{
         <Spin spinning={this.state.loading}>
           {/* overview summary */}
           <div className={styles.container}>
-            <p className={styles.tableName}>Yield overview</p>
+            <p className={styles.tableName}>Yield Overview</p>
             {/*<div style={{display:'inline-block',width:'400px',marginLeft:100}}>*/}
             {/*  <span className={styles.OverviewName}>Final Pass  &nbsp; | &nbsp;  First Pass</span> <br/>*/}
             {/*  <span style={{color:'#F6B300',marginRight:'30px'}} className={styles.OverviewNum}>9.7%</span><span style={{color:'#000'}} className={styles.OverviewNum}>9.75%</span>*/}
@@ -442,13 +442,13 @@ class SummaryPage extends Component{
           </div>
         {/*  Reactive Table */}
           <div className={styles.container}>
-            <p className={styles.tableName}>Process yield dashboard</p>
+            <p className={styles.tableName}>Process Yield Dashboard</p>
             <div style={{width:'95%',margin:'0 auto'}}>
               <Table size="small" columns={reactiveTableColumn} dataSource={this.state.stationYileds} pagination={false} />
             </div>
           </div>
           <div className={styles.container}>
-            <p className={styles.tableName}>Major issue summary</p>
+            <p className={styles.tableName}>Major Issue Summary</p>
             {/*<div id='topCosmeticIssues' className={styles.summaryChart} />*/}
             {/*  可能会做成柱状图  */}
             <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
@@ -461,7 +461,7 @@ class SummaryPage extends Component{
                   }} />
               </Col>
               <Col span={12}>
-                <div>Top Dimensional issues</div>
+                <div>Top Dimensional Issues</div>
                 <MajorIssueBarChart params = {{
                   color:'#f7bd26',
                   data:this.state.dimYields

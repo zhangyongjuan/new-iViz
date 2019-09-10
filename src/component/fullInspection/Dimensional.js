@@ -731,7 +731,7 @@ class Dimensional extends Component{
         <Spin spinning={this.state.loading} spinning={this.state.loading} delay={500}>
         <div>
           <p className={styles.title} >
-            Overall heatmap
+            Overall Heatmap
           </p>
           <div>
             <div id='DimOverallHeatmap' style={{display:'inline-block'}} className={styles.overallHeatmap} />
@@ -740,7 +740,7 @@ class Dimensional extends Component{
         {/* 下级热力图 */}
         <div id={styles.particularHeatmapCon} className={this.state.showParticularHeatmap}>
           <p className={styles.title} >
-            Heatmap by CNC
+            Heatmap By CNC
           </p>
           {
             this.state.showAllCnc === true ? (
@@ -764,7 +764,7 @@ class Dimensional extends Component{
         {/* line chart  Trend analysis of paiticular defect and machine*/}
         <div id={styles.particularLineCon} className={this.state.showParticularLine}>
           <p className={styles.title} >
-            Failure Rate trend
+            Failure Rate Trend
           </p>
           <div id='DimPaiticularLine' className={styles.particularLine} />
         </div>

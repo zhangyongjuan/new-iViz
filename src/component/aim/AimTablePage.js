@@ -484,7 +484,7 @@ class AimTablePage extends Component{
           </div>
         </div>
 
-        <p className={styles.tableName} >Major issue list</p>
+        <p className={styles.tableName} >Major Issue List</p>
         {/* no click event */}
         <div id={styles.showBarChart} className={this.state.showBarChart}>
           <p className={styles.barYAxisName}>{this.state.showbarYAxisName}</p>
@@ -495,7 +495,7 @@ class AimTablePage extends Component{
             <Table size="small" columns={this.state.spcTitle} dataSource={this.state.spcDataSource} scroll={{y:370}} pagination={false} />
           </div>
         </div>
-        <p className={styles.tableName} >Failure Rate trend</p>
+        <p className={styles.tableName} >Failure Rate Trend</p>
         <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart' />
       </div>
       </Spin>

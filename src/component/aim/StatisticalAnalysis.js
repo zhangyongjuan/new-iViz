@@ -17,6 +17,7 @@ class Statistical extends Component{
     loading:false,
     showChart:'none',
     selectStation:'',
+    process:'',
     selectSpc:'',
     station:[],
     spcInfo:[],
@@ -43,20 +44,27 @@ class Statistical extends Component{
       data:requestCon
     })
       .then(data=>{
-        // console.log('终于拿到数据了--',data);
+        // console.log('统计分析station--',data);
         this.setState({station:data.stations})
       })
   }
 
   stationChange=(stationValue)=> {
     // console.log(`selected ${stationValue}`);
-    this.setState({selectStation:stationValue,spcInfo:[]});
+    const labelInput = stationValue;
+    const process = labelInput.label[0];
+    const selectStation = labelInput.key;
+    this.setState({process:process,selectStation:selectStation,spcInfo:[]});
   //  修改了station的选项，重新获取spc的可选项
     let requsetSpc = {};
-    const sta={};
+    const sta={},stations=[];
     requsetSpc.data={};
-    sta.stations=[stationValue];
-    requsetSpc.data = JSON.stringify(sta);
+    sta.process=process;
+    sta.station=selectStation;
+    stations.push(sta);
+    const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem});
+    param.stations=stations;
+    requsetSpc.data = JSON.stringify(param);
     reqwest({
       url:`${global.constants.ip}/spc/getSpcs`,
       method: 'post',
@@ -77,7 +85,8 @@ class Statistical extends Component{
     }
     this.setState({loading:true})
     const requestCon = {};
-    const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem},{station:this.state.selectStation,spc:this.state.selectSpc});
+    const param = Object.assign({},this.props.global.dateTime,{mapping:this.props.global.topSelectItem},
+      {station:this.state.selectStation,spc:this.state.selectSpc,process:this.state.process});
     requestCon.data = JSON.stringify(param);
     reqwest({
       url:`${global.constants.ip}/spc/getSigmaChart`,
@@ -86,7 +95,7 @@ class Statistical extends Component{
       data:requestCon
     })
       .then(data=>{
-        console.log('统计分析的所有chart数据--',data);
+        // console.log('统计分析的所有chart数据--',data);
         if(data === null){
           this.setState({showChart:'none'})
         }else{
@@ -541,22 +550,22 @@ class Statistical extends Component{
         {/* select station and spc */}
         <div style={{marginBottom:'10px'}}>
           <span style={{marginLeft:'50px'}}>Station: </span>
-          <Select defaultValue="title" style={{ width: 300 }} onChange={this.stationChange}>
+          <Select labelInValue defaultValue="title" style={{ width: 350 }} onChange={this.stationChange}>
             <Option value='title' disabled>Please choose!</Option>
             {
               stationL !==0 ?
               this.state.station.map((station,i)=>(
-                  <Option key={i} value={station}>{station}</Option>
+                <Option key={i} process={station.process} value={station.station}>{station.process}_{station.station}</Option>
                 )
               ):''
             }
           </Select>
           <span style={{marginLeft:'50px'}}>SPC: </span>
-          <Select defaultValue="title" style={{ width: 300 }} onChange={this.spcChange}>
+          <Select defaultValue="title" style={{ width: 400 }} onChange={this.spcChange}>
             <Option value='title' disabled>Please choose!</Option>
             {
               this.state.spcInfo.map((spcItem,i)=>(
-                  <Option key={i} value={spcItem.spcName}>{spcItem.spcName}</Option>
+                <Option key={i} station={spcItem.station} value={spcItem.spcName}>{this.state.process}_{spcItem.station}_{spcItem.spcName}</Option>
                 )
               )
             }
