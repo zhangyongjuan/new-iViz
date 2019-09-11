@@ -57,10 +57,10 @@ class Statistical extends Component{
       })
   }
   stationChange=(stationValue)=> {
-    // console.log(`selected ${stationValue}`);
+    // console.log(`selected ${JSON.stringify(stationValue)}`);
     const labelInput = stationValue;
     const process = labelInput.label[0];
-    const selectStation = labelInput.key;
+    const selectStation = labelInput.label[2];
     this.setState({process:process,selectStation:selectStation,spcInfo:[]});
   //  修改了station的选项，重新获取spc的可选项
     let requsetSpc = {};
@@ -603,7 +603,7 @@ class Statistical extends Component{
             {
               stationL !==0 ?
               this.state.station.map((station,i)=>(
-                <Option key={i} process={station.process} value={station.station}>{station.process}_{station.station}</Option>
+                <Option key={i} process={station.process} value={`${station.process}_${station.station}`}>{station.process}_{station.station}</Option>
                 )
               ):''
             }

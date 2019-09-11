@@ -410,7 +410,7 @@ class DrawChart extends Component{
     const condition6 = this.state.drawchartRequest.condition6;
     const condition7 = this.state.drawchartRequest.condition7;
     if(condition1.length === 0 || condition2.length === 0 || condition3.length === 0 || condition3_4.length === 0){    //前三个条件必不能为空
-      this.setState({canDrawChart:'inline-block'});
+      this.setState({canDrawChart:'inline-block',alertMSG:'The required condition cannot be empty！'});
       return;
     }else{
     /* 条件1,2,3,3_4不为空时，需要判断3_4是什么条件，以此来判断后面的条件是否为非空
