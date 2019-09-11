@@ -290,7 +290,6 @@ class Dimensional extends Component{
     overallHeatmap.setOption(overallOption);
     //Axis添加点击事件
     overallHeatmap.on('click',(e)=>{
-      echarts.init(document.getElementById('particularHeatmap')).clear();
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
           //1.改变背景颜色
@@ -370,6 +369,7 @@ class Dimensional extends Component{
     })
   }
   clickChartRequest = (type,machineName)=>{
+    echarts.init(document.getElementById('particularHeatmap')).clear();
     this.setState({loading:true});
     if(type === 'clickOverallHeatmapXspecial'){
       let machine = this.state.machineName;

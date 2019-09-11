@@ -396,7 +396,7 @@ class Comparative extends Component{
         {/* select station and spc */}
         <div style={{marginBottom:'10px'}}>
           <span style={{marginLeft:'50px'}}>Station: </span>
-          <Select labelInValue defaultValue="title" style={{ width: 350 }} onChange={this.stationChange}>
+          <Select labelInValue defaultValue={{key:'title',label:''}} style={{ width: 350 }} onChange={this.stationChange}>
             <Option value='title' key='disabled' disabled>Please choose!</Option>
             {
               stationL !== 0 ?

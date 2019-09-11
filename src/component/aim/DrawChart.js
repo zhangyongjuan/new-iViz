@@ -51,6 +51,10 @@ const boxPlotHead = [
 }))
 class DrawChart extends Component{
   state = {
+    //是否能画图提示
+    canDrawChart:'none',
+    //提示信息;
+    alertMSG:'',
     showRect:'none',
     showBoxPlot:'none',
     select:[],
@@ -398,9 +402,45 @@ class DrawChart extends Component{
   submit=()=>{
     // console.log('画图的条件===',this.state.drawchartRequest);
     const condition1 = this.state.drawchartRequest.condition1;
-    if(condition1.length === 0)
+    const condition2 = this.state.drawchartRequest.condition2;
+    const condition3 = this.state.drawchartRequest.condition3;
+    const condition3_4 = this.state.drawchartRequest.condition3_4;
+    const condition4 = this.state.drawchartRequest.condition4;
+    const condition5 = this.state.drawchartRequest.condition5;
+    const condition6 = this.state.drawchartRequest.condition6;
+    const condition7 = this.state.drawchartRequest.condition7;
+    if(condition1.length === 0 || condition2.length === 0 || condition3.length === 0 || condition3_4.length === 0){    //前三个条件必不能为空
+      this.setState({canDrawChart:'inline-block'});
       return;
-
+    }else{
+    /* 条件1,2,3,3_4不为空时，需要判断3_4是什么条件，以此来判断后面的条件是否为非空
+    *   3_4 为line，aim,shift时，condition4为非空
+    *   3_4 为cnc时，condition4,5,6为非空
+    *   3_4 为spm时，condition4,5,6,7为非空
+    * */
+      if(condition3_4[0] === 'Line' || condition3_4[0] === 'AIM' || condition3_4[0] === 'Shift'){
+        if(condition4.length === 0 ){
+          this.setState({canDrawChart:'inline-block',alertMSG:'The required condition cannot be empty！'});
+          return;
+        }else{
+          this.setState({canDrawChart:'none',alertMSG:''});
+        }
+      }else if(condition3_4[0] === 'CNC'){
+        if(condition4.length === 0 || condition5.length === 0 || condition6.length === 0){
+          this.setState({canDrawChart:'inline-block',alertMSG:'The required condition cannot be empty！'});
+          return;
+        }else{
+          this.setState({canDrawChart:'none'});
+        }
+      }else if(condition3_4[0] === 'SPM'){
+        if(condition4.length === 0 || condition5.length === 0 || condition6.length === 0|| condition7.length === 0){
+          this.setState({canDrawChart:'inline-block',alertMSG:'The required condition cannot be empty！'});
+          return;
+        }else{
+          this.setState({canDrawChart:'none'});
+        }
+      }
+    }
     this.setState({loading:true})
     // console.log('可以提交选项信息了！',this.state.drawchartRequest);            //拿到数据啦，可以和后台交互啦，赶紧去获取chart数据吧
     // console.log('时间及6个条件',this.props.global.topSelectItem,this.props.global.dateTime);
@@ -418,6 +458,7 @@ class DrawChart extends Component{
     })
       .then(data=>{
         // console.log('图表数据---',data);
+        this.setState({canDrawChart:'none'});
         // react data
         if(data.blockChart !== null && data.blockChart !== undefined){
           //整理柱状图表格的数据
@@ -496,7 +537,11 @@ class DrawChart extends Component{
         }
         this.newChart();
 
+      },(error)=>{
+        console.log('错误了',error,error.status);
+        this.setState({loading:false,alertMSG:'The request timeout!',canDrawChart:'inline-block'});
       })
+
   }
   updateDrawChart(data){
     if (data.condition1.length === 0 ){
@@ -513,6 +558,7 @@ class DrawChart extends Component{
   render(){
     const showBoxPlot = this.state.showBoxPlot;
     const showRect = this.state.showRect;
+    const canDrawChart = this.state.canDrawChart;
     return (
       <div className={styles.normal}>
         <div className='rightcontent' style={{width:'100%',float:'right'}}>
@@ -521,6 +567,7 @@ class DrawChart extends Component{
               {/*<Header pfn = {(flag,selectData)=>this.fn(flag,selectData)} ></Header>*/}
               <NewHeader fun={this.updateDrawChart.bind(this)} />
               <Button style={{background:'#1890ff',color:'#fff',marginTop:'10px'}} disabled={this.state.submitFlag} onClick={this.submit}>OK</Button>
+              <span style={{color:'red',display:canDrawChart}}>{this.state.alertMSG}</span>
             </div>
             {/*  chart */}
           <Spin spinning={this.state.loading} delay={500}>

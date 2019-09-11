@@ -292,7 +292,6 @@ class Commetic extends Component{
     //Axis添加点击事件
     overallHeatmap.on('click',(e)=>{
       // console.log('click=======',e);
-      echarts.init(document.getElementById('particularHeatmap')).clear();
       if(e.componentType === 'xAxis' || e.componentType === 'series'){
         if(e.componentType === 'xAxis'){
           //1.改变背景颜色
@@ -373,6 +372,7 @@ class Commetic extends Component{
 
   }
   clickChartRequest = (type,machineName)=>{
+    echarts.init(document.getElementById('particularHeatmap')).clear();
     this.setState({loading:true});
     if(type === 'clickOverallHeatmapXspecial'){
       let machine = this.state.machineName;
@@ -391,7 +391,7 @@ class Commetic extends Component{
         data:requestCon,
       })
         .then(data=>{
-          console.log('点击x轴或者值后，获得的图表数据==',data);
+          // console.log('点击x轴或者值后，获得的图表数据==',data);
           //整理overallData数据
           // ** 整理数据
           data.machineTable.yields.map((item,n)=>{
