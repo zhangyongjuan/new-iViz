@@ -76,3 +76,20 @@ export async function fetchHangData(params) {
     requestType: 'form',
   });
 }
+
+//new fight bar page
+export async function fetchNewFlyBarData(params) {
+  return request('/api/story/getFlyBar', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+//getOneDayFlyBarData
+export async function fetchNewOneDayFlyBarData(params) {
+  return request('/api/story/getFlyBarOneDay', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}

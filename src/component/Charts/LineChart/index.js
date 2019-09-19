@@ -80,20 +80,37 @@ export default class BasicLineChart extends React.Component {
 
   componentDidMount() {
     this.initPie();
+    this.handleClick();
   }
+  handleClick = () => {
+    const { clickBar } = this.props.params;
+    const myChart = echarts.init(this.PieRef);
+    if(clickBar){
+      myChart.on('click', function(param) {
+        clickBar(param);
+      });
+    }
+  };
 
   componentDidUpdate() {
     this.initPie();
   }
+  shouldComponentUpdate(nextProps) {
+    if(JSON.stringify(nextProps) == JSON.stringify(this.props)) {
+      return false
+    }else {
+      return true
+    }
+  }
 
   initPie = () => {
     // 外部传入的data数据
-    const { data } = this.props.params;
+    const { data ,dataZoomX, dataZoomY} = this.props.params;
     // 初始化echarts
     const myChart = echarts.init(this.PieRef);
 
     // 我们要定义一个setPieOption函数将data传入option里面
-    const options = this.setPieOption(this.transformData(data));
+    const options = this.setPieOption(this.transformData(data,dataZoomX, dataZoomY));
     // 设置options
     myChart.setOption(options);
 
@@ -102,8 +119,10 @@ export default class BasicLineChart extends React.Component {
     });
   };
 
-  transformData = (data) => {
+  transformData = (data,dataZoomX, dataZoomY) => {
     const newData = {
+      dataZoomX: dataZoomX,
+      dataZoomY:dataZoomY,
       xAxis: [],
       defect: [],
       good: [],
@@ -151,12 +170,51 @@ export default class BasicLineChart extends React.Component {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
+      bottom: '5%',
       containLabel: true,
     },
     legend: {
       data: ['Pass', 'Fail', 'Failure Rate'],
     },
+    dataZoom: [
+      {
+      type: 'inside',
+      start: 0,
+      end: 100,
+      zoomLock: false,
+      disabled:!data.dataZoomX,
+    }, {
+      type: 'slider',
+      showDataShadow: false,
+      show: data.dataZoomX !== true ?  false : data.dataZoomX,
+      xAxisIndex: 0,
+      start: 0,
+      end: 100,
+      zoomLock: true,
+      bottom:0,
+      height:20,
+      handleSize:20,
+      handleStyle:{
+        color:'gray'
+      }
+    },
+      {
+        show: data.dataZoomY !== true ?  false : data.dataZoomY,
+        type: 'slider',
+        realtime: true,
+        left: '1%',
+        start: 0,
+        end: 100,
+        // bottom:40,
+        yAxisIndex:[0],
+        showDataShadow: false,
+        width:20,
+        handleSize:20,
+        handleStyle:{
+          color:'gray'
+        }
+      },
+    ],
     xAxis: [
       {
         type: 'category',

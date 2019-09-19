@@ -559,7 +559,7 @@ class MajorIssueBarChart extends Component{
       return itemA.yield-itemB.yield
     })
     params.data.map((item,i)=>{
-      if(i > params.data.length-15){
+      if(i > params.data.length-16){
         chartdata.push(((item.yield)*100).toPrecision(2));
         return name.push(item.name);
       }

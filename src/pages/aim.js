@@ -8,6 +8,7 @@ import Statistical from '../component/aim/StatisticalAnalysis';
 import Comparative from '../component/aim/ComparativeAnalysis'
 import BowingKinking from './BowingKinking';
 import AimFlyBar from './AimFlyBar';
+import AimFlyBar_n from './AimFlyBar/aimFlyBar_n';
 
 const { TabPane } = Tabs;
 
@@ -21,6 +22,9 @@ class AIM extends Component{
         <TimeRange />
         <div>
           <Tabs onChange={this.callback} type="card">
+            <TabPane key="7" tab={<span><Icon type="stock" />Color_Flight_Bar_Module_new</span>}>
+              <AimFlyBar_n />
+            </TabPane>
             <TabPane key="1" tab={<span><Icon type="table" />AIM Dashboard</span>}>
               <AimTablePage />
             </TabPane>
@@ -39,6 +43,7 @@ class AIM extends Component{
             <TabPane key="6" tab={<span><Icon type="stock" />Color_Flight_Bar_Module</span>}>
               <AimFlyBar />
             </TabPane>
+
           </Tabs>
         </div>
 

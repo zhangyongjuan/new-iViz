@@ -104,6 +104,8 @@ class BowingKinking extends React.Component {
                 <BasicLineChart
                   params={{
                     data: lines || [],
+                    dataZoomX:false,
+                    dataZoomY:false,
                     xAxis: 'time',
                     yAxis: 'value',
                     loading,
@@ -130,6 +132,8 @@ class BowingKinking extends React.Component {
                 <BasicLineChart
                   params={{
                     data: linesSB || [],
+                    dataZoomX:false,
+                    dataZoomY:false,
                     xAxis: 'time',
                     yAxis: 'value',
                     loading,

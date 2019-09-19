@@ -1,4 +1,4 @@
-import { fetchFlyBarData, fetchIMBox, fetchSBBox, fetchHangData } from '@/services/api';
+import { fetchFlyBarData, fetchIMBox, fetchSBBox, fetchHangData,fetchNewFlyBarData ,fetchNewOneDayFlyBarData} from '@/services/api';
 
 export default {
   namespace: 'FlyBar',
@@ -37,6 +37,23 @@ export default {
         payload: response,
       });
     },
+
+  //  更改后的flyBar
+    * getnewFlyBar({ payload }, { call, put }) {
+      const response = yield call(fetchNewFlyBarData, payload);
+      yield put({
+        type: 'saveNewData',
+        payload: response,
+      });
+    },
+  //  getOneFlyBarData
+    * getOneDayFlyBarData({ payload }, { call, put }) {
+      const response = yield call(fetchNewOneDayFlyBarData, payload);
+      yield put({
+        type: 'saveNewOneDayFlyBarData',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -62,6 +79,20 @@ export default {
       return {
         ...state,
         Hang: { ...payload },
+      };
+    },
+
+  //  new fly bar
+    saveNewData(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+    saveNewOneDayFlyBarData(state, { payload }) {
+      return {
+        ...state,
+        flybarChartByOneDay:{...payload},
       };
     },
   },

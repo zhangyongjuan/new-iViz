@@ -25,7 +25,7 @@ const config: IConfig =  {
   ],
   proxy: {
     '/api/': {
-      target: 'http://172.16.1.244:8080',
+      target: 'http://172.16.1.112:8081',
       changeOrigin: true,
       // pathRewrite: { '^/api': '' },
     },

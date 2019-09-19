@@ -251,8 +251,8 @@ class Comparative extends Component{
           bottom:10,
           xAxisIndex:[0],
           showDataShadow: false,
-          height:15,
-          handleSize:20,
+          // height:15,
+          // handleSize:20,
           handleStyle:{
             color:'gray'
           }
@@ -275,8 +275,8 @@ class Comparative extends Component{
           // bottom:40,
           yAxisIndex:[0],
           showDataShadow: false,
-          width:15,
-          handleSize:20,
+          // width:15,
+          // handleSize:20,
           handleStyle:{
             color:'gray'
           }

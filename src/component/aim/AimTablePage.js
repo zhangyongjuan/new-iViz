@@ -262,6 +262,9 @@ class AimTablePage extends Component{
           interval:0
         },
         triggerEvent:true,
+        axisLabel:{
+          interval:0
+        }
       },
       series: [{
         data: this.state.spcYield,
