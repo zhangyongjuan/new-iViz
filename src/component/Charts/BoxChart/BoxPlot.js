@@ -4,6 +4,8 @@ import React from 'react';
 import echarts from 'echarts/lib/echarts';
 import { prepareBoxplotData } from 'echarts/extension/dataTool';
 import _ from 'lodash';
+import styles from "../HeatMapChart/index.less";
+import {Spin} from "antd";
 
 require('echarts/lib/chart/boxplot');
 
@@ -14,22 +16,44 @@ import('echarts/lib/component/legend');
 export default class BoxPlot extends React.Component {
   constructor(props) {
     super(props);
-    this.PieRef = React.createRef();
+    // this.PieRef = React.createRef();
   }
 
   componentDidMount() {
     this.initPie();
+    this.handleClick();
   }
 
   componentDidUpdate() {
     this.initPie();
+  }
+  shouldComponentUpdate(nextProps) {
+    if(JSON.stringify(nextProps) === JSON.stringify(this.props)) {
+      return false
+    }else {
+      return true
+    }
+  }
+
+  handleClick(){
+    const { clickBoxPlot } = this.props.params;
+    const myChart = echarts.init(this.PieRef);
+    if(clickBoxPlot){
+      //防止多次点击事件
+      if(myChart._$handlers.click){
+        myChart._$handlers.click.length = 0;
+      }
+      myChart.on('click', (e)=> {
+        clickBoxPlot(e);
+      })
+    }
   }
 
   initPie = () => {
     // 外部传入的data数据
     const { data } = this.props.params;
     // 初始化echarts
-    const myChart = echarts.init(this.PieRef.current);
+    const myChart = echarts.init(this.PieRef);
 
     // 我们要定义一个setPieOption函数将data传入option里面
     const options = this.setPieOption(this.transformData(data));
@@ -75,9 +99,9 @@ export default class BoxPlot extends React.Component {
       },
     },
     grid: {
-      left: '10%',
-      right: '10%',
-      bottom: '15%',
+      left: '4%',
+      right: '4%',
+      bottom: '10%',
     },
     xAxis: {
       type: 'category',
@@ -101,6 +125,12 @@ export default class BoxPlot extends React.Component {
         show: true,
       },
       scale: true,
+      min:function (value) {   //value是包含min和max的对象，分别表示数据的最大最小值，这个函数应该返回坐标轴的最小值
+        return value.min < data.low_limit ? value.min : data.low_limit;
+      },
+      max:function (value) {
+        return value.max > data.up_limit ? value.max : data.up_limit;
+      }
     },
     series: [
       {
@@ -146,6 +176,18 @@ export default class BoxPlot extends React.Component {
   });
 
   render() {
-    return <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>;
+    const { loading, title } = this.props.params;
+    // return <div ref={this.PieRef} style={{ width: '100%', height: '500px' }}/>;
+    return (
+      <Spin spinning={loading}>
+        <div className={styles.main}>
+          <div className={styles.chartTitle}>{title || ''}</div>
+          <div ref={(input) => {
+            this.PieRef = input;
+          }} style={{ width: '100%', height: '500px' }}/>
+        </div>
+
+      </Spin>
+    )
   }
 }

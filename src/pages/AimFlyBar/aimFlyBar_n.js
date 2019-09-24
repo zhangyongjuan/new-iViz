@@ -12,131 +12,20 @@ import HeatMapChart from '../../component/Charts/HeatMapChart'
 import { connect } from 'dva';
 import BasicLineChart from "../../component/Charts/LineChart";
 
-const { Option } = Select;
-
-const linshiData = [
-  {
-    'name': '08-01',
-    'upper': 2.3,
-    'q3': 1.8,
-    'q2': 1.5,
-    'q1': 1.4,
-    'low': 0.5,
-    'low_limit': 1.0,
-    'up_limit': 2.0,
-    'all': 100,
-    'err': 2,
-    'errData': [
-      0.5,
-      2.3,
-    ],
-  },
-  {
-    'name': '08-02',
-    'upper': 2.5,
-    'q3': 1.8,
-    'q2': 1.5,
-    'q1': 1.4,
-    'low': 0.6,
-    'low_limit': 1.0,
-    'up_limit': 2.0,
-    'all': 100,
-    'err': 3,
-    'errData': [
-      0.6,
-      0.65,
-      2.5,
-    ],
-  },
-  {
-    'name': '08-03',
-    'upper': 1.9,
-    'q3': 1.8,
-    'q2': 1.5,
-    'q1': 1.4,
-    'low': 0.2,
-    'low_limit': 1.0,
-    'up_limit': 2.0,
-    'all': 100,
-    'err': 4,
-    'errData': [
-      0.2,
-      0.8,
-      2.2,
-      2.3,
-    ],
-  },
-];
-
-//基于天数的不同颜色的良率对比-data
-const FlybarMapByColorAndLocation={
-  "title":'Overall Heatmap',
-  "rowList": [
-    {
-      "columns": [
-        {
-          "all": 1803,//总数
-          "defect": 0,
-          "yield": 0.1,//良率
-          "ng": 0,
-          "time": "4",//列名
-          "ok": 1803//好的
-        },
-        {
-          "all": 62,
-          "defect": 0,
-          "yield": 0.3,
-          "ng": 0,
-          "time": "5",
-          "ok": 62
-        }
-      ],
-      "rowName": "NDA",
-      "sumValue": 4
-    },
-    {
-      "columns": [
-        {
-          "all": 129,
-          "defect": 0,
-          "yield": 0.4,
-          "ng": 0,
-          "time": "4",
-          "ok": 129
-        },
-        {
-          "all": 111,
-          "defect": 0,
-          "yield": 0.4,
-          "ng": 0,
-          "time": "5",
-          "ok": 111
-        }
-      ],
-      "rowName": "Sparrow",
-      "sumValue": 5
-    }
-  ],
-  "columnsName": [
-    "4",
-    "5"
-  ]
-}
-
-
 @connect(({ global, FlyBar, loading }) => ({
   global,
   FlyBar,
   loading: loading.effects['FlyBar/getnewFlyBar'],
 }))
 class AimFlyBar_n extends React.Component {
-  state={
-    show2:false
-  }
   constructor(props) {
     super(props);
     this.state = {
       spc: '',
+      location:'',
+      clickStackBarByColorTime:-1,
+      clickHeatMapByColor:'',
+      clickBoxPlotOneDay:''
     };
   }
 
@@ -169,56 +58,9 @@ class AimFlyBar_n extends React.Component {
     });
   };
 
-  handleChangeSpc = (value) => {
-    this.setState({
-      spc: value,
-    });
-  };
-
-  transLineData = (data) => {
-    const newData = [];
-    const a = [1, 2, 4];
-    _.forEach(data, (k) => {
-      _.forEach(k.data, (h) => {
-        newData.push({ name: k.name, ...h });
-      });
-    });
-    return newData;
-  };
-
-  handleClickBar = (param) => {
-    console.log(param);
-    const { dispatch, global } = this.props;
-    const { topSelectItem } = global;
-    const { startTime, endTime } = global && global.dateTime;
-    const { spc } = this.state;
-    const { data } = param;
-    const { _origin = '' } = data || [];
-    // seriesName
-    // name
-    if (spc) {
-      if (param.shape.name === 'interval'&&_origin) {
-        dispatch({
-          type: 'FlyBar/getHangData',
-          payload: {
-            data: JSON.stringify({
-              startTime,
-              endTime,
-              mapping: { ...topSelectItem },
-              flyBar: _origin.type,
-              hang: _origin.company,
-              spc,
-            }),
-          },
-        });
-      }
-    } else {
-      message.warning('Please select Spc');
-    }
-  };
   //良率对比分析图被点击了
   clickOneDay=(param)=>{
-    console.log('柱子被点击了---',param);
+    // console.log('柱子被点击了---',param);
     //当前所选时间，当前时间08:00计算
     const currentTime = new Date(param.name).getTime() + 8*60*60*1000;
     const { dispatch, global } = this.props;
@@ -236,19 +78,120 @@ class AimFlyBar_n extends React.Component {
       },
     });
   }
-  //点击heatmap
-  clickHeatMap = (param)=>{
-    console.log('热力图被点击了---',param)
+  //点击color的stackbarlineChart
+  clickStackBarLineChart = (param)=>{
+    // console.log('堆积柱状折线图被点击了---',param);
+    //当前所选时间，当前时间08:00计算
+    const currentTime = new Date(param.name).getTime() + 8*60*60*1000;
+    const { dispatch, global } = this.props;
+    const { topSelectItem } = global;
+    const { startTime, endTime } = global && global.dateTime;
+    dispatch({
+      type: 'FlyBar/getOverallHeatmap',
+      payload: {
+        data: JSON.stringify({
+          startTime,
+          endTime,
+          mapping: { ...topSelectItem },
+          flyBarDay: currentTime,
+        }),
+      },
+    });
+    //当图3堆积柱子被点击时，图6的热力图不展示
+    this.setState({clickStackBarByColorTime:currentTime,clickHeatMapByColor:'',spc:'',location:'',clickBoxPlotOneDay:''});
+  }
+  //点击图5 heatmapY轴颜色字段名称
+  clickHeatMapByColor = (param)=>{
+    // console.log('图5热力图Color被点击了---',param);
+    const currentTime = this.state.clickStackBarByColorTime;
+    const { dispatch, global } = this.props;
+    const { topSelectItem } = global;
+    const { startTime, endTime } = global && global.dateTime;
+    dispatch({
+      type: 'FlyBar/getHeatMapByColor',
+      payload: {
+        data: JSON.stringify({
+          startTime,
+          endTime,
+          mapping: { ...topSelectItem },
+          flyBarDay: currentTime,
+          color:param.value
+        }),
+      },
+    });
+    this.setState({clickHeatMapByColor:param.value,spc:'',location:'',clickBoxPlotOneDay:''});
+  }
+  //点击图6 heatMap部分
+  clickHeatMapBySpcAndLocation =(param)=>{
+    // console.log('图6热力图被点击了--',param);
+  //  1、判断点击的x，y或者series部分
+    let typeStr = {},requestUrl = '';
+    let nowSpc='',nowLocation='';
+    const clickType = param.componentType;
+    if(clickType === 'yAxis'){
+      requestUrl = 'FlyBar/getCharBySpc';
+      typeStr.spc = param.value;
+      typeStr.color = this.state.clickHeatMapByColor;
+      nowSpc = param.value;
+    }else if(clickType === 'xAxis'){
+      requestUrl = 'FlyBar/getCharByLocation';
+      typeStr.location = param.value;
+      typeStr.color = this.state.clickHeatMapByColor;
+      nowLocation = param.value;
+    }else{
+      requestUrl = 'FlyBar/getCharBySpcAndLocation';
+      typeStr.location = param.name;
+      typeStr.spc = param.data.yAxisName;
+      typeStr.color = this.state.clickHeatMapByColor;
+      nowSpc = param.data.yAxisName;
+      nowLocation = param.name;
+    }
+  //  2、取值
+    const currentTime = this.state.clickStackBarByColorTime;
+    const { dispatch, global } = this.props;
+    const { topSelectItem } = global;
+    const { startTime, endTime } = global && global.dateTime;
+    dispatch({
+      type: requestUrl,
+      payload: {
+        data: JSON.stringify(Object.assign({},
+          {
+          startTime,
+          endTime,
+          mapping: { ...topSelectItem },
+          flyBarDay: currentTime,
+        },typeStr)),
+      },
+    });
+    this.setState({spc:nowSpc,location:nowLocation,clickBoxPlotOneDay:''});
+  }
+  //点击图8盒须图
+  clickBoxPlot = (param)=>{
+    // console.log('何须图被点击了》》》》',param);
+    //如果点击的图三某一天的柱子的话，图8的盒须图会受影响（只有一天的数据），所以此处的flyBarDay只认为是图8被点击的时间
+    const currentTime = new Date(param.name).getTime()+8*60*60*1000;
+    const color = this.state.clickHeatMapByColor;
+    const spc = this.state.spc;
+    const { dispatch, global } = this.props;
+    const { topSelectItem } = global;
+    const { startTime, endTime } = global && global.dateTime;
+    dispatch({
+      type: 'FlyBar/getBoxOneDay',
+      payload: {
+        data: JSON.stringify({
+          startTime,
+          endTime,
+          mapping: {...topSelectItem},
+          flyBarDay: currentTime,
+          color:color,
+          spc:spc
+        }),
+      },
+    });
+    this.setState({clickBoxPlotOneDay:param.name})
   }
   render() {
     const { FlyBar, loading } = this.props;
-    const { spc } = this.state;
-    const singleBarData = FlyBar && FlyBar.barBlockChart && FlyBar.barBlockChart.series && FlyBar.barBlockChart.series.length !== 0 && FlyBar.barBlockChart.series[0].data || [];
-    const seriesLineData = (FlyBar && FlyBar.barLineChart && FlyBar.barLineChart.lines || []);
-    const { spcs = [], guaBlockChart = [], Hang = [], barLineChart = [] } = FlyBar;
-    const { boxList = '' } = Hang;
-    const { timeList = [] } = barLineChart;
-    const { series = [] } = guaBlockChart;
     console.log(FlyBar);
 
     //new data
@@ -256,6 +199,11 @@ class AimFlyBar_n extends React.Component {
     const FlybarChartByColor = FlyBar && FlyBar.flybarChartByColor  || [];
     const flybarChartByLocation = FlyBar && FlyBar.flybarChartByLocation  || [];
     const flybarChartByOneDay = FlyBar && FlyBar.flybarChartByOneDay  || [];
+    const flybarMapByColorAndLocation = FlyBar && FlyBar.flybarMapByColorAndLocation || [];
+    const FlybarMapBySpcAndLocation = FlyBar && FlyBar.FlybarMapBySpcAndLocation || [];
+    const FlybarChartBySpc = FlyBar && FlyBar.FlybarChartBySpc || [];
+    const FlybarBoxBySpc = FlyBar && FlyBar.FlybarBoxBySpc || [];
+    const FlybarLastBox = FlyBar && FlyBar.FlybarLastBox || [];
     return (
       <div className={styles.main}>
 
@@ -300,7 +248,6 @@ class AimFlyBar_n extends React.Component {
               </div>
             ) : null
           }
-
         </div>
 
         {/* Color & Location */}
@@ -317,6 +264,7 @@ class AimFlyBar_n extends React.Component {
                   yAxis: 'value',
                   loading,
                   info:FlybarChartByColor || [],
+                  clickStackBar:this.clickStackBarLineChart
                 }}
               />
             </Col>
@@ -343,46 +291,95 @@ class AimFlyBar_n extends React.Component {
             <Col xl={12} lg={12} md={12} sm={12} xs={12}>
               <HeatMapChart
                 params={{
-                  data: FlybarMapByColorAndLocation || {},
-                  triggerEventX:true,
+                  data: flybarMapByColorAndLocation || {},
+                  triggerEventX:false,            //设置x，y，value是否可点击
                   triggerEventY:true,
+                  triggerEventSeries:false,
                   loading,
-                  title:FlybarMapByColorAndLocation.title,
-                  clickHeatMap:this.clickHeatMap
+                  title:flybarMapByColorAndLocation.title,
+                  clickHeatMap:this.clickHeatMapByColor,
                 }}
               />
             </Col>
-            {/*<Col xl={12} lg={12} md={12} sm={12} xs={12}>*/}
-            {/*  <StackBarLineChart*/}
-            {/*    params={{*/}
-            {/*      data: flybarChartByLocation.lines || {},*/}
-            {/*      dataZoomX:false,         //只有值为布尔值 true时才会显示*/}
-            {/*      dataZoomY:false,*/}
-            {/*      xAxis: 'time',*/}
-            {/*      yAxis: 'value',*/}
-            {/*      loading,*/}
-            {/*      info:flybarChartByLocation || [],*/}
-            {/*    }}*/}
-            {/*  />*/}
-            {/*</Col>*/}
+            {
+              FlybarMapBySpcAndLocation.length !==0 && this.state.clickHeatMapByColor !=='' ? (
+                <Col xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <HeatMapChart
+                    params={{
+                      data: FlybarMapBySpcAndLocation || {},
+                      triggerEventX:true,            //设置x，y，value是否可点击
+                      triggerEventY:true,
+                      triggerEventSeries:true,
+                      loading,
+                      title:FlybarMapBySpcAndLocation.title,
+                      clickHeatMap:this.clickHeatMapBySpcAndLocation,
+                    }}
+                  />
+                </Col>
+              ):null
+            }
+
           </Row>
         </div>
 
-        {/*<div className={styles.firstRow}>*/}
-        {/*  <p className={styles.headerTitle}> SPC Distribution Comparision By Rack</p>*/}
-        {/*  <div className={styles.lineChartGroup}>*/}
-        {/*    {*/}
-        {/*      spc && boxList ? (*/}
-        {/*        <BoxPlot*/}
-        {/*          params={{*/}
-        {/*            data: boxList || [],*/}
-        {/*          }}*/}
-        {/*        />*/}
-        {/*      ) : null*/}
-        {/*    }*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-
+        {/*  spc barChart & boxPlot */}
+        <div className={styles.firstRow}>
+          <p className={styles.headerTitle}>Failure Rate Trend And Distribution Comparison</p>
+          <Row gutter={48} type="flex">
+            {
+              FlybarChartBySpc.length !== 0 && (this.state.spc !=='' || this.state.location !== '')? (
+                <Col xl={12} lg={12} md={12} sm={12} xs={12}>
+                  <BasicLineChart
+                    params={{
+                      data: FlybarChartBySpc.lines || [],
+                      dataZoomX:false,         //只有值为布尔值 true时才会显示
+                      dataZoomY:false,
+                      xAxis: 'time',
+                      yAxis: 'value',
+                      loading,
+                      title:FlybarChartBySpc.title,
+                      // clickBar:this.clickOneDay
+                    }}
+                  />
+                </Col>
+              ):null
+            }
+            {
+              FlybarBoxBySpc.length !==0 && this.state.spc !=='' ?(
+                  <Col xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <BoxPlot
+                      params={{
+                        data: FlybarBoxBySpc.boxList || [],
+                        loading,
+                        title:FlybarBoxBySpc.title,
+                        clickBoxPlot:this.clickBoxPlot
+                      }}
+                    />
+                  </Col>
+              ):null
+            }
+          </Row>
+          {/* last boxPlot */}
+          {
+            FlybarLastBox.length !== 0 && this.state.clickBoxPlotOneDay !=='' ? (
+              <Row gutter={48} type="flex">
+                {
+                  FlybarLastBox.length !== 0 ? (
+                    <Col xl={24} lg={24} md={24} sm={24} xs={24}>
+                      <BoxPlot
+                        params={{
+                          data: FlybarLastBox.boxList || [],
+                          loading,
+                          title:FlybarLastBox.title
+                        }}
+                      />
+                    </Col>
+                  ):null
+                }
+              </Row>
+            ):null
+          }
+        </div>
       </div>
     );
   }

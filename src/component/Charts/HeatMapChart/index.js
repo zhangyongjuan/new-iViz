@@ -27,14 +27,15 @@ export default class HeatMapChart extends React.Component {
 
   componentDidMount() {
     this.initPie();
+    this.handleClick();
   }
 
   componentDidUpdate() {
-    this.initPie();
-    this.handleClick();
+    this.setState({xHideAxis: [], yHideAxis: []},this.initPie);
+    // this.initPie();
   }
   shouldComponentUpdate(nextProps) {
-    if(JSON.stringify(nextProps) == JSON.stringify(this.props)) {
+    if(JSON.stringify(nextProps) === JSON.stringify(this.props)) {
       return false
     }else {
       return true
@@ -42,81 +43,90 @@ export default class HeatMapChart extends React.Component {
   }
 
   handleClick = () => {
-    const { clickHeatMap } = this.props.params;
+    // this.setState({xHideAxis: [], yHideAxis: []});
+    //设置X，Y，value区间是否可点击
+    const { clickHeatMap ,triggerEventX,triggerEventY,triggerEventSeries} = this.props.params;
     const myChart = echarts.init(this.PieRef);
     if(clickHeatMap){
-      const xHightLight= [].concat(this.state.xAxis);
-      const yHightLight = [].concat(this.state.yAxis);
       //防止多次点击事件
       if(myChart._$handlers.click){
         myChart._$handlers.click.length = 0;
       }
       myChart.on('click', (e)=> {
-        clickHeatMap(e);
-      //
-        if(e.componentType === 'xAxis' || e.componentType === 'series'){
-          if(e.componentType === 'xAxis'){
-            //1.改变背景颜色
-            for (var i = 0; i < xHightLight.length; i++) {        //对应的x轴背景变色
-              if (e.value === this.state.xAxis[i]) {
-                xHightLight[i] = e.value;
-                // this.setState({xHideAxis[i]})
-              }
-              else {
-                xHightLight[i] = '';
-              }
-            }
-            //y轴若有选中状态，则取消，变为全未选中状态
-            for (var k = 0; k < yHightLight.length; k++) {
-              yHightLight[k] = '';
-            }
-          }
-          else{              //点击的值
-            for (var m = 0; m < xHightLight.length; m++) {            // 对应的x轴背景变红色
-              if (e.name === this.state.xAxis[m]) {
-                xHightLight[m] = e.name;
-              }
-              else {
-                xHightLight[m] = '';
-              }
-            }
-            for (var n = 0; n < yHightLight.length; n++) {        // 对应的y轴背景变红色
-              if (e.value[1] === n) {
-                yHightLight[n] = this.state.yAxis[n];
-              }
-              else {
-                yHightLight[n] = '';
-              }
-            }
-          }
+       if(triggerEventX !==true && triggerEventY !==true && triggerEventSeries !==true){
+         return false;
+       }else {
+         const flag = this.changeHeatMapStyle(e);
+         if(flag !== false){
+           clickHeatMap(e);
+         }
+
         }
-        else if(e.componentType === 'yAxis'){
-          for (var j = 0; j < yHightLight.length; j++) {    //y轴对应字段背景变色
-            if (e.value === this.state.yAxis[j]) {
-              yHightLight[j] = e.value;
-            }
-            else {
-              yHightLight[j] = '';
-            }
-          }
-          //x轴若有选中状态，则取消，变为全未选中状态
-          for (var k = 0; k < xHightLight.length; k++) {
-            xHightLight[k] = '';
-          }
-        }
-        this.setState({xHideAxis:xHightLight,yHideAxis:yHightLight},this.initPie)
       });
     }
   };
+  // 点击热力图后，需要更改x，y轴的背景颜色
+  changeHeatMapStyle = (e)=>{
+    const { triggerEventX,triggerEventY,triggerEventSeries} = this.props.params;
+    const xHightLight= this.state.xAxis.map((v,i)=>{return ''});
+    const yHightLight = this.state.yAxis.map((v,i)=>{return ''});
+    if(triggerEventX === true && e.componentType === 'xAxis'){        // X轴设置可点击，且点击的是X轴
+      //1.改变背景颜色
+      for (var i = 0; i < xHightLight.length; i++) {        //对应的x轴背景变色
+        if (e.value === this.state.xAxis[i]) {
+          xHightLight[i] = e.value;
+        } else {
+          xHightLight[i] = '';
+        }
+      }
+      //y轴若有选中状态，则取消，变为全未选中状态
+      for (var o = 0; o < yHightLight.length; o++) {
+        yHightLight[o] = '';
+      }
+    }
+    else if(triggerEventY === true && e.componentType === 'yAxis'){    // X轴设置可点击，且点击的是X轴
+      for (var j = 0; j < yHightLight.length; j++) {    //y轴对应字段背景变色
+        if (e.value === this.state.yAxis[j]) {
+          yHightLight[j] = e.value;
+        } else {
+          yHightLight[j] = '';
+        }
+      }
+      //x轴若有选中状态，则取消，变为全未选中状态
+      for (var k = 0; k < xHightLight.length; k++) {
+        xHightLight[k] = '';
+      }
+    }
+    else if(triggerEventSeries === true && e.componentType === 'series'){       // 值设置可点击，且点击的是value
+      for (var m = 0; m < xHightLight.length; m++) {            // 对应的x轴背景变红色
+        if (e.name === this.state.xAxis[m]) {
+          xHightLight[m] = e.name;
+        } else {
+          xHightLight[m] = '';
+        }
+      }
+      for (var n = 0; n < yHightLight.length; n++) {        // 对应的y轴背景变红色
+        if (e.value[1] === n) {
+          yHightLight[n] = this.state.yAxis[n];
+        } else {
+          yHightLight[n] = '';
+        }
+      }
+    }
+    else{
+      return false;
+    }
+    this.setState({xHideAxis:xHightLight,yHideAxis:yHightLight},this.initPie);
+  }
 
   initPie = () => {
     // 外部传入的data数据
-    const { data,triggerEventX, triggerEventY} = this.props.params;
+    const { data,triggerEventX, triggerEventY,triggerEventSeries} = this.props.params;
     // 初始化echarts
     const myChart = echarts.init(this.PieRef);
 
     // 我们要定义一个setPieOption函数将data传入option里面
-    const options = this.setPieOption(this.transformData(data,triggerEventX, triggerEventY));
+    const options = this.setPieOption(this.transformData(data,triggerEventX, triggerEventY,triggerEventSeries));
     // 设置options
     myChart.setOption(options);
 
@@ -125,13 +135,13 @@ export default class HeatMapChart extends React.Component {
     });
   };
 
-  transformData = (data,triggerEventX, triggerEventY) => {
-    console.log('热力图原始数据》》》》》',data);
+  transformData = (data,triggerEventX, triggerEventY,triggerEventSeries) => {
     //热力图的数据结构为[0,0,5],即[x轴坐标，y轴坐标，值]的格式，且从左下角[0,0]开始画图
     const newData = {
       //是否可以点击
       triggerEventX:triggerEventX,
       triggerEventY:triggerEventY,
+      triggerEventSeries:triggerEventSeries,
       seriesData:[],
       // tooltipContent:[],
       sumYield:[],
@@ -148,30 +158,28 @@ export default class HeatMapChart extends React.Component {
       newData.sumYield.push(dataset.sumValue);
     //  2.toolTip显示的内容  数值/总数
       _.forEach(dataset.columns,(d,i)=>{
-        const oneNumber = {};
-        const defectyield = (d.yield*100).toFixed(2);
-        oneNumber.tooltipContent=`${d.ng} / ${d.all}`;   //toolTip显示的内容
-        oneNumber.value = [i,index,defectyield];
-        newData.seriesData.push(oneNumber);
+        if(d.defect !== null){
+          const oneNumber = {};
+          const defectyield = (d.defect*100).toFixed(2);
+          oneNumber.tooltipContent=`${d.ng} / ${d.all}`;   //toolTip显示的内容
+          oneNumber.value = [i,index,defectyield];
+          // 因为点击series时，得不到对应的Y轴名称，因此需要把对应的Y轴名称加上
+          oneNumber.yAxisName = dataset.rowName;
+          newData.seriesData.push(oneNumber);
+        }
+
       })
     });
-    //  隐藏的x和y轴
-    // let x = [], y =[];
-    // x = newData.xAxis.map((v,i)=>{
-    //   return ''
-    // });
-    // y = newData.yAxis.map((v,i)=>{
-    //   return ''
-    // });
     this.setState({xAxis: newData.xAxis, yAxis: newData.yAxis});
-    console.log('heatmap newData》》》',newData);
     return newData;
   };
 
   // 一个基本的echarts图表配置函数
   setPieOption = data => ({
     tooltip: {
-      position: 'bottom',
+      position: function (pos, params, dom, rect, size) {
+        return [ pos[0]+10,pos[1]+10];
+      },
       backgroundColor:'#fff',
       textStyle:{
         color:'#000',
@@ -213,7 +221,7 @@ export default class HeatMapChart extends React.Component {
       },
       {
         //不能点击的话不显示折叠的x轴
-        show:data.triggerEventX,
+        show:data.triggerEventSeries !== true ? data.triggerEventX : data.triggerEventSeries,
         type: 'category',
         data: this.state.xHideAxis,
         axisTick:{
@@ -263,7 +271,7 @@ export default class HeatMapChart extends React.Component {
       },
       {
         //不能点击的话不显示折叠的y轴
-        show:data.triggerEventY,
+        show:data.triggerEventSeries !== true ? data.triggerEventY : data.triggerEventSeries,
         type: 'category',
         data: this.state.yHideAxis,
         axisTick:{

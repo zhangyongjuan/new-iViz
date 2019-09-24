@@ -390,7 +390,7 @@ class Comparative extends Component{
     boxplotchart.setOption(boxplotOption);
   }
   render(){
-    const stationL = this.state.station.length;
+    const stationL = this.state.station.length || [];
     return(
       <div style={{paddingBottom:'20px'}}>
         {/* select station and spc */}

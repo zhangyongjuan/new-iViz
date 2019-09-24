@@ -1,4 +1,6 @@
-import { fetchFlyBarData, fetchIMBox, fetchSBBox, fetchHangData,fetchNewFlyBarData ,fetchNewOneDayFlyBarData} from '@/services/api';
+import { fetchFlyBarData, fetchIMBox, fetchSBBox, fetchHangData,fetchNewFlyBarData ,
+  fetchNewOneDayFlyBarData,fetchNewOverallHeatmapData,fetchNewHeatMapByColor,
+  fetchCharBySpc,fetchCharByLocation,fetchCharBySpcAndLocation,fetchBoxPlotOneDay} from '@/services/api';
 
 export default {
   namespace: 'FlyBar',
@@ -54,6 +56,54 @@ export default {
         payload: response,
       });
     },
+  //  getOverallHeatmap
+    * getOverallHeatmap({ payload }, { call, put }) {
+      const response = yield call(fetchNewOverallHeatmapData, payload);
+      yield put({
+        type: 'saveNewOverallHeatmapData',
+        payload: response,
+      });
+    },
+  //  getHeatMapByColor
+    * getHeatMapByColor({ payload }, { call, put }) {
+      const response = yield call(fetchNewHeatMapByColor, payload);
+      yield put({
+        type: 'saveHeatMapByColorData',
+        payload: response,
+      });
+    },
+  //  getCharBySpc  点击热力图Y轴spc
+    * getCharBySpc({ payload }, { call, put }) {
+      const response = yield call(fetchCharBySpc, payload);
+      yield put({
+        type: 'saveChartBySpcData',
+        payload: response,
+      });
+    },
+  //  getCharByLocation
+    * getCharByLocation({ payload }, { call, put }) {
+      const response = yield call(fetchCharByLocation, payload);
+      yield put({
+        type: 'saveChartByLocationData',
+        payload: response,
+      });
+    },
+  //  getCharBySpcAndLocation
+    * getCharBySpcAndLocation({ payload }, { call, put }) {
+      const response = yield call(fetchCharBySpcAndLocation, payload);
+      yield put({
+        type: 'saveCharBySpcAndLocationData',
+        payload: response,
+      });
+    },
+  //  getBoxOneDay(last boxPlot chart)
+    * getBoxOneDay({ payload }, { call, put }) {
+      const response = yield call(fetchBoxPlotOneDay, payload);
+      yield put({
+        type: 'saveBoxPlotOneDayData',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -95,5 +145,48 @@ export default {
         flybarChartByOneDay:{...payload},
       };
     },
+  //  saveNewOverallHeatmapData
+    saveNewOverallHeatmapData(state, { payload }) {
+      return {
+        ...state,
+        flybarMapByColorAndLocation:{...payload},
+      };
+    },
+  //  saveHeatMapByColorData
+    saveHeatMapByColorData(state, { payload }) {
+      return {
+        ...state,
+        FlybarMapBySpcAndLocation:{...payload},
+      };
+    },
+  //  saveChartBySpcData
+    saveChartBySpcData(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+  //saveChartByLocationData
+    saveChartByLocationData(state, { payload }) {
+      return {
+        ...state,
+        FlybarChartBySpc:{...payload},
+      };
+    },
+  //  saveCharBySpcAndLocationData
+    saveCharBySpcAndLocationData(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+  //saveBoxPlotOneDayData
+    saveBoxPlotOneDayData(state, { payload }) {
+      return {
+        ...state,
+        FlybarLastBox:{...payload},
+      };
+    },
+
   },
 };

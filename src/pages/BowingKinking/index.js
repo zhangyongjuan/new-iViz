@@ -170,6 +170,8 @@ class BowingKinking extends React.Component {
                   <BoxPlot
                     params={{
                       data: IMBox.boxList || [],
+                      loading,
+                      title:''
                     }}
                   />
                 ) : null
@@ -181,6 +183,8 @@ class BowingKinking extends React.Component {
                   <BoxPlot
                     params={{
                       data: SBBox.boxList || [],
+                      loading,
+                      title:''
                     }}
                   />
                 ):null

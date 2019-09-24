@@ -21,13 +21,22 @@ export default class StackBarLineChart extends React.Component {
 
   componentDidMount() {
     this.initPie();
+    this.handleClick();
   }
-
+  handleClick = () => {
+    const { clickStackBar } = this.props.params;
+    const myChart = echarts.init(this.PieRef);
+    if(clickStackBar){
+      myChart.on('click', function(param) {
+        clickStackBar(param);
+      });
+    }
+  };
   componentDidUpdate() {
     this.initPie();
   }
   shouldComponentUpdate(nextProps) {
-    if(JSON.stringify(nextProps) == JSON.stringify(this.props)) {
+    if(JSON.stringify(nextProps) === JSON.stringify(this.props)) {
       return false
     }else {
       return true

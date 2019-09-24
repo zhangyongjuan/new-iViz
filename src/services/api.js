@@ -93,3 +93,50 @@ export async function fetchNewOneDayFlyBarData(params) {
     requestType: 'form',
   });
 }
+//fetchNewOverallHeatmapData
+export async function fetchNewOverallHeatmapData(params) {
+  return request('/api/story/getHeatMap', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+//fetchNewHeatMapByColor
+export async function fetchNewHeatMapByColor(params) {
+  return request('/api/story/getHeatMapByColor', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+//fetchNewChartBySpc
+export async function fetchCharBySpc(params) {
+  return request('/api/story/getCharBySpc', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+export async function fetchCharByLocation(params) {
+  return request('/api/story/getCharByLocation', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+//fetchCharBySpcAndLocation
+export async function fetchCharBySpcAndLocation(params) {
+  return request('/api/story/getCharBySpcAndLocation', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
+//fetchBoxPlotOneDay
+export async function fetchBoxPlotOneDay(params) {
+  return request('/api/story/getBoxOneDay', {
+    method: 'POST',
+    data: params,
+    requestType: 'form',
+  });
+}
