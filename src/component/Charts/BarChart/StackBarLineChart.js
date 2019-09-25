@@ -131,13 +131,15 @@ export default class StackBarLineChart extends React.Component {
         type: 'shadow',        // 默认为直线，可选为：'line' | 'shadow'
       },
       formatter: function(param, index) {
-        // console.log(param)
-        return [
-          param[0].axisValue,
-          'Pass: ' + param[0].value,
-          'Fail: ' + param[1].value,
-          param[2].value === 0 ? `Failure Rate：0` : `Failure Rate：${(Number(param[2].value) * 100).toFixed(2)}%`,
-        ].join('<br/>');
+        // console.log(param);
+        let str = `<div>${param[0].axisValue}</div>` ;
+        _.forEach(param,data=>{
+          let value = '';
+          value = (data.seriesType === 'line' ? (!!data.value ? (data.value *100).toFixed(2) +'%' :'-') : data.value);
+          str += `<div><span style="background:${data.color};width:10px;height:10px;display: inline-block;border-radius: 5px" ></span>
+              <span>${data.seriesName}: ${ value }</span></div>`
+        })
+        return str;
       },
     },
     grid: {

@@ -99,8 +99,8 @@ export default class BoxPlot extends React.Component {
       },
     },
     grid: {
-      left: '4%',
-      right: '4%',
+      left: '10%',
+      right: '5%',
       bottom: '10%',
     },
     xAxis: {
@@ -141,11 +141,11 @@ export default class BoxPlot extends React.Component {
           formatter: function(param) {
             return [
               'name：' + param.name,
-              'upper: ' + param.data[5],
-              'Q3: ' + param.data[4],
-              'median: ' + param.data[3],
-              'Q1: ' + param.data[2],
-              'lower: ' + param.data[1],
+              'upper: ' + param.data[5].toFixed(2),
+              'Q3: ' + param.data[4].toFixed(2),
+              'median: ' + param.data[3].toFixed(2),
+              'Q1: ' + param.data[2].toFixed(2),
+              'lower: ' + param.data[1].toFixed(2),
             ].join('<br/>');
           },
         },

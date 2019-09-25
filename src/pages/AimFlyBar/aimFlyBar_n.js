@@ -21,6 +21,7 @@ class AimFlyBar_n extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      ChartByOneDay:'',
       spc: '',
       location:'',
       clickStackBarByColorTime:-1,
@@ -33,6 +34,7 @@ class AimFlyBar_n extends React.Component {
     const { dateTime, topSelectItem } = this.props.global;
     if (!(_.isEqual(dateTime, nextProps.global.dateTime) && _.isEqual(topSelectItem, nextProps.global.topSelectItem))) {
       this.getFlyBarChart(nextProps.global.dateTime, nextProps.global.topSelectItem);
+      this.setState({ChartByOneDay:'',spc:'',location:'',clickStackBarByColorTime:-1,clickHeatMapByColor:'',clickBoxPlotOneDay:''})
     }
   }
 
@@ -77,6 +79,7 @@ class AimFlyBar_n extends React.Component {
         }),
       },
     });
+    this.setState({ChartByOneDay:param.name})
   }
   //点击color的stackbarlineChart
   clickStackBarLineChart = (param)=>{
@@ -227,7 +230,7 @@ class AimFlyBar_n extends React.Component {
             </Col>
           </Row>
           {
-            flybarChartByOneDay.length !==0 ? (
+            flybarChartByOneDay.length !==0 && this.state.ChartByOneDay !== ''? (
               <div className={styles.firstRow}>
                 <p className={styles.headerTitle}>Failure Rate Comparison By Flight Bar</p>
                 <Row gutter={48} type="flex">
