@@ -141,7 +141,7 @@ class AimFlyBar_n extends React.Component {
       typeStr.location = param.value;
       typeStr.color = this.state.clickHeatMapByColor;
       nowLocation = param.value;
-    }else{
+    }else{     //点击value值
       requestUrl = 'FlyBar/getCharBySpcAndLocation';
       typeStr.location = param.name;
       typeStr.spc = param.data.yAxisName;
@@ -170,7 +170,9 @@ class AimFlyBar_n extends React.Component {
   }
   //点击图8盒须图
   clickBoxPlot = (param)=>{
-    // console.log('何须图被点击了》》》》',param);
+    if(this.state.location !== '')
+      return;
+    console.log('何须图被点击了》》》》',param);
     //如果点击的图三某一天的柱子的话，图8的盒须图会受影响（只有一天的数据），所以此处的flyBarDay只认为是图8被点击的时间
     const currentTime = new Date(param.name).getTime()+8*60*60*1000;
     const color = this.state.clickHeatMapByColor;
@@ -223,7 +225,7 @@ class AimFlyBar_n extends React.Component {
                   xAxis: 'time',
                   yAxis: 'value',
                   loading,
-                  title:flybarChartByDay.title,
+                  title:'',
                   clickBar:this.clickOneDay
                 }}
               />
@@ -243,7 +245,7 @@ class AimFlyBar_n extends React.Component {
                         xAxis: 'time',
                         yAxis: 'value',
                         loading,
-                        title:flybarChartByOneDay.title,
+                        title:'',
                       }}
                     />
                   </Col>
@@ -355,7 +357,7 @@ class AimFlyBar_n extends React.Component {
                         data: FlybarBoxBySpc.boxList || [],
                         loading,
                         title:FlybarBoxBySpc.title,
-                        clickBoxPlot:this.clickBoxPlot
+                        clickBoxPlot:this.state.location !== '' ? null : this.clickBoxPlot
                       }}
                     />
                   </Col>

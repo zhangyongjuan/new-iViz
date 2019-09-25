@@ -18,11 +18,21 @@ const reactiveTableColumn = [
   },{
     title:<Popover content={ToolTips('summaryPage','table','th2')} ><span>First Pass Yield</span></Popover>,
     key:'firstPass',
-    dataIndex:'firstPass'
+    dataIndex:'firstPass',
+    render:(text,record)=>record.minFirstPassYield === true ?(
+      <span style={{color:'red'}}>{text}</span>
+    ):(
+      <span>{text}</span>
+    )
   },{
     title:<Popover content={ToolTips('summaryPage','table','th3')}><span>Final Pass Yield</span></Popover>,
     key:'finalPass',
-    dataIndex:'finalPass'
+    dataIndex:'finalPass',
+    render:(text,record)=>record.minFinalPassYield === true ?(
+      <span style={{color:'red'}}>{text}</span>
+    ):(
+      <span>{text}</span>
+    )
   },{
     title:<Popover content={ToolTips('summaryPage','table','th4')}><span>Input</span></Popover>,
     key:'input',
@@ -86,7 +96,19 @@ class SummaryPage extends Component{
         // console.log('总结页的数据====', data);
         //整理表格数据，并按照station的固定顺序显示，鸡肋的功能
         const newStation = [];
+        const minFirstPassYield = Math.min.apply(Math, data.stationYileds.map(function(o) {return o.firstPass}));
+        const minFinalPassYield = Math.min.apply(Math, data.stationYileds.map(function(o) {return o.finalPass}));
         data.stationYileds.map((item, i) => {
+          if(item.firstPass === minFirstPassYield){
+            item.minFirstPassYield = true;
+          }else{
+            item.minFirstPassYield = false;
+          }
+          if(item.finalPass === minFinalPassYield){
+            item.minFinalPassYield = true;
+          }else{
+            item.minFinalPassYield = false;
+          }
           item.firstPass = (item.firstPass * 100).toFixed(2) + '%';
           item.finalPass = (item.finalPass * 100).toFixed(2) + '%';
           item.key = i;

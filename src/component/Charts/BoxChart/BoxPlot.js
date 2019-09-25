@@ -26,6 +26,7 @@ export default class BoxPlot extends React.Component {
 
   componentDidUpdate() {
     this.initPie();
+    this.handleClick();
   }
   shouldComponentUpdate(nextProps) {
     if(JSON.stringify(nextProps) === JSON.stringify(this.props)) {
