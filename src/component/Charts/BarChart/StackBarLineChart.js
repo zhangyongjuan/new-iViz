@@ -48,6 +48,8 @@ export default class StackBarLineChart extends React.Component {
     const { data ,dataZoomX, dataZoomY,info} = this.props.params;
     // 初始化echarts
     const myChart = echarts.init(this.PieRef);
+    //清除旧图
+    myChart.clear();
 
     // 我们要定义一个setPieOption函数将data传入option里面
     const options = this.setPieOption(this.transformData(data,dataZoomX, dataZoomY,info));
@@ -104,7 +106,7 @@ export default class StackBarLineChart extends React.Component {
       lineSeries.name=`${index}_line`;
       _.forEach(dataset,(d)=>{
         barSeries.data.push(d.all);
-        lineSeries.data.push(d.yield);
+        lineSeries.data.push(d.defect);
 
       })
       newData.series.push(barSeries);
@@ -115,7 +117,7 @@ export default class StackBarLineChart extends React.Component {
       newData.yInput.min =0;
       newData.yInput.max = params.maxY;
       newData.yRate.min = 0;
-      newData.yRate.max = params.maxYield;
+      newData.yRate.max = params.maxDefect;
     //  x轴字段
       newData.xAxis = params.timeList
     }
