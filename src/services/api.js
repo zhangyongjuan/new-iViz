@@ -79,7 +79,7 @@ export async function fetchHangData(params) {
 
 //new fight bar page
 export async function fetchNewFlyBarData(params) {
-  return request('/api/story/getFlyBar', {
+  return request('/api/story/getFlyBarOneColor', {
     method: 'POST',
     data: params,
     requestType: 'form',

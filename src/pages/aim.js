@@ -22,6 +22,7 @@ class AIM extends Component{
         <TimeRange />
         <div>
           <Tabs onChange={this.callback} type="card">
+
             <TabPane key="1" tab={<span><Icon type="table" />AIM Dashboard</span>}>
               <AimTablePage />
             </TabPane>
@@ -40,7 +41,7 @@ class AIM extends Component{
             {/*<TabPane key="6" tab={<span><Icon type="stock" />Color_Flight_Bar_Module</span>}>*/}
             {/*  <AimFlyBar />*/}
             {/*</TabPane>*/}
-            <TabPane key="7" tab={<span><Icon type="stock" />Color_Flight_Bar_Module_new</span>}>
+            <TabPane key="7" tab={<span><Icon type="stock" />Color_Flight_Bar_Module</span>}>
               <AimFlyBar_n />
             </TabPane>
           </Tabs>

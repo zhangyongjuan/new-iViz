@@ -49,6 +49,7 @@ class NewHeader extends Component {
       title6:'',
       title7:'',
       spcId:'',
+      title0:'OK/NG',
       title1:'Distribution/Yield',     //后面需求是条件一和二顺序调换，所以title序号反过来
       title2:'Station',
       title3:'SPC',
@@ -56,6 +57,7 @@ class NewHeader extends Component {
       title4:'condition4',
       category:'',
 
+      select0:[],
       select1:[],
       select2:[],
       select3:[],
@@ -117,6 +119,7 @@ class NewHeader extends Component {
   }
   test(){
     let alloption = {};
+    alloption.okng = this.state.select0;
     alloption.condition1 = this.state.select1;
     alloption.condition2 = this.state.select2;
     alloption.condition3 = this.state.select3;
@@ -125,8 +128,15 @@ class NewHeader extends Component {
     alloption.condition5 = this.state.select5;
     alloption.condition6 = this.state.select6;
     alloption.condition7 = this.state.select7;
-    // console.log('将要传回去画图的值---',alloption);
+    console.log('将要传回去画图的值---',alloption);
     this.turnData(alloption)
+  }
+  handleMenuClick0 = e=>{
+    console.log('条件0被点击项-------',e);
+    const d0 = [];
+    const key = e.key;
+    d0.push(key);
+    this.setState({select0:d0,title0:key},this.test)
   }
   handleMenuClick1 = e=>{
     // console.log('条件1被点击项-------',e);
@@ -229,16 +239,15 @@ class NewHeader extends Component {
       data:container
     })
       .then(data=>{
-        // console.log('c4-----',data)
+        console.log('c4-----',data);
         if(data.aimIps.length !== 0){
-          this.setState({condition4D:data.aimIps,select4:data.aimIps})
+          this.setState({condition4D:data.aimIps,select4:data.aimIps})   //选择cnc和spm时，条件4为单选
         }else if(data.lines.length !== 0){
           this.setState({condition4D:data.lines,select4:data.lines})
         }else if(data.shifts.length !== 0){
           this.setState({condition4D:data.shifts,select4:data.shifts})
-        } else if(data.spms.length !== 0){
-          this.setState({condition4D:data.spms,select4:data.spms})
-        } else{
+        }
+        else{
           this.setState({checkedList4:[],plainOptions4:[]})
         }
         this.setState({condition4:data});
@@ -272,16 +281,16 @@ class NewHeader extends Component {
       data:container
     })
       .then((data)=>{
-        // console.log('newCondition5========',data);
+        console.log('newCondition5========',data);
         this.setState({condition5:data})
-        data.machines && data.machines.length !== 0 ? this.setState({condition5D:data.machines}):
-          this.setState({condition5D:data.spms})
+        data.machines && data.machines.length !== 0 ? this.setState({condition5D:data.machines,plainOptions5:data.machines,checkedList5:data.machines}):
+          this.setState({condition5D:data.spms,plainOptions5:data.spms,checkedList5:data.spms})
         // console.log('5D====',this.state.condition5D);
-        let arr = data.machines;
-        this.setState({plainOptions5:arr,checkedList5:arr,select5:this.state.condition5D});
-        d4.con5=this.state.condition5.machines;
+        this.setState({select5:this.state.condition5D});
+        d4.con5=data.machines.length !== 0 ? data.machines : data.spms;
         container.data = JSON.stringify(d4);
-        this.getcondition6(container)
+        this.getcondition6(container);
+
       })
   };
   handleMenuClick5 = e=>{
@@ -306,13 +315,12 @@ class NewHeader extends Component {
       .then((data)=>{
         // console.log('newCondition6========',data);
         this.setState({condition6:data});
-        this.state.condition6.machines && this.state.condition6.machines.length !== 0 ? this.setState({condition6D:this.state.condition6.machines}) :
-          this.setState({condition6D:this.state.condition6.spms})
+        this.state.condition6.machines && this.state.condition6.machines.length !== 0 ? this.setState({condition6D:this.state.condition6.machines,plainOptions6:data.machines,checkedList6:data.machines}) :
+          this.setState({condition6D:this.state.condition6.spms,plainOptions6:data.spms,checkedList6:data.spms})
         // console.log('6D====',this.state.condition6D);
-        let arr = this.state.condition6D;
-        this.setState({plainOptions6:arr,checkedList6:arr,select6:this.state.condition6D})
+        this.setState({select6:this.state.condition6D})
 
-        d5.con6=this.state.condition6.spms;
+        d5.con6=data.spms.length !== 0 ?data.spms : data.machines;
         container.data = JSON.stringify(d5);
         this.getcondition7(container)
       })
@@ -457,9 +465,21 @@ class NewHeader extends Component {
         // if(data.title === 'Mc'){
         //   this.setState({title6:data.title});
         // }
-        this.setState({plainOptions6:arr,checkedList6:arr,select6:this.state.condition6D},this.test)
+        this.setState({plainOptions6:arr,checkedList6:arr,select6:this.state.condition6D},this.test);
+
+        //  如果是spm,则需要请求条件7
+        if(this.state.title3_4 === 'SPM'){
+          const newContainer = {};
+          const oldReq = container.data;
+          const reqData = JSON.parse(oldReq);
+          reqData.con6=data.spms;
+          newContainer.data = JSON.stringify(reqData);
+          this.getcondition7(newContainer);
+        }
+
       })
   }
+
   onCheckAllChange6 = e => {
     this.setState({
       checkedList6: e.target.checked ? this.state.plainOptions6 : [],
@@ -529,6 +549,13 @@ class NewHeader extends Component {
     const isHidecondition5 = this.state.isHidecondition5;
     const isHidecondition6 = this.state.isHidecondition6;
     const isHidecondition7 = this.state.isHidecondition7;
+    const menu0 = (
+      <Menu onClick={this.handleMenuClick0} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
+        <Menu.Item key='ALL'>ALL</Menu.Item>
+        <Menu.Item key='OK'>OK</Menu.Item>
+        <Menu.Item key='NG'>NG</Menu.Item>
+      </Menu>
+    );
     const menu1 = (
       <Menu onClick={this.handleMenuClick1} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
         {
@@ -563,7 +590,7 @@ class NewHeader extends Component {
       </Menu>
     );
     const menu4 = (
-      this.state.condition4.machines && this.state.condition4.machines.length ===0 ?(
+      this.state.condition4.machines && this.state.condition4.machines.length ===0 && this.state.condition4.spms.length ===0 ?(
           <div style={{maxHeight:'300px',overflowY:'scroll'}}>
             <Checkbox
               indeterminate={this.state.indeterminate4}
@@ -580,11 +607,15 @@ class NewHeader extends Component {
         ):
         <Menu onClick={this.handleMenuClick4} selectable style={{maxHeight:'300px',overflowY:'scroll'}}>
           {
-            this.state.condition4.machines ?(
+            this.state.condition4.machines && this.state.condition4.machines.length !==0 ?(
               this.state.condition4.machines.map((v,i)=>
                 <Menu.Item key={v} num={v}>{v}</Menu.Item>
               )
-            ):''
+            ):this.state.condition4.spms && this.state.condition4.spms.length !==0 ?(
+              this.state.condition4.spms.map((v,i)=>
+                <Menu.Item key={v} num={v}>{v}</Menu.Item>
+              )
+            ):null
           }
         </Menu>
     );
@@ -637,7 +668,7 @@ class NewHeader extends Component {
                              onChange={this.onChange6}
               />
             </div>
-            : ''
+            : null
         }
       </div>
     );
@@ -674,6 +705,13 @@ class NewHeader extends Component {
     );
     return (
       <ul id='headerItems'>
+        <Dropdown
+          overlay={menu0}
+        >
+          <li className="ant-dropdown-link">
+            {this.state.title0} <Icon type="down" />
+          </li>
+        </Dropdown>
         <Dropdown
           overlay={menu2}
         >

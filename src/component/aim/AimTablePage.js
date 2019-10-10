@@ -502,6 +502,7 @@ class AimTablePage extends Component{
         <div style={{height:'400px',position:'relative',zIndex:'-1',top:'-200px'}} className={this.state.showLineChart} id='aimlinechart' />
       </div>
       </Spin>
+
     )
   }
 }

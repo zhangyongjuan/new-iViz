@@ -162,7 +162,7 @@ class TimeRange extends Component {
     const select = Object.assign({},this.state.SelectItem,selectItem);
     const nowselct = Object.assign({},this.state.selectNowValue,nowValue);
     this.setState({SelectItem:select,selectNowValue:nowselct});
-    console.log('更改条件---',select)
+    // console.log('更改条件---',select)
     this.props.dispatch({
       type:'global/saveSelectCondition',
       payload:{
@@ -227,14 +227,23 @@ class TimeRange extends Component {
 
           {
             Object.keys(this.state.selectOption).map((key, i) =>
-              <Select key={key} value={this.state.selectNowValue[key][0] !== undefined ? this.state.selectNowValue[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
-                <Option className={styles.topselectOption} value='disabled' disabled>{key}</Option>
-                {
-                  this.state.selectOption[key].map((v, k) =>
-                    <Option className={styles.topselectOption} key={v} value={v}>{v}</Option>
-                  )
-                }
-              </Select>
+              key==='colors' ?
+                <Select style={{zIndex:'2'}} key={key} value={this.state.selectNowValue[key][0] !== undefined ? this.state.selectNowValue[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
+                  <Option className={styles.topselectOption} value='disabled' disabled>{key}</Option>
+                  {
+                    this.state.selectOption[key].map((v, k) =>
+                      <Option className={styles.topselectOption} key={v} value={v}>{v}</Option>
+                    )
+                  }
+                </Select>:
+                <Select key={key} value={this.state.selectNowValue[key][0] !== undefined ? this.state.selectNowValue[key][0] : key} className={styles.topSelect} onChange={(value)=>this.handleChange(value,key)}>
+                  <Option className={styles.topselectOption} value='disabled' disabled>{key}</Option>
+                  {
+                    this.state.selectOption[key].map((v, k) =>
+                      <Option className={styles.topselectOption} key={v} value={v}>{v}</Option>
+                    )
+                  }
+                </Select>
             )
           }
 

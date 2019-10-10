@@ -337,14 +337,14 @@ export default class HeatMapChart extends React.Component {
   });
 
   render() {
-    const { loading, title } = this.props.params;
+    const { loading, title,size } = this.props.params;
     return (
       <Spin spinning={loading}>
         <div className={styles.main}>
           <div className={styles.chartTitle}>{title || ''}</div>
           <div ref={(input) => {
             this.PieRef = input;
-          }} style={{ width: '100%', height: '500px' }}/>
+          }} style={{ width: '100%', height: size ? size :'500px' }}/>
         </div>
 
       </Spin>

@@ -149,7 +149,7 @@ export default {
     saveNewOverallHeatmapData(state, { payload }) {
       return {
         ...state,
-        flybarMapByColorAndLocation:{...payload},
+        ...payload,
       };
     },
   //  saveHeatMapByColorData
