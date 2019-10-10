@@ -590,7 +590,7 @@ class DrawChart extends Component{
                   </Col>
                 </Row>
               </div>
-              <div style={{display:`${showBoxPlot}`}}>
+              <div style={{display:`block`}}>
                 <Row gutter={16} style={{textAlign:'center',width:'95%',margin:'0 auto'}}>
                  <Col span={22}>
                     <div id='hexuchart' style={{width:'100%',height:'100px'}} />
