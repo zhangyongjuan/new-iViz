@@ -127,7 +127,7 @@ class AimTablePage extends Component{
             columnTitle1[v.name]=v.input;
             columnTitle2[v.name]=v.ok;
             columnTitle3[v.name]=v.ng;
-            columnTitle4[v.name]=(((1-v.yield)*100).toPrecision(2))+'%';
+            columnTitle4[v.name]=(((1-v.yield)*100).toFixed(2))+'%';
             return ;
           })
           stationDataSource.push(columnTitle1,columnTitle2,columnTitle3,columnTitle4);

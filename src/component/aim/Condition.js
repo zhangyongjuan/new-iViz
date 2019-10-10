@@ -128,11 +128,11 @@ class NewHeader extends Component {
     alloption.condition5 = this.state.select5;
     alloption.condition6 = this.state.select6;
     alloption.condition7 = this.state.select7;
-    console.log('将要传回去画图的值---',alloption);
+    // console.log('将要传回去画图的值---',alloption);
     this.turnData(alloption)
   }
   handleMenuClick0 = e=>{
-    console.log('条件0被点击项-------',e);
+    // console.log('条件0被点击项-------',e);
     const d0 = [];
     const key = e.key;
     d0.push(key);
@@ -239,7 +239,7 @@ class NewHeader extends Component {
       data:container
     })
       .then(data=>{
-        console.log('c4-----',data);
+        // console.log('c4-----',data);
         if(data.aimIps.length !== 0){
           this.setState({condition4D:data.aimIps,select4:data.aimIps})   //选择cnc和spm时，条件4为单选
         }else if(data.lines.length !== 0){
@@ -281,7 +281,7 @@ class NewHeader extends Component {
       data:container
     })
       .then((data)=>{
-        console.log('newCondition5========',data);
+        // console.log('newCondition5========',data);
         this.setState({condition5:data})
         data.machines && data.machines.length !== 0 ? this.setState({condition5D:data.machines,plainOptions5:data.machines,checkedList5:data.machines}):
           this.setState({condition5D:data.spms,plainOptions5:data.spms,checkedList5:data.spms})
@@ -456,7 +456,7 @@ class NewHeader extends Component {
       data:container
     })
       .then(data=>{
-        console.log('newCondition6========',data);
+        // console.log('newCondition6========',data);
         this.setState({condition6:data})
         this.state.condition6.machines && this.state.condition6.machines.length !== 0 ? this.setState({condition6D:this.state.condition6.machines}) :
           this.setState({condition6D:this.state.condition6.spms})

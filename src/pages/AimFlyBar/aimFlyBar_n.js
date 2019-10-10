@@ -3,9 +3,6 @@ import {Select, message, Col, Row} from 'antd';
 import _ from 'lodash';
 
 import styles from './index.less';
-import BasicColumn from '../../component/Charts/BarChart/BasicColumn';
-import GroupedColumn from '../../component/Charts/BarChart/GroupedColumn';
-import SeriesLine from '../../component/Charts/LineChart/SeriesLine';
 import BoxPlot from '../../component/Charts/BoxChart/BoxPlot';
 import StackBarLineChart from '../../component/Charts/BarChart/StackBarLineChart';
 import HeatMapChart from '../../component/Charts/HeatMapChart'
@@ -25,6 +22,8 @@ class AimFlyBar_n extends React.Component {
     this.state = {
       //页面初始化时，默认展示遮盖框，点击取消
       isShowModel:'block',
+      //是否显示数据
+      isShowData:false,
       ChartByOneDay:'',
       spc: '',
       location:'',
@@ -38,16 +37,15 @@ class AimFlyBar_n extends React.Component {
     const { dateTime, topSelectItem } = this.props.global;
     if (!(_.isEqual(dateTime, nextProps.global.dateTime) && _.isEqual(topSelectItem, nextProps.global.topSelectItem))) {
       if(nextProps.global.topSelectItem.color.length > 1 || topSelectItem.color.length === 0){
-        this.setState({isShowModel:'block'});
+        this.setState({isShowModel:'block',isShowData:false});
         return false;
       }else{
-        this.setState({isShowModel:'none'});
+        this.setState({isShowModel:'none',isShowData:true});
       }
       this.getFlyBarChart(nextProps.global.dateTime, nextProps.global.topSelectItem);
       this.setState({ChartByOneDay:'',spc:'',location:'',clickStackBarByColorTime:-1,clickHeatMapByColor:'',clickBoxPlotOneDay:''})
     }
   }
-
 
   componentDidMount() {
     const { global } = this.props;
@@ -239,7 +237,7 @@ class AimFlyBar_n extends React.Component {
           Please choose only one color,data is not displayed when 'All' is selected!
         </div>
         {
-          JSON.stringify(FlyBar) !== '{}' && this.state.isShowModel !=='block' ?
+          JSON.stringify(FlyBar) !== '{}' && this.state.isShowModel !=='block' && this.state.isShowData === true ?
             <div className={styles.main}>
 
               {/* ok or ng */}
